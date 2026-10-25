@@ -15,15 +15,19 @@ from app.data.catalog.freeze import MARKER, write_immutable
 from app.domain.markets.consolidations import CONSOLIDATION_POLICY
 from app.research.execution_convention import VERSION as EXECUTION_CONVENTION
 from scripts.audit_full_dataset import REQUIRED_GATES
+from scripts.full_dataset_sources import verify_source_contracts, verify_source_lineage
 
 
 def verify(dataset: Path, repository: Path) -> dict[str, Any]:
     state = json.loads((repository / ".research/project_state.json").read_bytes())
+    contracts = pq.read_table(dataset / "source-contracts.parquet").to_pylist()
+    verify_source_contracts(contracts, repository, state)
     audit_path = repository / state["full_dataset_audit_report"]
     materialization_path = Path(state["full_dataset_materialization_report"])
     audit = json.loads(audit_path.read_bytes())
     materialization = json.loads(materialization_path.read_bytes())
     manifest = load_manifest(dataset / "manifest.json")
+    verify_source_lineage(contracts, manifest.source_lineage)
     verify_dataset(dataset, manifest)
     if (
         state["r5_status"] != "PASS_AUDITED_GATE_B_PREAUTHORIZED"
@@ -38,14 +42,24 @@ def verify(dataset: Path, repository: Path) -> dict[str, Any]:
     if (
         manifest.dataset_id != dataset.name
         or manifest.dataset_id != state["full_dataset_id"]
-        or manifest.canonical_sha256
-        != state["full_dataset_manifest_sha256"]
-        != audit["manifest_sha256"]
-        != materialization["manifest_sha256"]
-        or sha256_file(dataset / "manifest.json")
-        != state["full_dataset_manifest_file_sha256"]
-        != audit["manifest_file_sha256"]
-        != materialization["manifest_file_sha256"]
+        or len(
+            {
+                manifest.canonical_sha256,
+                state["full_dataset_manifest_sha256"],
+                audit["manifest_sha256"],
+                materialization["manifest_sha256"],
+            }
+        )
+        != 1
+        or len(
+            {
+                sha256_file(dataset / "manifest.json"),
+                state["full_dataset_manifest_file_sha256"],
+                audit["manifest_file_sha256"],
+                materialization["manifest_file_sha256"],
+            }
+        )
+        != 1
     ):
         raise ValueError("FULL_DATASET_IDENTITY_CHANGED")
     if (
@@ -63,7 +77,6 @@ def verify(dataset: Path, repository: Path) -> dict[str, Any]:
         part.relative_to(dataset).as_posix() for part in dataset.rglob("*.parquet")
     }:
         raise ValueError("FULL_DATASET_PARTITION_SET_CHANGED")
-    contracts = pq.read_table(dataset / "source-contracts.parquet").to_pylist()
     return {
         "dataset_id": manifest.dataset_id,
         "dataset_version": "1",

@@ -1,18 +1,25 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatUtc } from "../../utils/format";
-import { navigate } from "../../utils/navigation";
+import { navigate, replaceUrl } from "../../utils/navigation";
 import { marketUpdateApi } from "./api";
 import { explainUpdateCode, updateError, useUpdateCopy } from "./copy";
 import {
   earliestUpdateDate,
+  invalidUpdateRequestField,
   readUpdateDraft,
   requestFromDraft,
   saveUpdateDraft,
-  validUpdateRequest,
+  type InvalidUpdateField,
   type UpdateDraft,
 } from "./intent";
 import { UpdateTaskDetail } from "./UpdateTaskDetail";
@@ -24,13 +31,25 @@ const selectedFromUrl = () =>
 function openUpdateJob(id: string) {
   const url = new URL(location.href);
   url.searchParams.set("updateJob", id);
-  navigate(`${url.pathname}${url.search}${url.hash}`);
+  return navigate(`${url.pathname}${url.search}${url.hash}`);
 }
-export function MarketUpdatesPanel() {
+export function MarketUpdatesPanel({
+  dataReady = true,
+}: {
+  dataReady?: boolean;
+} = {}) {
   const c = useUpdateCopy();
+  const { i18n } = useTranslation();
   const [revision, setRevision] = useState(0);
   const [offset, setOffset] = useState(0);
   const [jobId, setJobId] = useState(selectedFromUrl);
+  const initialJobId = useRef(jobId);
+  const pendingTaskFocus = useRef<string | null>(null);
+  const taskFocus = useRef<HTMLElement>(null);
+  const headingFocus = useRef<HTMLHeadingElement>(null);
+  const focusedHistory = useRef(false);
+  const historyErrorFocus = useRef<HTMLParagraphElement>(null);
+  const historyHeadingFocus = useRef<HTMLHeadingElement>(null);
   const caps = useApiResource(
     (signal) => marketUpdateApi.capabilities(signal),
     [revision],
@@ -38,17 +57,78 @@ export function MarketUpdatesPanel() {
   const history = useApiResource(
     (signal) => marketUpdateApi.list(offset, signal),
     [offset, revision, jobId],
+    {
+      intervalMs: 5000,
+      while: (page) =>
+        page.items.some(
+          (job) => job.status === "QUEUED" || job.status === "RUNNING",
+        ),
+    },
   );
+  useEffect(() => {
+    if (
+      (history.error || history.data) &&
+      focusedHistory.current &&
+      document.activeElement === document.body
+    ) {
+      (history.error
+        ? historyErrorFocus
+        : historyHeadingFocus
+      ).current?.focus();
+      focusedHistory.current = false;
+    }
+  }, [history.data, history.error]);
   useEffect(() => {
     const changed = () => setJobId(selectedFromUrl());
     window.addEventListener("popstate", changed);
     return () => window.removeEventListener("popstate", changed);
   }, []);
+  useEffect(() => {
+    if (
+      !initialJobId.current ||
+      !taskFocus.current ||
+      !dataReady ||
+      caps.loading
+    )
+      return;
+    const frame = window.requestAnimationFrame?.(() => {
+      const target = taskFocus.current;
+      const focused = document.activeElement;
+      if (
+        !target ||
+        selectedFromUrl() !== initialJobId.current ||
+        (focused !== document.body &&
+          focused !== document.getElementById("main-content"))
+      )
+        return;
+      target.focus({ preventScroll: true });
+      target.scrollIntoView?.({ block: "start" });
+    });
+    return () => {
+      if (frame !== undefined) window.cancelAnimationFrame(frame);
+    };
+  }, [dataReady, caps.loading]);
+  useEffect(() => {
+    if (jobId && pendingTaskFocus.current === jobId && taskFocus.current) {
+      if (document.activeElement === document.body) taskFocus.current.focus();
+      pendingTaskFocus.current = null;
+    }
+  }, [jobId]);
   const refresh = () => setRevision((value) => value + 1);
+  const openAndFocusTask = (id: string, shouldFocus: boolean) => {
+    pendingTaskFocus.current = shouldFocus ? id : null;
+    if (!openUpdateJob(id)) pendingTaskFocus.current = null;
+    else if (pendingTaskFocus.current === jobId && taskFocus.current) {
+      taskFocus.current.focus();
+      pendingTaskFocus.current = null;
+    }
+  };
   return (
     <section className="marketUpdates" aria-label={c.title}>
       <header>
-        <h2>{c.title}</h2>
+        <h2 ref={headingFocus} tabIndex={-1}>
+          {c.title}
+        </h2>
         <p>{c.intro}</p>
       </header>
       <aside className="updateNotice">
@@ -56,31 +136,64 @@ export function MarketUpdatesPanel() {
         <p>{c.authority}</p>
       </aside>
       {caps.loading && <p role="status">{c.loading}</p>}
-      {caps.error && <p role="alert">{c.loadFailed}</p>}
+      {caps.error && (
+        <p role="alert">{updateError(caps.error, i18n.language)}</p>
+      )}
       <button type="button" className="button secondary" onClick={refresh}>
         {c.refresh}
       </button>
       {caps.data && (
         <UpdateRequestForm
           capabilities={caps.data}
-          onCreated={(id) => {
-            openUpdateJob(id);
+          onCreated={(id, shouldFocus) => {
+            openAndFocusTask(id, shouldFocus);
             refresh();
           }}
         />
       )}
+      {jobId ? (
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          jobId,
+        ) ? (
+          <UpdateTaskDetail
+            key={jobId}
+            jobId={jobId}
+            onOpen={openAndFocusTask}
+            onReturn={() => {
+              replaceUrl("/data");
+              setJobId(null);
+              headingFocus.current?.focus();
+            }}
+            focusRef={taskFocus}
+          />
+        ) : (
+          <p role="alert">{c.invalidJob}</p>
+        )
+      ) : (
+        <p>{c.selectPrompt}</p>
+      )}
       <section aria-label={c.history}>
-        <h3>{c.history}</h3>
+        <h3 ref={historyHeadingFocus} tabIndex={-1}>
+          {c.history}
+        </h3>
         {history.loading && <p role="status">{c.loading}</p>}
-        {history.error && <p role="alert">{c.loadFailed}</p>}
+        {history.error && (
+          <p ref={historyErrorFocus} role="alert" tabIndex={-1}>
+            {updateError(history.error, i18n.language)}
+          </p>
+        )}
         {history.data && (
           <>
             {history.data.total === 0 && <p>{c.empty}</p>}
-            <ul className="updateHistory">
+            <ul
+              className="updateHistory"
+              onFocusCapture={() => (focusedHistory.current = true)}
+              onBlurCapture={() => (focusedHistory.current = false)}
+            >
               {history.data.items.map((job) => (
                 <li key={job.job_id}>
                   <div>
-                    <strong>{c.statuses[job.status]}</strong>
+                    <strong role="status">{c.statuses[job.status]}</strong>
                     <span>{job.configuration.security_ids.join(", ")}</span>
                     <span>
                       {job.configuration.start_date} →{" "}
@@ -91,34 +204,30 @@ export function MarketUpdatesPanel() {
                   <button
                     type="button"
                     className="button secondary"
-                    aria-label={`${c.open}: ${job.job_id}`}
-                    onClick={() => openUpdateJob(job.job_id)}
+                    aria-label={`${c.open}: ${job.configuration.security_ids.join(", ")} · ${job.configuration.start_date}–${job.configuration.end_date} · ${formatUtc(job.created_at)}`}
+                    onClick={(event) =>
+                      openAndFocusTask(
+                        job.job_id,
+                        document.activeElement === event.currentTarget,
+                      )
+                    }
                   >
                     {c.open}
                   </button>
                 </li>
               ))}
             </ul>
-            <Pagination
-              offset={offset}
-              limit={20}
-              total={history.data.total}
-              onChange={setOffset}
-            />
           </>
         )}
+        <Pagination
+          label={c.history}
+          offset={offset}
+          limit={20}
+          total={history.data?.total ?? null}
+          loading={history.loading}
+          onChange={setOffset}
+        />
       </section>
-      {jobId ? (
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-          jobId,
-        ) ? (
-          <UpdateTaskDetail key={jobId} jobId={jobId} onOpen={openUpdateJob} />
-        ) : (
-          <p role="alert">{c.invalidJob}</p>
-        )
-      ) : (
-        <p>{c.selectPrompt}</p>
-      )}
     </section>
   );
 }
@@ -128,7 +237,7 @@ function UpdateRequestForm({
   onCreated,
 }: {
   capabilities: UpdateCapabilities;
-  onCreated: (id: string) => void;
+  onCreated: (id: string, shouldFocus: boolean) => void;
 }) {
   const c = useUpdateCopy();
   const { i18n } = useTranslation();
@@ -144,8 +253,14 @@ function UpdateRequestForm({
   const [accepted, setAccepted] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<unknown>(null);
+  const [invalidField, setInvalidField] = useState<InvalidUpdateField | null>(
+    null,
+  );
+  const [validationAttempt, setValidationAttempt] = useState(0);
   const [storageFailed, setStorageFailed] = useState(false);
   const lock = useRef(false);
+  const formElement = useRef<HTMLFormElement>(null);
+  const submitButton = useRef<HTMLButtonElement>(null);
   const active = useRef(true);
   useEffect(() => {
     active.current = true;
@@ -153,6 +268,17 @@ function UpdateRequestForm({
       active.current = false;
     };
   }, []);
+  useLayoutEffect(() => {
+    if (!invalidField) return;
+    const input = formElement.current?.elements.namedItem(invalidField);
+    if (input instanceof HTMLElement) input.focus();
+  }, [invalidField, validationAttempt]);
+  const fieldAccessibility = (field: InvalidUpdateField) => ({
+    name: field,
+    "aria-invalid": invalidField === field || undefined,
+    "aria-describedby":
+      invalidField === field ? "update-request-error" : undefined,
+  });
   const archive = caps.archive.find(
     (dataset) => dataset.mode === "historical_exploration",
   );
@@ -170,6 +296,7 @@ function UpdateRequestForm({
     setDraft(updated);
     setAccepted(false);
     setError(null);
+    setInvalidField(null);
     try {
       saveUpdateDraft(updated);
       setStorageFailed(false);
@@ -181,8 +308,11 @@ function UpdateRequestForm({
     event.preventDefault();
     if (lock.current || unavailable) return;
     const config = requestFromDraft(draft);
-    if (!accepted || !validUpdateRequest(config, caps)) {
+    const invalid = invalidUpdateRequestField(config, caps);
+    if (!accepted || invalid !== null) {
       setError("validation");
+      setInvalidField(invalid);
+      setValidationAttempt((attempt) => attempt + 1);
       return;
     }
     try {
@@ -198,13 +328,23 @@ function UpdateRequestForm({
     const originatingUrl = `${location.pathname}${location.search}`;
     try {
       const job = await marketUpdateApi.create(config, draft.requestKey);
-      // Leave the persisted identity intact: a lost response or reopened form must
-      // reconcile to this same server job, never silently create another request.
       if (
         active.current &&
         `${location.pathname}${location.search}` === originatingUrl
-      )
-        onCreated(job.job_id);
+      ) {
+        const next = { ...draft, requestKey: crypto.randomUUID() };
+        setDraft(next);
+        setAccepted(false);
+        // A different tab may have replaced this draft while the request was pending.
+        if (JSON.stringify(readUpdateDraft()) === JSON.stringify(draft)) {
+          try {
+            saveUpdateDraft(next);
+          } catch {
+            setStorageFailed(true);
+          }
+        }
+        onCreated(job.job_id, document.activeElement === submitButton.current);
+      }
     } catch (reason) {
       if (active.current) setError(reason);
     } finally {
@@ -232,11 +372,16 @@ function UpdateRequestForm({
               : explainUpdateCode("UPDATE_WORKER_UNAVAILABLE", i18n.language)}
         </p>
       )}
-      <form onSubmit={(event) => void submit(event)}>
+      <form
+        ref={formElement}
+        noValidate
+        onSubmit={(event) => void submit(event)}
+      >
         <fieldset disabled={pending}>
           <label>
             {c.securities}
             <textarea
+              {...fieldAccessibility("security_ids")}
               rows={3}
               maxLength={500}
               required
@@ -257,6 +402,7 @@ function UpdateRequestForm({
             <label>
               {c.start}
               <input
+                {...fieldAccessibility("start_date")}
                 type="date"
                 required
                 min={earliestUpdateDate(caps) ?? undefined}
@@ -274,6 +420,7 @@ function UpdateRequestForm({
             <label>
               {c.end}
               <input
+                {...fieldAccessibility("end_date")}
                 type="date"
                 required
                 min={
@@ -299,16 +446,18 @@ function UpdateRequestForm({
             />
             {c.confirm}
           </label>
-          <button
-            className="button"
-            type="submit"
-            disabled={pending || unavailable || !accepted}
-          >
-            {pending ? c.submitting : c.submit}
-          </button>
         </fieldset>
+        <button
+          ref={submitButton}
+          className="button"
+          type="submit"
+          disabled={!pending && (unavailable || !accepted)}
+          aria-disabled={pending}
+        >
+          {pending ? c.submitting : c.submit}
+        </button>
         {error !== null && (
-          <p role="alert">
+          <p id="update-request-error" role="alert">
             {error === "validation"
               ? c.validation
               : updateError(error, i18n.language)}

@@ -166,9 +166,94 @@ def historical_cn_a_rules() -> TradingRuleVersion:
     return TradingRuleVersion(version="cn-a-2010-2025.6", rules=tuple(rules))
 
 
-def _split_by_cost(period: _BoardPeriod) -> tuple[TradingRuleSet, ...]:
+def candidate_2026_cn_a_costs(
+    *, commission_rate: Decimal, minimum_commission: Decimal
+) -> TransactionCostSchedule:
+    """Current statutory components; brokerage commission is an explicit assumption."""
+    return TransactionCostSchedule(
+        commission_rate=commission_rate,
+        minimum_commission=minimum_commission,
+        sell_stamp_duty_rate=Decimal("0.0005"),
+        transfer_fee_rate=Decimal("0.00001"),
+        valid_from=date(2026, 1, 1),
+        source_version="chinaclear-sh-sz-2026-01-01+broker-assumption",
+    )
+
+
+def candidate_2026_cn_a_rules(cost_schedule: TransactionCostSchedule) -> TradingRuleVersion:
+    """Official 2026 board terms; fail closed until other current inputs are audited."""
+    effective = date(2026, 7, 6)
+    if not cost_schedule.valid_from <= effective or (
+        cost_schedule.valid_to is not None and cost_schedule.valid_to < effective
+    ):
+        raise ValueError("CURRENT_COST_SCHEDULE_NOT_EFFECTIVE")
+    periods = (
+        _BoardPeriod(
+            Exchange.SSE,
+            Board.SSE_MAIN,
+            effective,
+            None,
+            "0.10",
+            "0.10",
+            5,
+            source="SSE Trading Rules (2026 revision), SSE [2026] No. 41",
+            published=date(2026, 4, 24),
+            note="current rule candidate; other execution authorities not yet accepted",
+        ),
+        _BoardPeriod(
+            Exchange.SSE,
+            Board.SSE_STAR,
+            effective,
+            None,
+            "0.20",
+            "0.20",
+            5,
+            minimum_buy_quantity=200,
+            increment=1,
+            source="SSE Trading Rules (2026 revision), SSE [2026] No. 41",
+            published=date(2026, 4, 24),
+            note="current rule candidate; other execution authorities not yet accepted",
+        ),
+        _BoardPeriod(
+            Exchange.SZSE,
+            Board.SZSE_MAIN,
+            effective,
+            None,
+            "0.10",
+            "0.10",
+            5,
+            source="SZSE Trading Rules (2026 revision), SZSE [2026] No. 551",
+            published=date(2026, 4, 24),
+            note="current rule candidate; other execution authorities not yet accepted",
+        ),
+        _BoardPeriod(
+            Exchange.SZSE,
+            Board.SZSE_CHINEXT,
+            effective,
+            None,
+            "0.20",
+            "0.20",
+            5,
+            source="SZSE Trading Rules (2026 revision), SZSE [2026] No. 551",
+            published=date(2026, 4, 24),
+            note="current rule candidate; other execution authorities not yet accepted",
+        ),
+    )
+    return TradingRuleVersion(
+        version="cn-a-product-2026-candidate.1",
+        rules=tuple(
+            rule.model_copy(update={"conservative_no_fill": True})
+            for period in periods
+            for rule in _split_by_cost(period, (cost_schedule,))
+        ),
+    )
+
+
+def _split_by_cost(
+    period: _BoardPeriod, costs: tuple[TransactionCostSchedule, ...] = _COSTS
+) -> tuple[TradingRuleSet, ...]:
     rules = []
-    for cost in _COSTS:
+    for cost in costs:
         start = max(period.start, cost.valid_from)
         ends = tuple(value for value in (period.end, cost.valid_to) if value is not None)
         end = min(ends) if ends else None

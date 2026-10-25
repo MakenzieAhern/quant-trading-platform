@@ -3,14 +3,20 @@ export const enUS = {
     unavailable: "N/A",
     loading: "Loading {{label}}…",
     error: "Unable to load this data.",
+    renderFailure: {
+      title: "This page stopped displaying",
+      guidance:
+        "Nothing was retried automatically. If you just submitted a request, check saved tasks or simulated accounts in another tab before reloading. Unsaved form entries may be lost.",
+      tasks: "Check saved tasks",
+      accounts: "Check simulated accounts",
+    },
     loadErrors: {
-      offline:
-        "The service is unavailable. Check its status, then reload this page.",
+      offline: "The service is unavailable. Check its status, then try again.",
       timeout:
-        "The request timed out. Check the service status, then reload this page.",
+        "The request timed out. Check the service status, then try again.",
       permission: "Access was denied. Check your access before trying again.",
       notFound:
-        "This record is unavailable. It may have been removed; return to the workbench to choose another.",
+        "This record is unavailable. It may have been removed. Choose another saved record.",
       unknown:
         "This data could not be loaded. Check the service status, then reload this page.",
       reload: "Reload page",
@@ -31,19 +37,19 @@ export const enUS = {
     run: "Run",
     routeNotFound: "ROUTE NOT FOUND",
     pageNotFound: "Page not found",
-    pageNotFoundBody: "The requested dashboard route is not available.",
-    returnToBacktests: "Return to backtests",
+    pageNotFoundBody:
+      "The requested page is unavailable. Check the address or return to the workbench.",
     statuses: {
-      CREATED: "CREATED",
-      STARTING: "STARTING",
-      RUNNING: "RUNNING",
-      PAUSING: "PAUSING",
-      PAUSED: "PAUSED",
-      STOPPING: "STOPPING",
-      STOPPED: "STOPPED",
-      SUCCEEDED: "SUCCEEDED",
-      FAILED: "FAILED",
-      INTERRUPTED: "INTERRUPTED",
+      CREATED: "Created",
+      STARTING: "Starting",
+      RUNNING: "Running",
+      PAUSING: "Pausing",
+      PAUSED: "Paused",
+      STOPPING: "Stopping",
+      STOPPED: "Stopped",
+      SUCCEEDED: "Completed",
+      FAILED: "Failed",
+      INTERRUPTED: "Interrupted",
     },
   },
   navigation: {
@@ -122,16 +128,96 @@ export const enUS = {
       executionError:
         "Backtest execution failed safely. Check run history for a failed run.",
       submitError: "Unable to submit the backtest.",
+      unavailableError:
+        "Backtest creation is unavailable. Check the service status and registered data before trying again.",
+      timeoutError: "The request timed out. It may already have created a run.",
+      offlineError:
+        "The service is unavailable. The submission result is unknown.",
+      recoveryHint:
+        "Keep this form open. Check run history in another tab before retrying with the same settings using Run backtest below. Do not reload: it clears this form and its retry identifier.",
+    },
+    detail: {
+      back: "← All backtests",
+      eyebrow: "RUN",
+      facts: "Run details",
+      authoritative: "AUTHORITATIVE RESULT",
+      performance: "Performance",
+      counts: "{{fills}} fills · {{rejections}} risk rejections",
+      metricsLoading: "performance metrics",
+      initialEquity: "Initial equity",
+      finalEquity: "Final equity",
+      totalReturn: "Total return",
+      cagr: "CAGR",
+      maxDrawdown: "Max drawdown",
+      sharpe: "Sharpe",
+      sortino: "Sortino",
+      commission: "Commission",
+      notAvailable: "Not available",
+      portfolio: "PORTFOLIO",
+      equityCurve: "Equity curve",
+      apiOrder: "UTC · API order",
+      equityData: "equity data",
+      chartTitle: "Portfolio equity curve",
+      chartDescription: "Equity over UTC time in deterministic API order.",
+      chartUnavailable:
+        "Chart geometry unavailable; exact values remain below.",
+      accessibleEquity: "Accessible equity data ({{count}} points)",
+      equity: "Equity",
+      noEquity: "No equity snapshots were recorded.",
+      signals: "Signals",
+      noSignals: "No signals were emitted.",
+      riskDecisions: "Risk decisions",
+      noRisk: "No proposals reached risk evaluation.",
+      orders: "Orders",
+      noOrders:
+        "No orders were created. Risk-rejected proposals do not become orders.",
+      fills: "Fills",
+      noFills: "No fills were recorded.",
+      utcTime: "UTC time",
+      strategy: "Strategy",
+      symbol: "Symbol",
+      signal: "Signal",
+      proposal: "Proposal",
+      decision: "Decision",
+      reason: "Reason",
+      message: "Message",
+      approved: "Risk check passed",
+      riskRejected: "Rejected by risk controls",
+      order: "Order",
+      sideType: "Side / type",
+      quantity: "Quantity",
+      status: "Status",
+      createdUtc: "Created (UTC)",
+      side: "Side",
+      price: "Price",
+      dataset: "Dataset",
+      created: "Created",
+      started: "Started",
+      completed: "Completed",
+      inProgress: "Backtest in progress",
+      progressHelp:
+        "This active run is checked every five seconds. Execution remains synchronous on the backend.",
+      failed: "Backtest failed",
+      failedDefault:
+        "The run failed without additional safe diagnostic information.",
+      failedWithDiagnostic:
+        "This backtest did not complete. Check its configuration and service status; open the original diagnostic below for details.",
+      failedNoMetrics:
+        "No successful metrics or equity curve are displayed for this run.",
     },
   },
   paper: {
     eyebrow: "SIMULATED EXECUTION LEDGER",
     title: "Paper trading sessions",
     description:
-      "Synthetic demo and audited historical replay accounts. New-market forward simulation is not available yet. No broker is connected.",
+      "Manage synthetic demos and saved historical replay accounts. New historical execution requires current data admission; check the data center. New-market forward simulation is not available yet. No broker is connected.",
     create: "Create paper session",
     persisted: "Persisted sessions",
-    empty: "No paper sessions yet. Create a safe replay session to begin.",
+    refresh: "Refresh",
+    sessionColumn: "Session",
+    openSession: "Open session",
+    empty:
+      "No paper sessions yet. Start with a labeled synthetic demo. Historical replay requires current data admission.",
     loading: "paper trading sessions",
     safetyTitle: "PAPER TRADING — SIMULATED EXECUTION ONLY",
     safetyBody:
@@ -139,9 +225,10 @@ export const enUS = {
     safetyLabel: "Paper trading safety notice",
     requestError: "Unable to load paper trading data.",
     providers: {
-      replay: "Local AAPL fixture replay",
+      replay: "Legacy local AAPL fixture · not A-share data",
       simulated_a_share: "Synthetic A-share demo · 2030 scenario",
-      historical_a_share: "Audited A-share historical replay",
+      historical_a_share: "A-share historical replay",
+      forward_a_share: "Receipt-bound A-share forward simulation",
     },
     strategies: {
       moving_average_crossover: "Moving average crossover",
@@ -150,14 +237,42 @@ export const enUS = {
         "A-share momentum + low-volatility strategy",
     },
     createPage: {
-      eyebrow: "NEW LOCAL REPLAY",
+      eyebrow: "NEW SIMULATED ACCOUNT",
       title: "Create paper session",
       cancel: "Cancel",
       safeProvider: "Safe provider",
+      capabilitiesTitle: "Current creation availability",
+      capabilitiesLoading: "Checking current data-source availability…",
+      capabilitiesError:
+        "Current availability could not be checked. New creation is blocked; saved account recovery remains available.",
+      capabilityBlocked:
+        "This mode is not currently available for a new account. Review data readiness or recheck availability; saved requests can still be recovered above.",
+      capabilitiesScope:
+        "Availability checks configuration and source access, not complete financial validation. The server checks again when creating or starting an account.",
+      recheckCapabilities: "Recheck availability",
+      checkDataReadiness: "Check data readiness",
+      forwardUnavailable: "New-market forward simulation · unavailable",
+      forwardUnavailableHelp:
+        "Lawful data-use rights, current source and rule checks, and the receipt-to-session processing connection are still missing. Historical replay and synthetic data do not establish forward acceptance.",
+      capabilityReasons: {
+        REPLAY_DATA_UNAVAILABLE: "The local replay fixture is unavailable.",
+        REPLAY_DATA_INVALID: "The local replay fixture failed validation.",
+        DATASET_NOT_REGISTERED: "The required dataset is not registered.",
+        DATASET_NOT_MOUNTED: "The required historical archive is not mounted.",
+        DATASET_INTEGRITY_FAILED: "The dataset integrity check failed.",
+        SOURCE_CONTRACT_INTEGRITY_FAILED:
+          "The source integrity check failed; new execution is blocked.",
+        SOURCE_CONTRACT_INTEGRITY_UNVERIFIED:
+          "Source integrity has not been verified; new execution is blocked.",
+        DATASET_EXECUTION_NOT_ACCEPTED:
+          "The dataset has not been accepted for execution.",
+        PAPER_CAPABILITY_CHECK_FAILED:
+          "Availability could not be verified; recheck before creating an account.",
+      },
       provider: "Provider",
-      replayLocal: "Replay (local)",
-      aShareSimulation: "A-share simulation (local)",
-      historicalAShare: "A-share historical replay (audited archive)",
+      replayLocal: "Legacy AAPL fixture (not A-share)",
+      aShareSimulation: "Synthetic A-share demo (2030 scenario)",
+      historicalAShare: "A-share historical replay (frozen archive)",
       dataset: "Dataset",
       fixture: "AAPL fixture",
       symbol: "Symbol",
@@ -167,22 +282,43 @@ export const enUS = {
       buyingPowerHint:
         "Buying-power risk enforcement is enabled. All values remain Decimal strings.",
       aShareScenarioHint:
-        "Deterministic 2030 scenario data only — not research evidence or an OOS rerun.",
+        "Deterministic 2030 scenario data only — not research evidence or an OOS rerun. The default 100,000,000 balance is a scenario input, not a recommended account size.",
       historicalHint:
-        "Past audited sessions only. This is replay, not new market data or a forward result. Range is limited to 93 calendar days.",
+        "Past trading sessions only. Check current data admission in the data center before creating or starting replay; a freeze marker is not financial validation. This is not new market data or a forward result. Range is limited to 93 calendar days.",
       historicalRange: "Historical replay range",
+      sourceLoading: "saved study settings",
+      sourceUnavailable:
+        "This saved study cannot configure a historical paper account. Open a completed A-share historical study, or start an independent account.",
+      sourceList: "Return to saved studies",
+      sourceReview:
+        "Settings copied from ‘{{name}}’ for review only. This account will have its own dates, snapshot and plan; no account or order has been created.",
+      sourceChooseDates:
+        "The study exceeds the 93-calendar-day replay limit. Choose the start date explicitly before creating this separate account.",
+      sourceIndependent: "Start an independent account instead",
+      sessionSourceLoading: "saved paper session settings",
+      sessionSourceUnavailable:
+        "This paper session cannot safely configure a new account. Review the original session or start independently.",
+      sessionSourceList: "Return to paper sessions",
+      sessionSourceReview:
+        "Settings copied from paper session for review. This will create a new independent account using the currently accepted dataset; the original ledger stays read-only. No account or order has been created or restarted.",
+      sessionSourceOriginal: "Review original session",
       startDate: "Start date",
       endDate: "End date",
       historicalAdvanced: "Strategy, universe and cost settings",
       rebalanceSessions: "Sessions between rebalances",
       maximumHoldings: "Maximum holdings",
       maxPositionWeight: "Maximum weight per holding",
+      maxDrawdown: "Drawdown risk limit (negative fraction)",
       universe: "Share universe",
       allShares: "All accepted A-shares",
       commissionRate: "Commission rate",
       minimumCommission: "Minimum commission (CNY)",
+      commissionAssumption:
+        "These are simulation assumptions, not a verified broker quote. The historical engine applies its accepted date-specific cost model; check the result's cost breakdown.",
       historicalValidationError:
-        "Check the historical dates and strategy/cost limits.",
+        "Choose no more than 93 calendar days and check strategy, cost and risk limits.",
+      historicalCashLimit:
+        "Historical simulated-account cash must be positive and no more than CNY 1,000,000,000,000, matching the research engine limit.",
       registeredStrategy: "Registered strategy",
       strategyType: "Strategy type",
       shortPeriod: "Short period",
@@ -192,13 +328,30 @@ export const enUS = {
       overbought: "Overbought",
       creating: "Creating…",
       submit: "Create paper session",
-      idempotentHint: "Creation is idempotent and does not start execution.",
+      idempotentHint:
+        "An unconfirmed request can be retried without a duplicate. Creation does not start execution.",
       decimalError:
         "Initial cash and quantity must be positive Decimal strings.",
       periodError:
         "Periods must be safe positive integers with short below long.",
       rsiError: "RSI values must satisfy 0 < oversold < overbought < 100.",
-      submitError: "Unable to create paper session.",
+      submitError:
+        "Could not confirm whether the paper session was created. Check the paper-session list and service status. Retry unchanged settings here, or reopen this page to choose the saved exact request.",
+      pendingTitle: "Saved paper creation requests",
+      pendingHelp:
+        "Check the session list first. Retry an unconfirmed saved request with its original key, or verify a browser-saved receipt against this server before opening it. Nothing starts trading automatically.",
+      pendingDetails: "Review exact saved settings",
+      retrySaved: "Retry saved request {{number}}",
+      openSaved: "Verify and open saved paper account",
+      receiptUnverified:
+        "This browser-saved account could not be verified against the current server. No new account was created. Check the account list and data-recovery status; keep the original request key and verify again later.",
+      createAnother: "Create another paper account",
+      resolvePendingFirst:
+        "A saved creation already exists. Review its exact settings, retry it if unconfirmed, or verify its receipt before opening. To make a new account, use Create another after saved receipts are verified.",
+      storageError:
+        "Could not save this creation request. No POST was sent by this attempt. Check browser storage before trying again.",
+      recoveryError:
+        "Saved creation requests cannot be read safely. No retry was sent. Check browser storage and the session list before creating another account.",
       datasetError: "The registered paper dataset is unavailable.",
       conflictError: "This paper session conflicts with an existing request.",
       validationError: "Please check the submitted paper session values.",
@@ -207,7 +360,7 @@ export const enUS = {
       loading: "paper session snapshot",
       back: "← All paper sessions",
       eyebrow: "PAPER SESSION",
-      websocket: "WebSocket",
+      websocket: "Session connection",
       connection: {
         connecting: "connecting",
         connected: "connected",
@@ -218,12 +371,41 @@ export const enUS = {
       resume: "Resume replay",
       pause: "Pause replay",
       stop: "Stop replay",
-      startError: "Unable to start the paper session.",
-      pauseError: "Unable to pause the paper session.",
-      stopError: "Unable to stop the paper session.",
+      forwardStart: "Start forward simulation",
+      forwardResume: "Resume forward simulation",
+      forwardPause: "Pause forward simulation",
+      forwardStop: "Stop forward simulation",
+      forwardBoundary:
+        "Server-recorded receipt-bound forward simulation. Displaying this lineage does not establish source rights, financial acceptance, or permission for live trading. Public forward creation remains unavailable.",
+      marketInput: "Recorded market input lineage",
+      portfolioInput: "Recorded portfolio input lineage",
+      inputChecksum: "Daily input checksum",
+      admissionChecksum: "Admission contract checksum",
+      closedAt: "Session close (UTC)",
+      nextOpenAt: "Next open (UTC)",
+      receipts:
+        "Security · receipt ID · first received (UTC) · manifest checksum",
+      receiptCount:
+        "Showing {{shown}} of {{total}} recorded receipts. Complete lineage remains in the saved API record.",
+      forwardEndedHelp:
+        "This forward simulation has ended. Preserve its recorded inputs, plans and financial journal; partial records are not a completed validation.",
+      forwardCopyUnavailable:
+        "Forward accounts cannot be copied through the replay creation form. No replacement account will be created.",
+      inputCommitSummary:
+        "Input commit for {{date}}, financial batch {{first}}–{{last}}. Control record only; no new fill or portfolio value.",
+      startError:
+        "Unable to start the paper session. Check the current session status and connection before retrying.",
+      pauseError:
+        "Unable to pause the paper session. Check the current session status and connection before retrying.",
+      stopError:
+        "Unable to stop the paper session. Check the current session status and connection before retrying.",
       unknownError: "Unknown error",
       hydrateError: "Unable to load the paper session snapshot.",
+      connectionError:
+        "The paper session connection could not be restored automatically.",
       malformedEvent: "A malformed paper stream event was rejected.",
+      commandAccountMismatch:
+        "The server returned a different paper account for this command. Reload this page before using account controls.",
       auditIdentity: "Audit identifiers",
       sessionId: "Session ID",
       datasetId: "Dataset ID",
@@ -231,7 +413,9 @@ export const enUS = {
         SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1:
           "Synthetic 2030 scenario · not research evidence",
         FROZEN_HISTORICAL_A_SHARE_REPLAY_V1:
-          "Audited historical archive · replay only",
+          "Frozen historical archive · not current execution approval",
+        RECEIPT_BOUND_FORWARD_A_SHARE_V1:
+          "Server-recorded receipt-bound forward input · not acceptance approval",
       },
       detailsLabel: "Paper session details",
       provider: "Provider",
@@ -244,6 +428,7 @@ export const enUS = {
       failedHelp:
         "This replay did not complete. Do not treat partial records as a finished result. Check the configuration and create a new session.",
       createAgain: "Create another paper session",
+      reviewConfiguration: "Review configuration (does not repair missing data)",
       auditError: "Original diagnostic (audit)",
       latestBar: "LATEST COMPLETED BAR",
       marketData: "Market data",
@@ -254,20 +439,39 @@ export const enUS = {
       volume: "Volume",
       utcTime: "UTC time",
       noBars: "No completed replay Bars received yet.",
+      noSessions: "No completed A-share trading days received yet.",
       latestSession: "LATEST COMPLETED A-SHARE SESSION",
       marketSession: "Market session",
       sessionDate: "Session date",
       securities: "Securities",
       source: "Source",
       portfolioKicker: "AUTHORITATIVE PORTFOLIO",
+      lastVerifiedPortfolioKicker: "LAST VERIFIED PORTFOLIO",
+      lastVerifiedWarning:
+        "Connection interrupted. Displayed account state is the last verified snapshot, not a current balance; it will refresh after reconnection.",
+      collectionLastVerified:
+        "These records are the last verified page; newer saved records have not been loaded yet.",
+      retryCollection: "Retry {{title}}",
+      stalePortfolioWarning:
+        "Latest accepted session: {{sessionDate}}. The portfolio, cash, and positions below are last verified as of {{portfolioDate}}, not valued for {{sessionDate}}.",
+      unknownDate: "unknown date",
       portfolio: "Paper portfolio",
+      cnySuffix: " (CNY)",
       cash: "Cash",
       marketValue: "Market value",
       equity: "Equity",
-      realizedPnl: "Realized PnL",
+      realizedPnl: "Trading realized PnL",
+      corporateActionPnl: "Corporate-action PnL",
+      totalPnl: "Total PnL (after costs)",
+      pnlExplanation:
+        "Total PnL combines trading realized PnL, corporate-action PnL (such as dividends) and unrealized PnL, less accumulated transaction costs. All values come from the saved account snapshot.",
+      legacyPnlUnavailable:
+        "This older snapshot did not record corporate-action or total PnL. Missing values are unknown, not zero.",
       unrealizedPnl: "Unrealized PnL",
-      commission: "Commission",
+      commission: "Transaction costs",
       noPortfolio: "Portfolio initializes on the first completed Bar.",
+      noSessionPortfolio:
+        "The portfolio appears after the first completed A-share trading day.",
       positions: "Positions",
       noPositions: "No simulated positions are open.",
       averagePrice: "Average price",
@@ -283,8 +487,8 @@ export const enUS = {
       decision: "Decision",
       reason: "Reason",
       message: "Message",
-      approved: "APPROVED",
-      riskRejected: "RISK REJECTED",
+      approved: "Risk check passed",
+      riskRejected: "Rejected by risk controls",
       orders: "Paper orders",
       noOrders: "No simulated orders recorded.",
       order: "Order",
@@ -292,7 +496,44 @@ export const enUS = {
       quantity: "Quantity",
       status: "Status",
       fills: "Paper fills",
+      fillAnnouncement:
+        "New simulated fill: {{side}} {{quantity}} {{symbol}} at {{price}}.",
       noFills: "No simulated fills recorded.",
+      eventLog: "Paper event log",
+      viewEventLog: "View saved events",
+      hideEventLog: "Hide saved events",
+      eventLogSaved:
+        "Saved account events, not a live feed. Refresh to check for newer records.",
+      eventLogError: "Unable to load saved account events. Retry with Refresh.",
+      noEvents: "No saved account events.",
+      eventSequence: "Sequence",
+      eventType: "Event",
+      eventSummary: "Details",
+      eventEquity: "Equity {{equity}}",
+      calendarSummary: {
+        initial:
+          "Calendar initialized. Dates recorded: {{count}}. Completed sessions: {{completed}}. Calendar control only; no new market data or fills.",
+        extension:
+          "Calendar extended. Dates recorded: {{count}}. Completed sessions: {{completed}}. Calendar control only; no new market data or fills.",
+      },
+      eventLogLoading: "Loading saved events…",
+      eventLogRange: "Saved events {{newest}}–{{oldest}} (newest first)",
+      newEventsAvailable:
+        "Newer saved events are available. Refresh to see them.",
+      refreshEvents: "Refresh",
+      newerEvents: "Newer",
+      olderEvents: "Older",
+      eventTypes: {
+        session: { status: "Account status" },
+        market: { bar: "Completed bar", session: "Trading session" },
+        calendar: { observed: "Calendar control" },
+        input: { committed: "Input commit control" },
+        signal: { created: "Strategy signal" },
+        risk: { decision: "Risk decision" },
+        order: { updated: "Order update" },
+        fill: { created: "Simulated fill" },
+        portfolio: { snapshot: "Portfolio snapshot" },
+      },
       side: "Side",
       price: "Price",
       directions: { BUY: "Buy", SELL: "Sell", HOLD: "Hold" },
@@ -305,6 +546,10 @@ export const enUS = {
         FILLED: "Filled",
         CANCELLED: "Cancelled",
         REJECTED: "Rejected",
+      },
+      fillCancellationReasons: {
+        INSUFFICIENT_BUYING_POWER:
+          "Actual fill price and fees exceed available cash",
       },
       riskReasons: {
         APPROVED: "Risk approved",
@@ -374,6 +619,22 @@ export const enUS = {
     datasetDetail: "Research dataset",
     strategies: "Research strategies",
     runs: "Research runs",
+    scrollTable:
+      "If columns are cut off, scroll within this table to see the rest.",
+    unknownStatus: "Unknown status",
+    readiness: {
+      PASSED: "Audit passed",
+      BLOCKED: "Not ready",
+      FAILED: "Audit failed",
+      unknown: "Unknown readiness",
+    },
+    periods: {
+      DEVELOPMENT: "Development",
+      VALIDATION: "Validation",
+      OUT_OF_SAMPLE: "Official out-of-sample",
+      FULL_PERIOD: "Full period",
+      PILOT_SMOKE: "Engineering smoke test (not research evidence)",
+    },
     openStrategy: "View methodology",
     noDatasets: "No frozen research dataset has been registered.",
     noRuns: "No research run has been persisted.",
@@ -382,6 +643,7 @@ export const enUS = {
       "China A-Share Cross-Sectional Momentum and Low-Volatility Strategy",
     strategyNameZh: "中国A股横截面动量与低波动策略",
     methodology: "Frozen methodology",
+    fullPrecision: "Show full precision",
     methodologyNotes: "Point-in-time and accounting notes",
     pointInTimeNote:
       "Historical membership, ST, suspension and rules are resolved as of each session.",
@@ -405,6 +667,7 @@ export const enUS = {
     manifest: "Canonical manifest",
     ruleVersion: "Market-rule version",
     benchmark: "Benchmark",
+    showBenchmark: "Show benchmark",
     strategySeries: "Strategy",
     period: "Research split",
     equity: "Strategy equity",
@@ -413,10 +676,17 @@ export const enUS = {
     monthlyReturns: "Monthly returns",
     rollingMetrics: "Rolling metrics",
     rollingDrawdown: "Rolling drawdown",
+    chartData: "Show plotted data ({{count}} points)",
+    chartUnavailable:
+      "Chart geometry is unavailable for these values; use the exact data table.",
+    displayedDateRange:
+      "Displayed trading dates: {{start}}–{{end}}. Full-run metrics are unchanged.",
     holdings: "Holdings",
     rebalances: "Rebalances",
     trades: "Trades",
     knownLimitations: "KNOWN LIMITATIONS",
+    formalKnownLimitations:
+      "Daily-bar simulation; Validation did not establish robust alpha; no guarantee of future returns.",
     reproducibility: "REPRODUCIBILITY",
     reproduceCommand:
       "Reproduce with the persisted run ID and frozen dataset checksum.",
@@ -430,6 +700,8 @@ export const enUS = {
     strategyConfig: "Strategy configuration",
     columns: {
       date: "Date",
+      series: "Series",
+      value: "Exact value",
       security: "Security",
       quantity: "Quantity",
       weight: "Weight",
@@ -461,6 +733,11 @@ export const enUS = {
     excess_return: "Excess return",
     tracking_error: "Tracking error",
     information_ratio: "Information ratio",
+    average_gross_exposure: "Average gross exposure",
+    average_net_exposure: "Average net exposure",
+    average_holding_period: "Average holding period (trading sessions)",
+    closed_trade_sessions: "Sell-session records",
+    number_of_trades: "Trade records",
   },
   validation: {
     datasetReady: "Ready",

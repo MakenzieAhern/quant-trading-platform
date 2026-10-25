@@ -1,5 +1,359 @@
 # Autonomous Quant Project Checkpoint
 
+## 2026-10-14 — after-start context persistence prerequisite
+
+Checkpoint37dd25d pushed; exactCI38494149725 SUCCESS:2277backend/1optionalSKIP,
+950frontend/54files,static/build/migration/isolatedCompose. The strengthened archived-
+only recovery test passes in19focused cases and exact CI; six source hashes match
+the commit. ExistingPR32 remains OPEN/DRAFT, no merge/release.
+
+Previous status-only turn was NO_PROGRESS; this continuation implements an actual
+storage prerequisite for U7, without claiming the missing V2 consumer is complete.
+Product-local immutable evidence and candidate/observation intent precede PG
+append-only registration. Conflicts stay visible, repeat capture retains first
+local time, and byte/version/security limits fail closed.19synthetic cases;
+full2277PASS/1optional archiveSKIP94.73s, Ruff/592format/mypy150PASS.
+Independent read-only review reproduced a concurrent stale-clock P2; new RED
+regression failed, time refreshed after winning-intent read, final suite passes.
+Reviewer now reports no remaining scoped P1/P2, not whole-product approval.
+
+Docker Desktop vanished during work. Ordinary startup auto-restarted original
+services and backend Alembic applied uncommitted0018 through its source mount.
+This unplanned migration was disclosed; no destructive recovery/downgrade.
+Original0018/candidate0/5STOPPED/417events/APIpaperhealthy selected checks preserved;
+test-only downgrade/upgrades succeed. Downgrade drops this candidate index and
+is not a lossless production rollback. Existing evidence files are not deleted.
+[Logs, source hashes, incident and limits](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-daily-context-arrival/README.md>).
+
+Full U1–U8/M0–M5 remains active. Next V2 eligible root, qualified source validation,
+actual receipt-manager/journal/resume and frontend compatibility. No source is
+approved by candidate storage; no real account/source/frozen/OOS/merge/release run.
+
+## 2026-10-13 receipt publication and scoped browser checkpoint
+
+PROGRESS: reviewed fixes committed38eb9d8/4eb7bdf, pushed to existing draftPR32,
+exactCI38406422590 SUCCESS2258backend/1optionalSKIP and950frontend, full static/build
+and Compose PASS. One safe backend restart and assets-first frontend publication
+preserve prior state; Windows13asset/header verification and actual bilingual
+receipt/create-page checks pass. Publication f2999f28 binds248private artifacts.
+[Evidence, actual screenshots and preserved failed verifier checks](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md>).
+
+No account/source producer started, no frozen data/formal study/OOS/merge/release.
+Finite context integration is not continuous new-market acceptance. The active
+goal continues with qualified append-only day-context ingestion after start and
+existing full product/source/financial/quality obligations; not blocked at this unit.
+
+## 2026-10-13 receipt bridge regression checkpoint
+
+PROGRESS: six actual cached bundles verified without changing18files; strict
+execution still rejects the two documented parser-label exceptions. New canonical
+receipt/manager integration reuses existing risk, OMS, accounting and journal.
+Independent review found and closed causal-clock, account-pin, receipt-budget and
+effective-cost defects. Final backend2258PASS/1optional archiveSKIP, frontend950PASS,
+static/type/build PASS; actual disposable PostgreSQL/REST/ASGI socket/resume passes.
+[Evidence and preserved failures](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md>).
+
+No original account/feed/provider, service restart, frozen data/OOS, merge or release
+action. aa5f529 remains served; the new tree needs exact-head CI and publication.
+The fixed future-context contract is only finite integration. Continuous arrivals
+after account start, qualified real sources and full product acceptance remain open.
+Next append-only daily-context binding must preserve existing financial semantics.
+
+## 2026-10-13 style publication complete and receipt connection active
+
+The previous status-only turn was NO_PROGRESS. Live GitHub reads reconfirm
+`aa5f529` CI38395584853 SUCCESS and PR32 OPEN/DRAFT. The frontend style correction
+is already published and its selected Chrome checks complete; older pending
+entries below describe earlier checkpoints, not work to repeat.
+[Publication, retained state and exact browser scope](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities-style/README.md>).
+
+The one remaining targeted 300147 document retrieval is complete. Its printed
+share totals conflict, so it does not close the original finding. No new index
+request, other security acquisition, dataset admission or financial execution.
+The next engineering unit is verified receipt consumption in the existing paper
+manager; source admission and real after-start causal evidence remain required.
+
+## 2026-10-13 paper capabilities publication and browser correction
+
+- Exact `efd1297` CI38392162439 SUCCESS:2177backend PASS/1optional archive SKIP,
+  902frontend PASS; existing local backend/frontend publication completed.
+- Fresh backups and selected response comparisons retain5stopped accounts and
+  417events; PostgreSQL/Redis/frontend identities and start times are unchanged.
+  Windows and WSL verify all13new frontend asset hashes. No all-table claim.
+- Actual Chrome Chinese/English rechecks preserve entered values and visible
+  unavailable reasons. Saved history remains readable; no new account or study.
+  Reused button styles correct one visible inconsistency;150focused tests pass.
+- [Exact evidence and limitations](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities/README.md>).
+  Final button publication/recheck remains next. The latest status-only reply
+  was NO_PROGRESS; this checkpoint does not repeat the preceding implementation
+  as new work or promote partial checks to full product acceptance.
+
+## 2026-10-13 paper capabilities and receipt race corrected
+
+- Previous status-only turn: NO_PROGRESS. The integrated capability API/form and
+  reproduced delayed-receipt POST fix are PROGRESS, not full forward acceptance.
+- Backend2177 PASS/1 optional archive SKIP; frontend902 PASS/51 files;
+  Ruff/format/mypy/lint/types/build PASS. The isolated tmpfs test DB is stopped
+  and retained. Original application data and workers were not used for tests.
+- [Evidence and negative runs](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities/README.md>).
+  The separate real-config ASGI child binds four imported source hashes, refuses
+  database use and preserves original backend process identity. History remains
+  source-integrity-blocked; forward remains unavailable.
+- Review, exact new commit CI and safe publication remain distinct gates. Publish
+  after backup/quiescence and retained-record checks, then continue the full
+  product scope. No new strategy, account, dataset, OOS, merge or release.
+
+## 2026-10-13 candidate listing preconditions corrected
+
+- Progress: complete synthetic candidate exposed audit/runtime mismatch; one
+  shared accepted-calendar guard now closes it before financial mutation.
+- 8new retained cases;216relatedPASS, Ruff/583format/app-mypy146PASS. Independent
+  review no scopedP1/P2; proof ec8a5adc binds587fixture files/15codepins and repeats
+  identically with python-O. Original RED tool output retained, old tempfiles absent.
+- [Evidence and exact-head CI](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-candidate-listing-audit/README.md>).
+  Reference failure,15unproven financial/lifecycle gates and full productPARTIAL
+  remain. No real dataset/DB/provider/strategy/OOS or additional runtime action.
+- Next required U7 receipt-to-session/plan/processing integration must be advanced
+  from real contracts; lawful source/current authority and actual after-start
+  evidence are still absent. No raw-candidate promotion or fixture-forward claim.
+
+## 2026-10-13 backend publication completed
+
+- Progress: exact-head CI and safe publication, not a status-only continuation.
+- CI38385449677/a369968 SUCCESS: backend2152PASS/1optionalSKIP, frontend870PASS,
+  Compose PASS. Original frontend failure and deterministic test-only fix retained.
+- Fresh pg_dumpd3104ca3/product backup and compatible725source retained. Existing
+  backend restarted once10:50:09.99589481UTC; other services unchanged; schema0017.
+- Selected32HTTP responses and file hashes match before;2legacy/5STOPPEDpaper/
+  417events/12research/4updates. Windows API/frontendHTTP200. No all-table/restore/
+  browser claim. Independent publication review2RED→17PASS; evidence77cda9b2.
+- [Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-date-guard-publication/README.md>).
+  Next shared listing validation in candidate audit, then full remaining U1–U8.
+  Frozen data, original studies/OOS and release state unchanged; full goal active.
+
+## 2026-10-13 CI recovery and safe publication preparation
+
+- Previous status-only turn was NO_PROGRESS. Current work closes a reproducible
+  test scheduling failure and prepares delivery of the actual accounting fix.
+- Preserve run38383415919 failure: backend2152PASS/1optionalSKIP, Compose PASS,
+  frontend869PASS/1FAIL. Two awaited mounts fix the proven listener race without
+  changing assertions or production code. Focused90/static/independent review PASS.
+- [Exact follow-up validation evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-dated-distribution-accounting/CI_RECOVERY.md>).
+- Backend-only publication still requires successful CI, fresh backup/quiescence
+  including legacy backtests and exact selected HTTP comparison. No deployment
+  yet; full U1–U8/M0–M5 objective remains active, incomplete and unchanged.
+
+## 2026-10-13 dated ordinary accounting and date guards
+
+- User status query was NO_PROGRESS; reproduced and fixed actual date-boundary
+  defects and sealed the real-event-to-engine proof: PROGRESS. Full goal unchanged.
+- 28 domain-date and12 calendar-listing red cases; final71new/659related PASS.
+  All backend Ruff/583format/app-mypy146 PASS. Normal/optimized proof c9390065,
+  input reversal and Decimal6/50 agree;10 atomic rejection probes pass.
+- Actual300155 terms with synthetic accounts/prices/calendar/rules, not financial
+  admission or a strategy. Explicit-date-only compatibility keeps286 next-session
+  listings and newly rejects0 archived records; null fields remain unknown.
+- [Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-dated-distribution-accounting/README.md>).
+  Exact-head hosted CI and independent review are recorded beside the proof.
+- Original runtime/DB/frozen/research/OOS/tag unchanged. New guard not deployed yet.
+  After review/CI, safely publish, then continue full source/economic/lifecycle and
+  U1–U8/M3–M5 acceptance. No new actual dataset, merge, tag or release.
+
+## 2026-10-08 isolated successor build inputs — scoped PASS
+
+- Prior runtime-status answer NO_PROJECT_PROGRESS. New explicit entry and
+  reproduced input/report/race defects fixed: PROGRESS, full goal unchanged.
+- Seven selection/report RED cases; one transient inventory RED (tool transcript);
+  two spec/producer RED and two SSE/SZSE raw-selection RED cases repaired.
+  Readonly independent review closed all reported P2s; no scopedP1P2 remains.
+- Final277relatedPASS2.77s (33new/244existing), Ruff/format/script-mypy PASS.
+  Four retained positive synthetic builds PASS0.92s; input-order/fresh manifest
+  repeat and two interrupted resumes retain raw hashes/mtimes. CLI resume actual
+  canonical5fd015f5. Ownership binds entry files, not a hermetic environment.
+- [265 inputs/outputs/log/code bindings](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-successor-build-inputs/README.md>)
+  SHA2ab20883d397d985c17a303f25f3528dc584cf1e9003531364bc37b43af64597 verified
+  by Windows and WSL. Missing fixture parent / three pytest alias inventory
+  errors preserved; corrected without deleting real or sealed outputs.
+- Frozen/.research/tag/identity unchanged; no app/frontend changes, runtime
+  restart, DB, provider, strategy or OOS action. Compose healthy. No actual
+  successor dataset created/audited/registered/frozen. Full app/frontend/browser
+  and remote CI NOT_RUN. Real preflight cannot reuse inspection-only evidence.
+- Next: explicit price-only companion inputs and version-aware actual audit,
+  keeping genuine source/economic/lifecycle and full product gates. GitHub HOLD.
+
+## 2026-10-08 raw input-bound resume — scoped PASS
+
+- Previous runtime-status answer: NO_PROJECT_PROGRESS. Current shared defect
+  and three independently found P2 fixes: PROGRESS; full objective unchanged.
+- Initial21 failures reproduce stale source/master/ST/metadata reuse and unsafe
+  partial/frozen states. Independent2 Decimal/metadata-cleanup failures, then2
+  actual hardlink input-overwrite failures reproduced and repaired.
+- Final244 related tests PASS1.54s (47new/197existing), Ruff/format/script-mypy
+  PASS (missing pyarrow/openpyxl stubs ignored, no project-wide policy change).
+  Earlier formatter/regex/typing failures retained as failures in evidence.
+- Two positive retained JSON/XLSX/Parquet fixtures PASS3.25s: fresh build,
+  reversed-input resume, independent fresh build byte-identical. Synthetic only.
+- Independent readonly final review no scopedP1/P2; reviewer did not rerun tests.
+- [34-file/code bindings and logs](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-raw-resume-input-binding/README.md>)
+  manifest1c3ac57b20d3e0e962cb08280f6d8f6ec6c27bb2882bc2831148b5d51d0576ff verified.
+- Frozen manifest/freeze/contracts/research state/v1.1 tag unchanged; no
+  backend/app/frontend/.research diff, DB/queue/strategy/runtime restart.
+  Compose PG/Redis/backend healthy. New fullsuite/browser/remoteCI NOT_RUN.
+- Next explicit successor identity/approved inputs/owned output contract is NOT
+  implemented yet. Real builder NOT_RUN; financial/lifecycle admission PARTIAL.
+  Whole-pipeline crash recovery not claimed. U1-U8/M0-M5 ACTIVE; GitHub HOLD.
+
+## 2026-10-08 complete15-source inspection chain — scoped VERIFIED
+
+- Previous service-status answer did not advance project state. This turn records
+  actual prior local publication and closes a separate new-version reference
+  defect with real immutable outputs: PROGRESS, full objective unchanged.
+- New offline producer reuses checksum/immutable/source helpers;direct isolated
+  product-candidates child only,freeze/symlink refusal,prior20input pins exact.
+  Four immutable whole-financial/component/listing/reference reports bound.
+- Full15 originalsource bytes preserved;13 rows exact. Master ref corrected only
+  in candidate;new preflight references/state5pins/canonical lineage agree.
+  Historical approval not copied;all outputs INSPECTION_ONLY/financialPARTIAL.
+- Initial9module-absentRED;fixtureparent setup failure corrected;format errors
+  corrected. OutputsymlinkRED and independent P2 same-path byte-rebinding RED
+  preserved. Strict pre-publication conflict guard fixed P2;temporary mypy name
+  collision corrected. Final111 source tests0.94s/Ruff/format/script-mypy PASS.
+- Actual normal+optimized/reverse repeats canonicaldfdd998f4cf316479e648ffdb49bb55b9479e9c61d79b4cbf0d7cde6dbde5706.
+ 43nativebindings twiceverified+sha256sum;adf9a80e9b810911f38111df737e32d34bca28d92d4539701408b9d14c390cf7.
+- Prior323publication/124engineering bindings still verify. New script/tests do
+  not change backend/app,frontend or.research. OriginalCompose3healthy/APIpaper200
+  at03:50UTC;no process/DB/queue/financial/provider operation this offline unit.
+- New dataset creation/registration/freeze/strategy/financialPASS NOT performed.
+  No new browser/fullsuite/remoteCI claimed. GitHub HOLD;full U1–U8/M0–M5 ACTIVE.
+
+## 2026-10-08 original source-admission publication — scoped PASS
+
+- Source d183ad3/backend tree65dda6a8/frontend treebbc94061 actually loaded.
+  One existing89aa backend restart at03:29:52UTC;0017 alreadyhead;12 research,
+  5 STOPPED paper,4 update jobs terminal and no pending receipts beforehand.
+  Normal startup has recovery writes: NOT a read-only operation.
+- Private pre-action dump d98d8730/list0, product cache61ae82fd,176 frontend
+  files and parent code archive retained; no restoration/lost-ledger claim.
+- 19 selected GET bodies before/after:18 unchanged except additive findings,
+  catalog only expected admission changes. Independent19 saved ID+SHA findings
+  PASS. Cache tar and selected statuses/417events unchanged, not all44tables.
+- Tested13 frontend files HTTP200/SHA/length/security headers exact; atomicindex
+  06a9a2d5;175 prior nonindex files retained/187 live. No frontend restart.
+- Actual original IAB EN1440/ZH390: data history/warnings, old0cdf result and
+  d704 STOPPED account retained exact money/dates; no page overflow. Own tab
+  closed/preferences restored. No original new financial/provider request.
+- Native323 seal adcd949dcd2dc985acffcf7b61b85d691a237393738cd12423b074e72500f631
+  twiceverified; prior124 seal unchanged. Independent scoped review noP1/P2.
+  First health probe during starting reset/HTTP000; same container recovered,
+  no restart loop. Prior documentation patch failed validation and wrote nothing.
+- Prior local-service answer alone was status/no-progress. This checkpoint
+  records completed deployment; next concrete defect is new15-source lineage.
+  Full objective unchanged/ACTIVE; GitHub HOLD; no financial approval/release.
+
+## 2026-10-08 source admission and saved-version findings — scoped PASS
+
+- Previous user-answer turn completed the live frontend handle13929: terminal0,
+  840tests/static/build. That validation completion is PROGRESS; service-status
+  restatements alone are not progress. Full objective unchanged.
+- Actual REDs: admission9, stronger real-registry pin3, read projection9,
+  notice5; final1579backend/1existingoptionalSKIP28.60s +840frontend49files16.10s.
+  Ruff/format/mypy146/ESLint/types/build/0017/Alembic check PASS. No test weakened.
+- Shared expected SHA compares one registry read; paper guard precedes transition,
+  old active/receipt idempotency and readonly candidate cache remain. Source code
+  identifies exact saved versions independently from economic quality.
+- Results/JSONCSV/formal/archive/accounts and existing notices use saved lineage;
+  tests preserve old summary/plan/Decimal strings. Strict enum parser and localized
+  create/resume422 errors retain unrelated-error fallback. Source-only note/aria
+  regression explicitly added; independent backend/frontend review no scopedP1P2.
+- IAB current-built UI EN1440/ZH390: data-card combined note/demo clear, account
+  portfolio/plan notices, one resume422 and no locale resubmit/PAUSED retained.
+  Synthetic account+actual registry, no DB/manager/fill/real financial proof.
+  Deliberate missing QA update APIs404 and initial WS failure retained/scoped.
+- Native124 bindings twicePASS checksum02bebe0082f034d1524aa4f6acf0a6c8eb69ad631854c0e7f595d0acf199187b.
+  All logs closed before seal; old code-bound evidence historical, not resealed.
+- Own QA762760 fresh argv/cwd/start verified then TERM/application complete;
+  handle53202 intentional1. Existing tmpfs PGbe259c15 no mounts/ports/otherclients,
+  stopped0/OOMfalse/retained (only disposable rows lost). Original fourstarts same,
+  HTTP200paper/5173/PONG/PGready; frozen/research/tag unchanged.
+- Initial cleanup shell quoting failed before execution; direct read-only probes
+  fixed. Later publication preflight wrong DB/table/file guesses failed read-only,
+  then actual inventory resolved quant_platform/paper_trading_sessions/0017.
+- Original code NOT yet reloaded/deployed. Next bounded existing-container
+  publication, never denied scratch/source-copy/44table refresh. No strategy/OOS,
+  provider acquisition, original SQL write or GitHub action in this unit.
+
+## 2026-10-08 v1.2 current local market quality notice — scoped PASS
+
+- Previous CI-availability answer NO_PROJECT_PROGRESS; actual minimal repair,
+  publication/browser/API/checkpoint evidence now PROGRESS, full goal unchanged.
+- Three production files reuse parser/copy/style; all three market read responses
+  validate quality, and detail binds its actual metadata rather than outer source.
+- 9RED→52focused/829frontend48files15.23s/static/buildPASS; 528.37kB warning retained,
+  not interaction p95. Previous1563backend+1optionalSKIP retained, not rerun here.
+- Actual IAB ZH390/EN1440 source/detail notes, raw2011window/119records/watchlist
+  preserved; demo note clears. Four raw GET response snapshots corroborate exact
+  version/quality. UNKNOWN/long-precision behavior unit-only; no full AA claim.
+- Original nginx a561fa/start/no mounts unchanged,13served HTTP/SHA/bytes/headerPASS,
+  169beforebackup/168oldnonindex intact/atomicindex7281f6ac/no restart/deletion.
+  Backup available; rollback not executed. Independent readonly no scoped P1/P2.
+- Native222 byte entries twicePASS:306e8db665d4392c8129c8e3778783c65132ea9db38db6999a55e9742f22a67e.
+  First commit guard aborted before staging because PowerShell evaluated a bash
+  substitution in the Windows nonrepo cwd; use direct WSL `git -C` readback instead.
+  Earlier frontend-bound evidence historical, not resealed. Reset invoked but
+  final390 not initial452; no exact viewport restoration assertion.
+- Legacy source-integrityFAIL/fullfinancialfalse remains; next shared new-execution
+  admission and independent source-status projection (catalog still permits it).
+  Originalservices/frozen/.research/tag/OOS/identity intact; GitHub HOLD/no action.
+
+## 2026-10-08 v1.2 source guards and freeze identity — scoped PASS
+
+- Previous local-service answer was NO_PROGRESS toward full goal; this repair is
+  PROGRESS: eight initial malformed/wrong reference REDs, four re-signing REDs,
+  six freeze identity sentinel REDs now reject before forbidden processing.
+- Shared exact-15/canonical/byte/P0/state/preflight/lineage guard across fresh,
+  resume, audit, freeze; eight explicit component links/two file pins, no aggregate
+  ledger misbinding. Four identity digests must all agree.
+- Final 155 focused / 1563 backend PASS + 1 optional archive SKIP; Ruff/format,
+  mypy147, migrations0017 and Alembic check/test Compose isolation PASS.
+- Retained initial four full-test failures fixed solely in test Compose import
+  path/read-only policy fixture. Incorrect test filename and verifier assumption
+  preserved; no tests/assertions deleted or weakened. Reviewer read-only only.
+- Native49-entry proof twice PASS, SHA
+  `f5d0262cfe109aa33bd24de2acf176fca4a8d35ef7cf489af5c97158da28b3a4`.
+  Read-only repeated original outputs identical/all20 input bytes unchanged;
+  legacy source integrity FAIL, RAM metadata-only correction also rejected.
+- No new dataset registration/freeze/actual audit pipeline/strategy/OOS/SQL or
+  provider job. Originalfour IDs/starttimes and healthy PG/Redis/backend/APIpaper/
+  frontend5173 unchanged. Owned isolated tmpfs test PG had zero other clients,
+  stopped0; test containers/logs retained, no data/images/volumes deleted.
+- M3/M4/M5 IN_PROGRESS/full U1–U8/M0–M5 ACTIVE/PARTIAL/financial admissionfalse.
+  Frontend815 retained; prior backend-bound proof historical, never resealed.
+- Next: existing economic quality parsing/rendering in markets/page/detail,
+  followed by separate source-integrity propagation and remaining full gates.
+  GitHub HOLD/no request/push/merge/tag/release; no CI or release acceptance claim.
+
+## 2026-10-08 v1.2 local UI milestone and provenance integrity discovery
+
+- Stage:M3/M4 active,M5 notcomplete;all U1–U8/M0–M5 retained,goalACTIVE.
+- Frontend:4actualregressionRED→16focused/815full/static/buildPASS;existingrefresh
+  persists draftpage clamps. RealENZH/nativecross-tab rows/bytes/focus verified;
+ 82payload7d52f070 twicecheck/localatomicstaticpublication/no backendrestart.
+- Services:01:42UTC originalfourIDs/starttimes unchanged;Compose3healthy,RedisPONG,
+  API8000HTTP200paper,frontend5173HTTP200. Existing program can run without GitHub.
+- 002168:cachedofficialcredit/list2011-03-28 joined to exactnotice/ratio/date identity,
+  threeactualraw observations/calendar/master/21suspension intervals. No same
+  record/ex BONUS/STOCK amongall3frozensecurityactions;not actualcustodian/fill proof.
+- Provenance:all15sourcefileSHA valid;14othercanonicalreferences valid. MasterP0
+  authority has64SHA but oldstate/preflight/contract/catalog/freeze holds65SHA.
+  SOURCE_CONTRACT_INTEGRITY=FAIL,financialadmission=false/coveragePARTIAL.
+- New20payload9a3a58d7/c6f8c55a v2 proof:normal/reversedrepeat/7RAMnegativecontrols,
+  readonlyreview/scopedcheckerPASS of savedPARTIAL evidence,not datasetPASS.
+- No new dataset registration/freeze/strategy/officialstudy/OOS/DB/provider action;
+  frozen/.research/backend/identity unchanged. NewcandidateJSON/privateQA outsideGit.
+- GitHub:HOLD/no requests/push/merge/tag/release;PR32 onlycachedOPEN/DRAFT,notfreshCI.
+- Next:new-version canonical-reference validation/metadata correction without
+  rewriting legacyfreeze,then remaining fullinput financial/mandatoryquality gates.
+
 ## 2026-09-22 final local release QA PASS / PR integration active
 
 - Docker Desktop / Engine / Compose: 4.92.0 / 29.8.0 / 5.5.1; WSL2 integration PASS

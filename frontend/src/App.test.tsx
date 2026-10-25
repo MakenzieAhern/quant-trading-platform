@@ -12,6 +12,7 @@ import { App } from "./App";
 import { i18n } from "./i18n";
 import { experimentApi } from "./product/experiments/api";
 import { capabilities } from "./product/experiments/fixtures.test-data";
+import { EXPERIMENT_DRAFT_KEY } from "./product/experiments/draft";
 import { jsonResponse, RUN_ID } from "./test/fixtures";
 
 const health = {
@@ -23,6 +24,166 @@ const health = {
 };
 
 describe("routing", () => {
+  it("starts the saved-study request on the initial route commit", () => {
+    window.history.replaceState({}, "", `/experiments/${RUN_ID}`);
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    const get = vi
+      .spyOn(experimentApi, "get")
+      .mockImplementation(() => new Promise(() => {}));
+    render(<App />);
+    expect(get).toHaveBeenCalledExactlyOnceWith(RUN_ID, expect.anything());
+  });
+
+  it("tracks the actual sticky header height without changing focus and releases the root inset on unmount", async () => {
+    let resize: ResizeObserverCallback | undefined;
+    const observe = vi.fn();
+    const disconnect = vi.fn();
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(callback: ResizeObserverCallback) {
+          resize = callback;
+        }
+        observe = observe;
+        disconnect = disconnect;
+      },
+    );
+    let height = 109;
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(
+      function (this: HTMLElement) {
+        return {
+          height: this.classList.contains("topbar") ? height : 0,
+        } as DOMRect;
+      },
+    );
+    window.history.replaceState({}, "", "/unknown");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    const root = document.documentElement;
+    root.style.setProperty("--app-topbar-height", "12px");
+    const view = render(<App />);
+    await screen.findByText("Service online", { selector: ".serviceText" });
+    expect(observe).toHaveBeenCalledExactlyOnceWith(
+      document.querySelector(".topbar"),
+    );
+    expect(root.style.getPropertyValue("--app-topbar-height")).toBe("109px");
+    const refresh = screen.getByRole("button", {
+      name: /Refresh service and data status/,
+    });
+    refresh.focus();
+    height = 153.5;
+    act(() => resize?.([], {} as ResizeObserver));
+    expect(root.style.getPropertyValue("--app-topbar-height")).toBe("154px");
+    expect(refresh).toHaveFocus();
+    view.unmount();
+    expect(disconnect).toHaveBeenCalledOnce();
+    expect(root.style.getPropertyValue("--app-topbar-height")).toBe("12px");
+    root.style.removeProperty("--app-topbar-height");
+  });
+
+  it("canonicalizes the accepted study-list alias without losing query, fragment or list history", async () => {
+    await i18n.changeLanguage("en-US");
+    const state = {
+      experimentView: {
+        q: "Study",
+        status: "SUCCEEDED",
+        mode: "",
+        sort: "newest",
+        columns: { mode: true, period: true, created: true },
+      },
+      experimentSelection: [RUN_ID, "aa000000-0000-4000-8000-000000000001"].map(
+        (id) => ({
+          id,
+          name: "Study",
+          createdAt: "2026-09-22T10:00:00Z",
+        }),
+      ),
+      experimentScrollY: 693,
+    };
+    window.history.replaceState(
+      state,
+      "",
+      "/experiments/?retained=yes#context",
+    );
+    const length = window.history.length;
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(experimentApi, "list").mockResolvedValue({
+      items: [],
+      total: 0,
+      limit: 20,
+      offset: 0,
+    });
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    await screen.findByRole("heading", { name: "Your experiments" });
+    expect(
+      window.location.pathname + window.location.search + window.location.hash,
+    ).toBe("/experiments?retained=yes#context");
+    expect(window.history.length).toBe(length);
+    expect(
+      screen.getByRole("searchbox", { name: "Search saved studies" }),
+    ).toHaveValue("Study");
+    expect(screen.getByText("Selected: 2 / 3")).toBeInTheDocument();
+    expect(window.history.state.experimentSelection).toEqual(
+      state.experimentSelection,
+    );
+    await waitFor(() =>
+      expect(window.scrollTo).toHaveBeenCalledWith({
+        top: 693,
+        left: 0,
+        behavior: "instant",
+      }),
+    );
+  });
+
+  it("leaves the skip link reachable on direct load and focuses main after navigation", async () => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState({}, "", "/");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    const main = screen.getByRole("main");
+    expect(main).not.toHaveFocus();
+    fireEvent.click(screen.getByRole("link", { name: "Strategies" }));
+    await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
+  });
+
+  it("updates the page title after navigation and a language change", async () => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState({}, "", "/settings");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    expect(document.title).toBe("Settings · QUANT");
+
+    fireEvent.click(screen.getByRole("link", { name: "Help" }));
+    expect(document.title).toBe("Help · QUANT");
+
+    await act(() => i18n.changeLanguage("zh-CN"));
+    expect(document.title).toBe("帮助 · QUANT");
+  });
+
+  it("returns from an unknown route to the workbench in both languages", async () => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState({}, "", "/does-not-exist");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    expect(
+      screen.getByRole("heading", { name: "Page not found" }),
+    ).toBeInTheDocument();
+    expect(document.title).toBe("Page not found · QUANT");
+    expect(
+      screen.getByRole("link", { name: "Return to workbench" }),
+    ).toHaveAttribute("href", "/");
+    await act(() => i18n.changeLanguage("zh-CN"));
+    const recovery = screen.getByRole("link", { name: "返回工作台" });
+    expect(recovery).toHaveAttribute("href", "/");
+    fireEvent.click(recovery);
+    expect(window.location.pathname).toBe("/");
+  });
+
   it("closes and restores the strategy drawer with Back and Forward", async () => {
     await i18n.changeLanguage("en-US");
     window.history.replaceState({}, "", "/strategies");
@@ -48,16 +209,22 @@ describe("routing", () => {
     });
     trigger.focus();
     fireEvent.click(trigger);
-    expect(window.location.hash).toContain(capabilities.strategies[0].strategy_id);
+    expect(window.location.hash).toContain(
+      capabilities.strategies[0].strategy_id,
+    );
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     act(() => window.history.back());
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
     expect(window.location.pathname).toBe("/strategies");
     expect(trigger).toHaveFocus();
     act(() => window.history.forward());
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
     expect(window.location.hash).toBe("");
     view.unmount();
     window.history.replaceState(
@@ -68,29 +235,109 @@ describe("routing", () => {
     render(<App />);
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
     expect(window.location.pathname).toBe("/strategies");
     expect(window.location.hash).toBe("");
   });
 
-  it("releases mobile background isolation when resizing to desktop", async () => {
-    const desktop = Object.assign(new EventTarget(), { matches: false });
+  it("releases mobile isolation without losing focus when resizing to desktop", async () => {
+    const mobile = Object.assign(new EventTarget(), { matches: true });
     vi.stubGlobal(
       "matchMedia",
-      vi.fn(() => desktop),
+      vi.fn(() => mobile),
     );
     window.history.replaceState({}, "", "/unknown");
     vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
     render(<App />);
-    await screen.findByText("Service online");
-    fireEvent.click(screen.getByRole("button", { name: "Open navigation" }));
-    expect(document.querySelector(".appBody")).toHaveAttribute("inert");
+    await screen.findByText("Service online", { selector: ".serviceText" });
+    const menu = screen.getByRole("button", { name: "Open navigation" });
+    menu.focus();
+    menu.blur();
     act(() => {
-      desktop.matches = true;
-      desktop.dispatchEvent(new Event("change"));
+      mobile.matches = false;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
+    expect(window.matchMedia).toHaveBeenCalledWith("(max-width: 800px)");
+
+    act(() => {
+      mobile.matches = true;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    fireEvent.click(menu);
+    expect(document.querySelector(".appBody")).toHaveAttribute("inert");
+    const navigation = screen.getByRole("dialog", {
+      name: "Workspace navigation",
+    });
+    const strategies = within(navigation).getByRole("link", {
+      name: "Strategies",
+    });
+    strategies.focus();
+    act(() => {
+      mobile.matches = false;
+      mobile.dispatchEvent(new Event("change"));
     });
     expect(document.querySelector(".appBody")).not.toHaveAttribute("inert");
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(strategies).toHaveFocus();
+
+    act(() => {
+      mobile.matches = true;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    fireEvent.click(menu);
+    within(screen.getByRole("dialog", { name: "Workspace navigation" }))
+      .getByRole("button", { name: "Close" })
+      .focus();
+    const main = screen.getByRole("main");
+    const focusMain = main.focus.bind(main);
+    vi.spyOn(main, "focus").mockImplementation((options) => {
+      if (!document.querySelector(".appBody")?.hasAttribute("inert"))
+        focusMain(options);
+    });
+    vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+      callback(0);
+      return 1;
+    });
+    act(() => {
+      mobile.matches = false;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    await waitFor(() => expect(main).toHaveFocus());
+  });
+
+  it("moves hidden sidebar focus to navigation when resizing to mobile", async () => {
+    const mobile = Object.assign(new EventTarget(), { matches: false });
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => mobile),
+    );
+    window.history.replaceState({}, "", "/unknown");
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    await screen.findByText("Service online", { selector: ".serviceText" });
+    const strategies = screen.getByRole("link", { name: "Strategies" });
+    const menu = screen.getByRole("button", { name: "Open navigation" });
+    strategies.focus();
+    act(() => {
+      mobile.matches = true;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    expect(menu).toHaveFocus();
+
+    act(() => {
+      mobile.matches = false;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    strategies.focus();
+    strategies.blur(); // Some browsers blur a control when CSS hides its parent.
+    act(() => {
+      mobile.matches = true;
+      mobile.dispatchEvent(new Event("change"));
+    });
+    expect(menu).toHaveFocus();
   });
 
   it("names icon-only search, traps mobile navigation focus and restores it", async () => {
@@ -120,6 +367,43 @@ describe("routing", () => {
     expect(menu).toHaveAttribute("aria-expanded", "false");
   });
 
+  it("closes mobile navigation when its current-page link is selected", async () => {
+    await i18n.changeLanguage("en-US");
+    window.history.replaceState({}, "", "/help");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    const menu = screen.getByRole("button", { name: "Open navigation" });
+    fireEvent.click(menu);
+    const navigation = screen.getByRole("dialog", {
+      name: "Workspace navigation",
+    });
+    fireEvent.click(within(navigation).getByRole("link", { name: "Help" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    expect(document.querySelector(".appBody")).not.toHaveAttribute("inert");
+    await waitFor(() => expect(menu).toHaveFocus());
+  });
+
+  it("keeps mobile navigation open when the dirty wizard rejects a new route", async () => {
+    await i18n.changeLanguage("en-US");
+    window.localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
+    window.history.replaceState({}, "", "/research/new");
+    vi.spyOn(experimentApi, "capabilities").mockResolvedValue(capabilities);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    render(<App />);
+    await screen.findByRole("button", { name: "Continue" });
+    fireEvent.click(screen.getByRole("button", { name: "Open navigation" }));
+    const navigation = screen.getByRole("dialog", {
+      name: "Workspace navigation",
+    });
+    fireEvent.click(within(navigation).getByRole("link", { name: "Help" }));
+    expect(confirm).toHaveBeenCalledOnce();
+    expect(window.location.pathname).toBe("/research/new");
+    expect(navigation).toHaveAttribute("role", "dialog");
+    expect(document.querySelector(".appBody")).toHaveAttribute("inert");
+  });
+
   it("refreshes service health without equating it to data freshness", async () => {
     window.history.replaceState({}, "", "/unknown");
     let online = false;
@@ -133,31 +417,221 @@ describe("routing", () => {
       return Promise.resolve(jsonResponse({ detail: "Unavailable" }, 503));
     });
     render(<App />);
-    expect(await screen.findByText("Service unavailable")).toBeInTheDocument();
-    online = true;
-    fireEvent.click(
-      screen.getByRole("button", { name: "Refresh service and data status" }),
+    expect(
+      screen.getByRole("button", { name: /Refresh service and data status/ }),
+    ).toHaveAccessibleName("Connecting · Refresh service and data status");
+    expect(
+      await screen.findByText("Service unavailable", {
+        selector: ".serviceText",
+      }),
+    ).toBeInTheDocument();
+    const refresh = screen.getByRole("button", {
+      name: /Refresh service and data status/,
+    });
+    const serviceStatus = screen.getByRole("status");
+    expect(refresh).not.toContainElement(serviceStatus);
+    expect(refresh).toHaveAttribute("aria-describedby", serviceStatus.id);
+    expect(refresh).toHaveAccessibleDescription("Service unavailable");
+    expect(refresh).toHaveAccessibleName(
+      "Service unavailable · Refresh service and data status",
     );
-    expect(await screen.findByText("Service online")).toBeInTheDocument();
+    online = true;
+    fireEvent.click(refresh);
+    expect(
+      await screen.findByText("Service online", { selector: ".serviceText" }),
+    ).toBeInTheDocument();
+    expect(serviceStatus).toHaveTextContent("Service online");
+    expect(refresh).toHaveAccessibleDescription("Service online");
+    expect(refresh).toHaveAccessibleName(
+      "Service online · Refresh service and data status",
+    );
     expect(
       screen.getByText("Available data · not an active run"),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Service checked at:/)).toHaveTextContent("UTC");
+    expect(screen.getByText(/Service checked at:/)).toHaveTextContent(
+      /Service checked at: .*\(UTC\)/,
+    );
+    expect(screen.getByText(/Service checked at:/)).not.toHaveTextContent(
+      /T\d{2}:\d{2}/,
+    );
+    await act(() => i18n.changeLanguage("zh-CN"));
+    expect(refresh).toHaveAccessibleName("服务在线 · 刷新服务与数据状态");
+    expect(screen.getByText(/服务检查时间:/)).toHaveTextContent(/\(UTC\)/);
+    expect(screen.getByText(/服务检查时间:/)).not.toHaveTextContent(
+      /T\d{2}:\d{2}/,
+    );
+    await act(() => i18n.changeLanguage("en-US"));
   });
 
-  it.each(["/unknown", "/backtests/not-a-uuid", "/backtests/1234"])(
-    "fails safely for %s",
-    async (pathname) => {
-      window.history.replaceState({}, "", pathname);
-      vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
-      render(<App />);
-      expect(
-        screen.getByRole("heading", { name: "Page not found" }),
-      ).toBeInTheDocument();
-      expect(await screen.findByText("Service online")).toBeInTheDocument();
-      expect(screen.getByTitle("development · paper")).toBeInTheDocument();
-    },
-  );
+  it("keeps the service refresh focused and prevents repeat requests while loading", async () => {
+    window.history.replaceState({}, "", "/unknown");
+    let healthRequests = 0;
+    let dataRequests = 0;
+    let resolveHealth: ((response: Response) => void) | undefined;
+    let resolveData: ((response: typeof capabilities) => void) | undefined;
+    vi.spyOn(experimentApi, "capabilities").mockImplementation(() => {
+      dataRequests += 1;
+      return dataRequests === 1
+        ? Promise.resolve(capabilities)
+        : new Promise<typeof capabilities>((done) => {
+            resolveData = done;
+          });
+    });
+    vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
+      if (!String(input).endsWith("/api/health"))
+        throw new Error("Unexpected fetch");
+      healthRequests += 1;
+      return healthRequests === 1
+        ? Promise.resolve(jsonResponse(health))
+        : new Promise((done) => {
+            resolveHealth = done;
+          });
+    });
+    render(<App />);
+    await screen.findByText("Service online", { selector: ".serviceText" });
+    const refresh = screen.getByRole("button", {
+      name: /Refresh service and data status/,
+    });
+    await waitFor(() =>
+      expect(refresh).toHaveAttribute("aria-disabled", "false"),
+    );
+    refresh.focus();
+    fireEvent.click(refresh);
+    expect(healthRequests).toBe(2);
+    expect(dataRequests).toBe(2);
+    expect(refresh).toHaveFocus();
+    expect(refresh).not.toBeDisabled();
+    expect(refresh).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(refresh);
+    expect(healthRequests).toBe(2);
+    await act(async () => resolveHealth?.(jsonResponse(health)));
+    expect(refresh).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(refresh);
+    expect(healthRequests).toBe(2);
+    expect(dataRequests).toBe(2);
+    await act(async () => resolveData?.(capabilities));
+    expect(refresh).toHaveFocus();
+    expect(refresh).toHaveAttribute("aria-disabled", "false");
+  });
+
+  it("rechecks stale service and data status on tab return without duplicate or hidden requests", async () => {
+    window.history.replaceState({}, "", "/unknown");
+    const now = vi.spyOn(Date, "now").mockReturnValue(1000);
+    const visibility = vi
+      .spyOn(document, "visibilityState", "get")
+      .mockReturnValue("visible");
+    const data = vi
+      .spyOn(experimentApi, "capabilities")
+      .mockResolvedValue(capabilities);
+    let online = true;
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation(() =>
+        Promise.resolve(
+          online
+            ? jsonResponse(health)
+            : jsonResponse({ detail: "Unavailable" }, 503),
+        ),
+      );
+    const view = render(<App />);
+    await screen.findByText("Service online", { selector: ".serviceText" });
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(data).toHaveBeenCalledTimes(1);
+
+    now.mockReturnValue(15000);
+    online = false;
+    visibility.mockReturnValue("hidden");
+    fireEvent(document, new Event("visibilitychange"));
+    expect(fetch).toHaveBeenCalledTimes(1);
+
+    visibility.mockReturnValue("visible");
+    fireEvent(document, new Event("visibilitychange"));
+    await screen.findByText("Service unavailable", {
+      selector: ".serviceText",
+    });
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(data).toHaveBeenCalledTimes(2);
+    fireEvent.focus(window);
+    fireEvent(document, new Event("visibilitychange"));
+    expect(fetch).toHaveBeenCalledTimes(2);
+
+    view.unmount();
+    now.mockReturnValue(30000);
+    fireEvent(document, new Event("visibilitychange"));
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("rechecks foreground health and recovers without polling hidden tabs", async () => {
+    window.history.replaceState({}, "", "/unknown");
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-09-29T00:00:00Z"));
+    const visibility = vi
+      .spyOn(document, "visibilityState", "get")
+      .mockReturnValue("visible");
+    const data = vi
+      .spyOn(experimentApi, "capabilities")
+      .mockResolvedValue(capabilities);
+    let online = true;
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation(() =>
+        Promise.resolve(
+          online
+            ? jsonResponse(health)
+            : jsonResponse({ detail: "Unavailable" }, 503),
+        ),
+      );
+    const view = render(<App />);
+    await act(async () => {});
+    expect(
+      screen.getByText("Service online", { selector: ".serviceText" }),
+    ).toBeInTheDocument();
+
+    online = false;
+    await act(async () => vi.advanceTimersByTime(30_000));
+    expect(
+      screen.getByText("Service unavailable", { selector: ".serviceText" }),
+    ).toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(data).toHaveBeenCalledTimes(2);
+
+    visibility.mockReturnValue("hidden");
+    online = true;
+    await act(async () => vi.advanceTimersByTime(60_000));
+    expect(fetch).toHaveBeenCalledTimes(2);
+    visibility.mockReturnValue("visible");
+    await act(async () => vi.advanceTimersByTime(30_000));
+    expect(
+      screen.getByText("Service online", { selector: ".serviceText" }),
+    ).toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledTimes(3);
+
+    view.unmount();
+    await act(async () => vi.advanceTimersByTime(30_000));
+    expect(fetch).toHaveBeenCalledTimes(3);
+  });
+
+  it.each([
+    "/unknown",
+    "/backtests/not-a-uuid",
+    "/backtests/1234",
+    "/strategies/%",
+    "/research/a-share/datasets/%",
+    "/research/a-share/strategies/%",
+  ])("fails safely for %s", async (pathname) => {
+    window.history.replaceState({}, "", pathname);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(health));
+    render(<App />);
+    expect(
+      screen.getByRole("heading", { name: "Page not found" }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText("Service online", {
+        selector: ".serviceText",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByTitle("development · paper")).not.toBeInTheDocument();
+  });
 
   it("supports a direct detail URL and shows a safe 404 state", async () => {
     window.history.replaceState({}, "", `/backtests/${RUN_ID}`);
@@ -172,6 +646,7 @@ describe("routing", () => {
   });
 
   it("supports a direct research dataset lineage URL", async () => {
+    await i18n.changeLanguage("en-US");
     const datasetId = "cn-a-research-20100101-20251231-v1";
     window.history.replaceState(
       {},
@@ -203,6 +678,9 @@ describe("routing", () => {
     expect(
       await screen.findByRole("heading", { name: datasetId }),
     ).toBeInTheDocument();
+    expect(screen.getByText("Audit passed · Frozen")).not.toHaveAttribute(
+      "title",
+    );
     expect(screen.queryByText("Page not found")).not.toBeInTheDocument();
   });
 });

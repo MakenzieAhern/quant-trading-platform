@@ -20,14 +20,18 @@ import {
 } from "./product/ProductPages";
 import { CreateExperimentPage } from "./product/experiments/CreateExperimentPage";
 import { ExperimentsPage } from "./product/experiments/ExperimentsPage";
+// ponytail: eager core result route avoids retry delay; split if startup transfer regresses.
+import { ExperimentDetailPage } from "./product/experiments/ExperimentDetailPage";
 import { ProductDataProvider } from "./product/ProductDataProvider";
 import { MarketsPage } from "./product/markets";
 import { TaskCenterPage } from "./product/TaskCenterPage";
 
 const ResearchDatasetPage = lazy(() =>
-  import("./pages/research/ResearchDatasetPage").then(({ ResearchDatasetPage }) => ({
-    default: ResearchDatasetPage,
-  })),
+  import("./pages/research/ResearchDatasetPage").then(
+    ({ ResearchDatasetPage }) => ({
+      default: ResearchDatasetPage,
+    }),
+  ),
 );
 const ResearchHomePage = lazy(() =>
   import("./pages/research/ResearchHomePage").then(({ ResearchHomePage }) => ({
@@ -45,13 +49,10 @@ const ResearchStrategiesPage = lazy(() =>
   ),
 );
 const ResearchStrategyPage = lazy(() =>
-  import("./pages/research/ResearchStrategyPage").then(({ ResearchStrategyPage }) => ({
-    default: ResearchStrategyPage,
-  })),
-);
-const ExperimentDetailPage = lazy(() =>
-  import("./product/experiments/ExperimentDetailPage").then(
-    ({ ExperimentDetailPage }) => ({ default: ExperimentDetailPage }),
+  import("./pages/research/ResearchStrategyPage").then(
+    ({ ResearchStrategyPage }) => ({
+      default: ResearchStrategyPage,
+    }),
   ),
 );
 const ExperimentComparePage = lazy(() =>
@@ -59,6 +60,14 @@ const ExperimentComparePage = lazy(() =>
     ({ ExperimentComparePage }) => ({ default: ExperimentComparePage }),
   ),
 );
+
+function decodeRouteId(value: string): string | null {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return null;
+  }
+}
 
 export function App() {
   const { t } = useTranslation("navigation");
@@ -84,13 +93,11 @@ export function App() {
   else if (pathname === "/markets" || pathname === "/markets/")
     page = <MarketsPage />;
   else if (pathname === "/strategies") page = <ProductStrategiesPage />;
-  else if (pathname.startsWith("/strategies/"))
-    page = (
-      <ProductStrategiesPage
-        strategyId={decodeURIComponent(pathname.slice("/strategies/".length))}
-      />
-    );
-  else if (pathname === "/data") page = <DataCenterPage />;
+  else if (pathname.startsWith("/strategies/")) {
+    const strategyId = decodeRouteId(pathname.slice("/strategies/".length));
+    if (strategyId !== null)
+      page = <ProductStrategiesPage strategyId={strategyId} />;
+  } else if (pathname === "/data") page = <DataCenterPage />;
   else if (pathname === "/tasks") page = <TaskCenterPage />;
   else if (pathname === "/help") page = <HelpPage />;
   else if (pathname === "/settings") page = <SettingsPage />;
@@ -129,22 +136,21 @@ export function App() {
   )
     page = <ResearchStrategiesPage />;
   else if (researchRunMatch?.[1])
-    page = <ResearchRunPage runId={researchRunMatch[1]} />;
-  else if (researchDatasetMatch?.[1])
     page = (
-      <ResearchDatasetPage
-        datasetId={decodeURIComponent(researchDatasetMatch[1])}
-      />
+      <ResearchRunPage key={researchRunMatch[1]} runId={researchRunMatch[1]} />
     );
-  else if (researchStrategyMatch?.[1])
-    page = (
-      <ResearchStrategyPage
-        strategyId={decodeURIComponent(researchStrategyMatch[1])}
-      />
-    );
+  else if (researchDatasetMatch?.[1]) {
+    const datasetId = decodeRouteId(researchDatasetMatch[1]);
+    if (datasetId !== null)
+      page = <ResearchDatasetPage datasetId={datasetId} />;
+  } else if (researchStrategyMatch?.[1]) {
+    const strategyId = decodeRouteId(researchStrategyMatch[1]);
+    if (strategyId !== null)
+      page = <ResearchStrategyPage strategyId={strategyId} />;
+  }
   return (
     <ProductDataProvider>
-      <AppShell>
+      <AppShell notFound={page.type === NotFoundPage}>
         <Suspense fallback={<LoadingPanel label={t("research")} />}>
           {page}
         </Suspense>

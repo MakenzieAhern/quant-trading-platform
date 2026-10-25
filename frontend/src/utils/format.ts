@@ -58,6 +58,18 @@ export function formatPercent(value: string | null, places?: number): string {
   return `${formatDecimal(shiftedValue, places)}${percentSign}`;
 }
 
+export function formatSignedPercent(
+  value: string | null,
+  places?: number,
+): string {
+  const formatted = formatPercent(value, places);
+  return value !== null &&
+    DECIMAL_PATTERN.test(value) &&
+    isPositiveDecimal(value)
+    ? `+${formatted}`
+    : formatted;
+}
+
 export function formatUtc(value: string | null): string {
   if (value === null) return i18n.t("common:unavailable");
   const date = new Date(value);

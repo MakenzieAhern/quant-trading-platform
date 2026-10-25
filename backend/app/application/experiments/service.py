@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession, a
 from sqlalchemy.sql.elements import ColumnElement
 
 from app.application.experiments.data import ExperimentDatasetRegistry, ExperimentInputError
-from app.application.experiments.models import CreateExperimentRequest
+from app.application.experiments.models import CreateExperimentRequest, ExperimentFailureContext
 from app.application.experiments.runner import ExperimentCancelled, json_value, run_experiment
 from app.data.catalog.checksums import canonical_sha256
 from app.db.models.experiments import ExperimentJobModel, ExperimentResultRowModel
@@ -58,7 +58,9 @@ class ExperimentManager:
         self._active_cancel: Event | None = None
         self._active_id: UUID | None = None
         self._ownership: AsyncConnection | None = None
-        self._pending_terminal: tuple[UUID, str, str | None] | None = None
+        self._pending_terminal: (
+            tuple[UUID, str, str | None, ExperimentFailureContext | None] | None
+        ) = None
         self._ownership_failed = False
         self._owner_pid: int | None = None
 
@@ -151,8 +153,6 @@ class ExperimentManager:
         retry_of: UUID | None = None,
         attempt: int = 1,
     ) -> ExperimentJobModel:
-        if self._ownership_failed:
-            raise ExperimentConflictError("EXPERIMENT_WORKER_UNAVAILABLE")
         config = json_value(request.model_dump())
         fingerprint = canonical_sha256(config)
         async with self.factory() as db:
@@ -161,6 +161,14 @@ class ExperimentManager:
             )
             if existing is not None:
                 return self._same(existing, fingerprint, retry_of)
+            if retry_of is not None:
+                child = await db.scalar(
+                    select(ExperimentJobModel).where(ExperimentJobModel.retry_of == retry_of)
+                )
+                if child is not None:
+                    return self._same(child, fingerprint, retry_of)
+        if self._ownership_failed:
+            raise ExperimentConflictError("EXPERIMENT_WORKER_UNAVAILABLE")
         dataset = await asyncio.to_thread(self.registry.resolve, request.dataset_id)
         if (
             not date.fromisoformat(dataset["coverage_start"])
@@ -198,6 +206,10 @@ class ExperimentManager:
                 existing = await db.scalar(
                     select(ExperimentJobModel).where(ExperimentJobModel.request_key == key)
                 )
+                if existing is None and retry_of is not None:
+                    existing = await db.scalar(
+                        select(ExperimentJobModel).where(ExperimentJobModel.retry_of == retry_of)
+                    )
                 if existing is None:
                     raise
                 return self._same(existing, fingerprint, retry_of)
@@ -443,17 +455,30 @@ class ExperimentManager:
             code = (
                 exc.code if isinstance(exc, ExperimentInputError) else "EXPERIMENT_EXECUTION_FAILED"
             )
-            await self._record_terminal(job.id, "FAILED", code)
+            context = exc.context if isinstance(exc, ExperimentInputError) else None
+            await self._record_terminal(job.id, "FAILED", code, context)
         finally:
             self._active_cancel = None
             self._active_id = None
 
-    async def _record_terminal(self, identifier: UUID, status: str, code: str | None) -> None:
-        self._pending_terminal = (identifier, status, code)
-        await self._finish_failure(identifier, status, code)
+    async def _record_terminal(
+        self,
+        identifier: UUID,
+        status: str,
+        code: str | None,
+        context: ExperimentFailureContext | None = None,
+    ) -> None:
+        self._pending_terminal = (identifier, status, code, context)
+        await self._finish_failure(identifier, status, code, context)
         self._pending_terminal = None
 
-    async def _finish_failure(self, identifier: UUID, status: str, code: str | None) -> None:
+    async def _finish_failure(
+        self,
+        identifier: UUID,
+        status: str,
+        code: str | None,
+        context: ExperimentFailureContext | None = None,
+    ) -> None:
         async with self.factory() as db, db.begin():
             row = await db.scalar(
                 select(ExperimentJobModel)
@@ -463,4 +488,5 @@ class ExperimentManager:
             if row is not None and row.status == "RUNNING":
                 row.status = row.phase = status
                 row.error_code = code
+                row.error_context = context.model_dump(mode="json") if context else None
                 row.completed_at = datetime.now(UTC)

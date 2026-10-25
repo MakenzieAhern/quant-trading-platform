@@ -97,7 +97,8 @@ class RiskEngine:
                     RiskReasonCode.INVALID_PORTFOLIO_STATE,
                     f"reserved quantity for {symbol} must be finite",
                 )
-            quantities[symbol] = quantities.get(symbol, ZERO) + quantity
+            with localcontext(RISK_CONTEXT):
+                quantities[symbol] = quantities.get(symbol, ZERO) + quantity
 
         reference_price = marks.get(proposal.symbol)
         if not self._is_positive_finite_decimal(reference_price):
@@ -172,6 +173,8 @@ class RiskEngine:
             projected_cash = effective_cash + trade_cash_delta
             projected_equity = projected_cash + net_exposure
             leverage = gross_exposure / snapshot.equity if snapshot.equity > ZERO else None
+            required_buying_power = order_notional + estimated_transaction_cost
+            available_buying_power = snapshot.cash - reserved_buying_power
 
         diagnostics: _DecisionDiagnostics = {
             "risk_increasing": risk_increasing,
@@ -198,7 +201,7 @@ class RiskEngine:
             )
         if (
             self._config.max_position_quantity is not None
-            and abs(projected_quantity) > self._config.max_position_quantity
+            and projected_quantity.copy_abs() > self._config.max_position_quantity
             and risk_increasing
         ):
             return self._reject(
@@ -248,8 +251,6 @@ class RiskEngine:
                 "projected gross leverage exceeds configured limit",
                 **diagnostics,
             )
-        required_buying_power = order_notional + estimated_transaction_cost
-        available_buying_power = snapshot.cash - reserved_buying_power
         if (
             self._config.enforce_buying_power
             and proposal.side is OrderSide.BUY

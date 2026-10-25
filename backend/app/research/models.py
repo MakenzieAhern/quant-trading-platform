@@ -90,8 +90,14 @@ class ResearchSession:
     pass_through_events: tuple[RestructuringBonusPassThroughEvent, ...] = ()
     consolidations: tuple[ShareConsolidationEvent, ...] = ()
     consolidation_holder_class: str | None = None
+    unexplained_reference_adjustment_ids: tuple[SecurityId, ...] = ()
 
     def __post_init__(self) -> None:
+        reference_ids = set(self.unexplained_reference_adjustment_ids)
+        if len(reference_ids) != len(
+            self.unexplained_reference_adjustment_ids
+        ) or not reference_ids <= {bar.security_id for bar in self.bars}:
+            raise ValueError("invalid reference adjustment identity")
         if any(bar.trading_date != self.trading_date for bar in self.bars):
             raise ValueError("all bars must belong to the research session")
         if len({str(bar.security_id) for bar in self.bars}) != len(self.bars):

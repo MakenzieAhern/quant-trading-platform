@@ -1,5 +1,5 @@
 from datetime import UTC, datetime, timedelta
-from decimal import Decimal
+from decimal import ROUND_DOWN, Decimal, localcontext
 from uuid import UUID
 
 import pytest
@@ -123,6 +123,22 @@ def test_sequential_reservation_prevents_combined_same_bar_position_breach() -> 
     assert second_order is None
     assert portfolio.positions == ()
     assert manager.active_reservation_count == 1
+
+
+def test_sell_reservation_retains_exact_quantity_under_low_caller_precision() -> None:
+    _, _, broker, manager = components(initial_cash="100000000")
+    sell = proposal(1, quantity="100001", side=OrderSide.SELL)
+    buy = proposal(2, quantity="1")
+    with localcontext() as context:
+        context.prec = 5
+        context.rounding = ROUND_DOWN
+        decision, order = manager.process_proposal(sell)
+        assert decision.approved and order is not None
+        assert manager.active_reservations[0].signed_quantity == Decimal("-100001")
+        reduction, _ = manager.process_proposal(buy)
+        assert reduction.projected_position_quantity == Decimal("-100000")
+        assert not reduction.risk_increasing
+    assert len(broker.orders) == 2
 
 
 def test_sequential_reservation_prevents_combined_buying_power_breach() -> None:

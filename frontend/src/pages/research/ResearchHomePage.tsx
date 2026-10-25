@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { explainDatasetFindings } from "../../product/experiments/codes";
 
 import { researchApi } from "../../api/research";
 import {
@@ -12,7 +13,7 @@ import { useApiResource } from "../../hooks/useApiResource";
 import { formatUtc, shortId } from "../../utils/format";
 
 export function ResearchHomePage() {
-  const { t } = useTranslation(["research", "common", "validation"]);
+  const { t, i18n } = useTranslation(["research", "common", "validation"]);
   const datasets = useApiResource((signal) => researchApi.datasets(signal), []);
   const runs = useApiResource((signal) => researchApi.runs(signal), []);
   return (
@@ -37,13 +38,27 @@ export function ResearchHomePage() {
         <div className="panelHeader">
           <h2>{t("research:datasets")}</h2>
         </div>
+        {datasets.data?.items.map(
+          (dataset) =>
+            (dataset.current_dataset_quality ||
+              dataset.current_source_integrity) && (
+              <p className="oosGuard" role="note" key={dataset.dataset_id}>
+                <strong>{dataset.dataset_id}: </strong>
+                {explainDatasetFindings(dataset, i18n.language)}
+              </p>
+            ),
+        )}
         {datasets.loading && <LoadingPanel label={t("research:datasets")} />}
         {datasets.error && <ErrorPanel message={datasets.error} />}
         {datasets.data?.items.length === 0 && (
           <EmptyState>{t("research:noDatasets")}</EmptyState>
         )}
         {datasets.data && datasets.data.items.length > 0 && (
-          <div className="tableScroll">
+          <div
+            className="tableScroll"
+            tabIndex={0}
+            aria-label={t("research:scrollTable")}
+          >
             <table>
               <thead>
                 <tr>
@@ -75,7 +90,10 @@ export function ResearchHomePage() {
                       {shortId(dataset.canonical_sha256)}
                     </td>
                     <td>
-                      {dataset.readiness_status} ·{" "}
+                      {t(`research:readiness.${dataset.readiness_status}`, {
+                        defaultValue: t("research:readiness.unknown"),
+                      })}{" "}
+                      ·{" "}
                       {dataset.frozen
                         ? t("validation:frozen")
                         : t("validation:notFrozen")}
@@ -97,7 +115,11 @@ export function ResearchHomePage() {
           <EmptyState>{t("research:noRuns")}</EmptyState>
         )}
         {runs.data && runs.data.items.length > 0 && (
-          <div className="tableScroll">
+          <div
+            className="tableScroll"
+            tabIndex={0}
+            aria-label={t("research:scrollTable")}
+          >
             <table>
               <thead>
                 <tr>
@@ -123,7 +145,11 @@ export function ResearchHomePage() {
                     <td>
                       <SplitBadge period={run.period_kind} />
                     </td>
-                    <td>{run.status}</td>
+                    <td>
+                      {t(`common:statuses.${run.status}`, {
+                        defaultValue: t("research:unknownStatus"),
+                      })}
+                    </td>
                     <td>{formatUtc(run.created_at)}</td>
                   </tr>
                 ))}

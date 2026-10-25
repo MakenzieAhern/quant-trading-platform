@@ -165,7 +165,7 @@ class OrderManager:
                 order_id=order.id,
                 symbol=order.symbol,
                 signed_quantity=(
-                    order.quantity if order.side is OrderSide.BUY else -order.quantity
+                    order.quantity if order.side is OrderSide.BUY else order.quantity.copy_negate()
                 ),
                 cash_delta=cash_delta,
                 buying_power_consumed=buying_power_consumed,

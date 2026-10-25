@@ -1,4 +1,10 @@
 export type ExperimentMode = "historical_exploration" | "synthetic_demo";
+export type CurrentDatasetQuality =
+  "KNOWN_ECONOMIC_COVERAGE_GAP" | "HISTORICAL_DATASET_QUALITY_UNKNOWN" | null;
+export type CurrentSourceIntegrity =
+  | "SOURCE_CONTRACT_INTEGRITY_FAILED"
+  | "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED"
+  | null;
 export type ExperimentStatus =
   "QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED" | "CANCELLED" | "INTERRUPTED";
 export interface ParameterRange {
@@ -20,9 +26,13 @@ export interface StrategyCapability {
   limitations: string[];
 }
 export interface DatasetCapability {
+  current_dataset_quality?: CurrentDatasetQuality;
+  current_source_integrity?: CurrentSourceIntegrity;
   dataset_id: string;
   mode: ExperimentMode;
   available: boolean;
+  execution_available?: boolean;
+  execution_reason_code?: string | null;
   reason_code: string | null;
   coverage_start: string;
   coverage_end: string;
@@ -74,11 +84,18 @@ export interface Experiment {
   total_sessions: number | null;
   cancel_requested: boolean;
   error_code: string | null;
+  error_context?: {
+    trading_date: string;
+    security_ids: string[];
+    security_count: number;
+  } | null;
   retry_of: string | null;
   attempt: number;
   result_available: boolean;
 }
 export interface ExperimentResult {
+  current_dataset_quality?: CurrentDatasetQuality;
+  current_source_integrity?: CurrentSourceIntegrity;
   job_id: string;
   mode: ExperimentMode;
   metrics: {
@@ -110,6 +127,7 @@ export interface SimulationPlan {
   status: string;
   mode: ExperimentMode;
   as_of_trading_date: string;
+  account_snapshot_trading_date?: string | null;
   next_accepted_session: string | null;
   dataset_sha256: string;
   configuration_sha256: string;
@@ -143,6 +161,30 @@ export interface SimulationPlan {
   estimated_cash_required: string | null;
   risk_rejections?: number;
 }
+
+export type PaperAccountPlan = Omit<
+  SimulationPlan,
+  "mode" | "account_mode" | "submitted_to_account"
+> & {
+  submitted_to_account: boolean;
+  paper_session_id: string;
+} & (
+    | {
+        mode: "historical_exploration";
+        account_mode: "HISTORICAL_PAPER_REPLAY";
+        plan_version:
+          | "PAPER_ACCOUNT_PLAN_V1"
+          | "PAPER_ACCOUNT_PLAN_V2"
+          | "PAPER_ACCOUNT_PLAN_V3";
+        input_provenance?: never;
+      }
+    | {
+        mode: "forward_paper";
+        account_mode: "FORWARD_PAPER";
+        plan_version: "PAPER_FORWARD_PLAN_V1";
+        input_provenance: import("../../types/paper").PaperInputProvenance;
+      }
+  );
 export interface ExperimentEquity {
   sequence: number;
   trading_date: string;

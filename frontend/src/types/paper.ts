@@ -1,3 +1,9 @@
+import type {
+  CurrentDatasetQuality,
+  CurrentSourceIntegrity,
+  PaperAccountPlan,
+} from "../product/experiments/types";
+
 export type PaperSessionStatus =
   | "CREATED"
   | "STARTING"
@@ -12,7 +18,8 @@ export type PaperSessionStatus =
 export interface PaperSession {
   session_id: string;
   status: PaperSessionStatus;
-  provider_type: "replay" | "simulated_a_share" | "historical_a_share";
+  provider_type:
+    "replay" | "simulated_a_share" | "historical_a_share" | "forward_a_share";
   dataset_id: string;
   symbol: string;
   strategy_type:
@@ -27,6 +34,28 @@ export interface PaperSession {
   started_at: string | null;
   stopped_at: string | null;
   error_message: string | null;
+}
+
+export type PaperCapabilityReason =
+  | "REPLAY_DATA_UNAVAILABLE"
+  | "REPLAY_DATA_INVALID"
+  | "DATASET_NOT_REGISTERED"
+  | "DATASET_NOT_MOUNTED"
+  | "DATASET_INTEGRITY_FAILED"
+  | "SOURCE_CONTRACT_INTEGRITY_FAILED"
+  | "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED"
+  | "DATASET_EXECUTION_NOT_ACCEPTED"
+  | "PAPER_CAPABILITY_CHECK_FAILED";
+
+export interface PaperCapabilities {
+  providers: {
+    provider_type: CreatePaperSessionRequest["provider_type"];
+    dataset_id: string;
+    symbol: string;
+    available: boolean;
+    reason_code: PaperCapabilityReason | null;
+  }[];
+  forward: { available: false; reason_code: "FORWARD_NOT_AVAILABLE" };
 }
 
 export interface MarketBar {
@@ -44,7 +73,79 @@ export interface MarketSession {
   security_count: number;
   source:
     | "SIMULATED_SCENARIO_NOT_RESEARCH_EVIDENCE_V1"
-    | "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1";
+    | "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1"
+    | "RECEIPT_BOUND_FORWARD_A_SHARE_V1";
+  input_provenance?: PaperInputProvenance;
+}
+
+export interface PaperContextPin {
+  candidate_id: string;
+  candidate_sha256: string;
+  observation_sha256: string;
+  verifier: string;
+  first_captured_at: string;
+  registered_at: string;
+  sources: {
+    authority_names: string[];
+    evidence_sha256: string;
+    receipt_sha256: string;
+    published_at: string;
+    completed_at: string;
+    first_observed_at: string;
+  }[];
+}
+
+export type PaperInputProvenance = PaperInputFields &
+  (
+    | { schema_version: "PAPER_DAILY_INPUT_V1" }
+    | { schema_version: "PAPER_DAILY_INPUT_V2"; context: PaperContextPin }
+  );
+
+interface PaperInputFields {
+  paper_session_id: string;
+  trading_date: string;
+  admission_sha256: string;
+  calendar_sha256: string;
+  authorities_sha256: string;
+  session_sha256: string;
+  input_sha256: string;
+  closed_at: string;
+  next_open_at: string;
+  receipts: {
+    security_id: string;
+    receipt_id: string;
+    manifest_sha256: string;
+    first_received_at: string;
+  }[];
+}
+
+export interface PaperInputCommit {
+  schema_version: "PAPER_INPUT_COMMIT_V1";
+  paper_session_id: string;
+  trading_date: string;
+  input_sha256: string;
+  journal_first_sequence: number;
+  journal_last_sequence: number;
+  commit_observed_at: string;
+  next_open_at: string;
+}
+
+export interface PaperCalendarPayload {
+  schema_version: "PAPER_CALENDAR_V1";
+  kind: "initial" | "extension";
+  calendar: {
+    market: "CN_A";
+    sessions: {
+      session_date: string;
+      is_open: boolean;
+      source_version: string;
+    }[];
+  };
+  before_sha256: string | null;
+  after_sha256: string;
+  applied_at: string;
+  after_completed_sessions: number;
+  after_trading_date: string | null;
 }
 
 export interface PaperSignal {
@@ -72,6 +173,7 @@ export interface PaperOrder {
   price: string | null;
   status: string;
   created_at: string;
+  cancellation_reason_code?: string;
 }
 
 export interface PaperFill {
@@ -95,18 +197,25 @@ export interface PaperPosition {
 }
 
 export interface PaperPortfolio {
+  input_provenance?: PaperInputProvenance;
   timestamp: string;
   cash: string;
   market_value: string;
   equity: string;
+  accounting_version?: "PNL_BREAKDOWN_V1" | null;
+  corporate_action_realized_pnl?: string | null;
+  total_pnl?: string | null;
   realized_pnl: string;
   unrealized_pnl: string;
   cumulative_commission: string;
   drawdown: string;
   positions: PaperPosition[];
+  plan: PaperAccountPlan | null;
 }
 
 export interface PaperSnapshot {
+  current_dataset_quality?: CurrentDatasetQuality;
+  current_source_integrity?: CurrentSourceIntegrity;
   session: PaperSession;
   last_sequence: number;
   latest_bar: MarketBar | null;
@@ -116,6 +225,24 @@ export interface PaperSnapshot {
   orders: PaperOrder[];
   fills: PaperFill[];
   latest_portfolio: PaperPortfolio | null;
+  last_rebalance_plan: PaperAccountPlan | null;
+}
+
+export type PaperState = Omit<
+  PaperSnapshot,
+  "signals" | "risk_decisions" | "orders" | "fills"
+>;
+
+export type PaperCollection = "signals" | "risk_decisions" | "orders" | "fills";
+
+export interface PaperCollectionPage {
+  session_id: string;
+  collection: PaperCollection;
+  as_of_sequence: number;
+  limit: number;
+  offset: number;
+  total: number;
+  items: PaperJournalEvent[];
 }
 
 export interface PaperSessionPage {
@@ -193,6 +320,8 @@ export interface PaperWireEvent {
     | "session.status"
     | "market.bar"
     | "market.session"
+    | "calendar.observed"
+    | "input.committed"
     | "signal.created"
     | "risk.decision"
     | "order.updated"
@@ -200,4 +329,13 @@ export interface PaperWireEvent {
     | "portfolio.snapshot";
   occurred_at: string | null;
   payload: Record<string, unknown>;
+}
+
+export interface PaperJournalEvent extends PaperWireEvent {
+  sequence: number;
+  occurred_at: string;
+  type: Exclude<
+    PaperWireEvent["type"],
+    "stream.connected" | "stream.resync_required"
+  >;
 }

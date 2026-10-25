@@ -1,4 +1,8 @@
-# Five-to-ten-minute v1.0.0 demo
+# Legacy five-to-ten-minute v1.0.0 fixture demo
+
+For the current v1.2 A-share product interface, use the
+[bilingual synthetic demo](docs/product/DEMO.md) instead. This legacy AAPL
+fixture is a regression/demo input, not A-share or forward-market evidence.
 
 This walkthrough uses local deterministic simulation only. No account, broker key, live data, or
 real money is involved.

@@ -1,17 +1,15 @@
-import os
 from dataclasses import asdict
-from datetime import UTC, datetime
+from datetime import date
 from decimal import Decimal
 from typing import Annotated, Any
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, Query, Request, status
 from fastapi.responses import JSONResponse
-from sqlalchemy import Select, func, select
+from sqlalchemy import Date, Select, cast, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.schemas.research import (
-    CreateResearchRunRequest,
     DatasetResponse,
     HoldingResponse,
     MarketResponse,
@@ -26,7 +24,7 @@ from app.api.schemas.research import (
     TradeResponse,
 )
 from app.application.backtests.decimal_policy import canonical_decimal
-from app.data.catalog.checksums import canonical_sha256
+from app.application.experiments.data import current_dataset_quality, current_source_integrity
 from app.db.models.research import (
     ResearchBenchmarkPointModel,
     ResearchDatasetModel,
@@ -41,14 +39,6 @@ from app.db.models.research import (
     ResearchTradeModel,
 )
 from app.db.session import get_session
-from app.domain.markets.mergers import MERGER_POLICY, ZERO_WHOLE_SHARE_POLICY
-from app.domain.markets.pass_through import PASS_THROUGH_BASIS_POLICY, PASS_THROUGH_POLICY
-from app.domain.markets.surrenders import (
-    PARTIAL_SURRENDER_BOUNDARY_POLICY,
-    PARTIAL_SURRENDER_FRACTION_POLICY,
-    PARTIAL_SURRENDER_POLICY,
-)
-from app.research import INITIAL_SPLIT
 from app.research.models import ResearchPeriodKind
 from app.strategies.research import (
     STRATEGY_ID,
@@ -98,6 +88,8 @@ def _strategy() -> StrategyResponse:
 def _dataset(model: ResearchDatasetModel, *, detail: bool = False) -> DatasetResponse:
     return DatasetResponse(
         dataset_id=model.dataset_id,
+        current_dataset_quality=current_dataset_quality(model.dataset_id, model.canonical_sha256),
+        current_source_integrity=current_source_integrity(model.dataset_id, model.canonical_sha256),
         provider=model.provider,
         provider_version=model.provider_version,
         retrieval_timestamp=model.retrieval_timestamp,
@@ -116,6 +108,8 @@ def _dataset(model: ResearchDatasetModel, *, detail: bool = False) -> DatasetRes
 def _run(model: ResearchRunModel) -> ResearchRunResponse:
     return ResearchRunResponse(
         run_id=model.id,
+        current_dataset_quality=current_dataset_quality(model.dataset_id, model.dataset_checksum),
+        current_source_integrity=current_source_integrity(model.dataset_id, model.dataset_checksum),
         status=model.status,
         period_kind=ResearchPeriodKind(model.period_kind),
         git_commit=model.git_commit,
@@ -206,102 +200,14 @@ async def strategy_detail(strategy_id: str, request: Request) -> StrategyRespons
     return _strategy()
 
 
-@router.post("/runs", response_model=ResearchRunResponse, status_code=201)
-async def create_run(
-    payload: CreateResearchRunRequest,
-    request: Request,
-    session: Annotated[AsyncSession, Depends(get_session)],
-) -> ResearchRunResponse | JSONResponse:
-    if payload.strategy_id != STRATEGY_ID:
-        return _error(request, 422, "RESEARCH_STRATEGY_NOT_FOUND", "Research strategy not found")
-    if (
-        payload.dataset_id.startswith("cn-a-pilot-")
-        or payload.period_kind is ResearchPeriodKind.PILOT_SMOKE
-    ):
-        return _error(
-            request,
-            409,
-            "PILOT_NOT_FORMAL_RESEARCH",
-            "Use the approved engineering-smoke command; formal studies remain locked",
-        )
-    if payload.benchmark_id not in {"CSI300", "CSI500", "ELIGIBLE_EQUAL_WEIGHT"}:
-        return _error(request, 422, "BENCHMARK_DATA_MISSING", "Benchmark is not registered")
-    dataset = await session.get(ResearchDatasetModel, payload.dataset_id)
-    if dataset is None:
-        return _error(request, 404, "RESEARCH_DATASET_NOT_FOUND", "Research dataset not found")
-    if not dataset.frozen or dataset.readiness_status != "PASSED":
-        return _error(
-            request, 409, "RESEARCH_DATASET_NOT_READY", "Research dataset is not frozen and ready"
-        )
-    if payload.period_kind is ResearchPeriodKind.OUT_OF_SAMPLE:
-        return _error(
-            request,
-            409,
-            "OOS_APPROVAL_REQUIRED",
-            "Official out-of-sample execution requires operator approval",
-        )
-    git_commit = os.getenv("GIT_COMMIT", "")
-    if len(git_commit) != 40 or any(
-        character not in "0123456789abcdef" for character in git_commit
-    ):
-        return _error(
-            request, 409, "REPRODUCIBILITY_METADATA_MISSING", "Build Git commit is not pinned"
-        )
-    config = ChinaAMomentumLowVolConfig()
-    split = {
-        "development": {
-            "start": INITIAL_SPLIT.development.start.isoformat(),
-            "end": INITIAL_SPLIT.development.end.isoformat(),
-        },
-        "validation": {
-            "start": INITIAL_SPLIT.validation.start.isoformat(),
-            "end": INITIAL_SPLIT.validation.end.isoformat(),
-        },
-        "out_of_sample": {
-            "start": INITIAL_SPLIT.out_of_sample.start.isoformat(),
-            "end": INITIAL_SPLIT.out_of_sample.end.isoformat(),
-        },
-    }
-    now = datetime_now_utc()
-    model = ResearchRunModel(
-        id=uuid4(),
-        status="CREATED",
-        period_kind=payload.period_kind.value,
-        git_commit=git_commit,
-        dataset_id=dataset.dataset_id,
-        dataset_checksum=dataset.canonical_sha256,
-        provider=dataset.provider,
-        provider_version=dataset.provider_version,
-        market_rule_version=dataset.rule_version,
-        strategy_id=STRATEGY_ID,
-        strategy_config_hash=config.configuration_hash,
-        strategy_config=asdict(config),
-        transaction_cost_config={"schedule": "effective-dated-cn-a-v1"},
-        benchmark_id=payload.benchmark_id,
-        benchmark_version=f"{dataset.dataset_id}:{payload.benchmark_id}",
-        temporal_split_hash=canonical_sha256(split),
-        temporal_split=split,
-        random_seed=0,
-        created_at=now,
-        diagnostics={
-            "accounting_policies": {
-                "pass_through_policy": PASS_THROUGH_POLICY,
-                "pass_through_basis_policy": PASS_THROUGH_BASIS_POLICY,
-                "merger_policy": MERGER_POLICY,
-                "zero_whole_share_policy": ZERO_WHOLE_SHARE_POLICY,
-                "partial_surrender_policy": PARTIAL_SURRENDER_POLICY,
-                "partial_surrender_fraction_policy": PARTIAL_SURRENDER_FRACTION_POLICY,
-                "partial_surrender_boundary_policy": PARTIAL_SURRENDER_BOUNDARY_POLICY,
-            }
-        },
+@router.post("/runs", status_code=409)
+async def create_run(request: Request) -> JSONResponse:
+    return _error(
+        request,
+        409,
+        "FORMAL_RESEARCH_READ_ONLY",
+        "Formal research is read-only; use personal experiments for exploration",
     )
-    session.add(model)
-    await session.commit()
-    return _run(model)
-
-
-def datetime_now_utc() -> datetime:
-    return datetime.now(UTC)
 
 
 @router.get("/runs", response_model=ResearchPage[ResearchRunResponse])
@@ -335,11 +241,27 @@ async def _run_rows(
     order_columns: tuple[Any, ...],
     limit: int,
     offset: int,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> tuple[list[Any], int] | JSONResponse:
     required = await _require_run(request, session, run_id)
     if isinstance(required, JSONResponse):
         return required
+    if start_date is not None and end_date is not None and start_date > end_date:
+        return _error(
+            request, 422, "INVALID_DISPLAY_DATE_RANGE", "Start date must not follow end date"
+        )
     statement = select(model).where(model.run_id == run_id).order_by(*order_columns)
+    if start_date is not None or end_date is not None:
+        trading_date = (
+            cast(func.timezone("Asia/Shanghai", model.timestamp), Date)
+            if model is ResearchTradeModel
+            else model.trading_date
+        )
+        if start_date is not None:
+            statement = statement.where(trading_date >= start_date)
+        if end_date is not None:
+            statement = statement.where(trading_date <= end_date)
     return await _page(session, statement, limit, offset)
 
 
@@ -385,8 +307,12 @@ def _point_route(model: type[Any], path: str) -> None:
         session: Annotated[AsyncSession, Depends(get_session)],
         limit: Limit = 200,
         offset: Offset = 0,
+        start_date: date | None = None,
+        end_date: date | None = None,
     ) -> ResearchPage[PointResponse] | JSONResponse:
-        result = await _run_rows(request, session, run_id, model, (model.sequence,), limit, offset)
+        result = await _run_rows(
+            request, session, run_id, model, (model.sequence,), limit, offset, start_date, end_date
+        )
         if isinstance(result, JSONResponse):
             return result
         items, total = result
@@ -451,6 +377,8 @@ async def rolling_metrics(
     session: Annotated[AsyncSession, Depends(get_session)],
     limit: Limit = 200,
     offset: Offset = 0,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> ResearchPage[RollingMetricResponse] | JSONResponse:
     result = await _run_rows(
         request,
@@ -460,6 +388,8 @@ async def rolling_metrics(
         (ResearchRollingMetricModel.trading_date, ResearchRollingMetricModel.metric_name),
         limit,
         offset,
+        start_date,
+        end_date,
     )
     if isinstance(result, JSONResponse):
         return result
@@ -486,6 +416,8 @@ async def rebalances(
     session: Annotated[AsyncSession, Depends(get_session)],
     limit: Limit = 200,
     offset: Offset = 0,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> ResearchPage[RebalanceResponse] | JSONResponse:
     result = await _run_rows(
         request,
@@ -495,6 +427,8 @@ async def rebalances(
         (ResearchRebalanceModel.sequence,),
         limit,
         offset,
+        start_date,
+        end_date,
     )
     if isinstance(result, JSONResponse):
         return result
@@ -522,6 +456,8 @@ async def holdings(
     session: Annotated[AsyncSession, Depends(get_session)],
     limit: Limit = 200,
     offset: Offset = 0,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> ResearchPage[HoldingResponse] | JSONResponse:
     result = await _run_rows(
         request,
@@ -531,6 +467,8 @@ async def holdings(
         (ResearchHoldingModel.sequence,),
         limit,
         offset,
+        start_date,
+        end_date,
     )
     if isinstance(result, JSONResponse):
         return result
@@ -560,9 +498,19 @@ async def trades(
     session: Annotated[AsyncSession, Depends(get_session)],
     limit: Limit = 200,
     offset: Offset = 0,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> ResearchPage[TradeResponse] | JSONResponse:
     result = await _run_rows(
-        request, session, run_id, ResearchTradeModel, (ResearchTradeModel.sequence,), limit, offset
+        request,
+        session,
+        run_id,
+        ResearchTradeModel,
+        (ResearchTradeModel.sequence,),
+        limit,
+        offset,
+        start_date,
+        end_date,
     )
     if isinstance(result, JSONResponse):
         return result

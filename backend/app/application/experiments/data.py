@@ -7,10 +7,14 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
+
+from app.application.experiments.models import ExperimentFailureContext
 from app.data.catalog import load_manifest
 from app.data.catalog.checksums import canonical_sha256
 from app.data.catalog.freeze import MARKER
 from app.data.catalog.models import DatasetManifest
+from app.data.catalog.repository import DatasetNotFoundError, LocalDatasetCatalog
 from app.data.full_dataset import FullDataset
 from app.domain.markets.calendar import TradingCalendar
 from app.paper.a_share_fixture import simulated_a_share_fixture
@@ -23,30 +27,109 @@ HISTORICAL_ID = "cn-a-research-20100101-20251231-v1"
 DEMO_SHA = canonical_sha256({"dataset_id": DEMO_ID, "generator_version": 1, "sessions": 340})
 DEMO_START = date(2030, 1, 2)
 DEMO_END = date(2031, 4, 22)
+HISTORICAL_ECONOMIC_GAP_SHA = "1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e"
+HISTORICAL_SOURCE_CONTRACT_FAILURE_SHA = (
+    "1d7b6134e2c6a7026aa124bed57ab101ea910847e10e3d799c45f6c6a1e17f9e"
+)
+
+
+def current_dataset_quality(dataset_id: str, dataset_sha256: object) -> str | None:
+    """Later-discovered read advice, never frozen provenance or result mutation."""
+    if dataset_id != HISTORICAL_ID:
+        return None  # Not covered by this finding, not a financial audit PASS.
+    if isinstance(dataset_sha256, str) and dataset_sha256 == HISTORICAL_ECONOMIC_GAP_SHA:
+        return "KNOWN_ECONOMIC_COVERAGE_GAP"
+    return "HISTORICAL_DATASET_QUALITY_UNKNOWN"
+
+
+def current_source_integrity(dataset_id: str, dataset_sha256: object) -> str | None:
+    """Exact-version finding from the source audit, not an online source revalidation."""
+    if dataset_id != HISTORICAL_ID:
+        return None  # Not covered by this finding, not a source-authority PASS.
+    if isinstance(dataset_sha256, str) and dataset_sha256 == HISTORICAL_SOURCE_CONTRACT_FAILURE_SHA:
+        return "SOURCE_CONTRACT_INTEGRITY_FAILED"
+    return "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED"
 
 
 class ExperimentInputError(ValueError):
-    def __init__(self, code: str) -> None:
+    def __init__(self, code: str, context: ExperimentFailureContext | None = None) -> None:
         super().__init__(code)
         self.code = code
+        self.context = context
+
+
+class ProductDatasetRegistration(BaseModel):
+    """Explicit inspection identity, not a financial execution approval."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+    dataset_id: str = Field(pattern=r"^[a-z0-9][a-z0-9._-]{2,127}$")
+    manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
 
 class ExperimentDatasetRegistry:
-    def __init__(self, root: Path) -> None:
+    def __init__(self, root: Path, product_root: Path | None = None) -> None:
         self.root = root.resolve()
+        self.product_root = product_root.resolve() / "datasets" if product_root else None
 
-    def manifest(self) -> DatasetManifest:
-        path = self.root / HISTORICAL_ID
-        if not (path / "manifest.json").is_file() or not (path / MARKER).is_file():
+    def _registrations(self) -> dict[str, str]:
+        if self.product_root is None or not (self.product_root / "registry.json").is_file():
+            return {}
+        try:
+            entries = TypeAdapter(tuple[ProductDatasetRegistration, ...]).validate_json(
+                (self.product_root / "registry.json").read_bytes()
+            )
+            records = {entry.dataset_id: entry.manifest_sha256 for entry in entries}
+            if len(records) != len(entries) or {HISTORICAL_ID, DEMO_ID} & records.keys():
+                raise ValueError("duplicate or reserved registration")
+            return records
+        except (OSError, ValueError) as exc:
+            raise ExperimentInputError("DATASET_REGISTRATION_INVALID") from exc
+
+    def dataset_root(self, dataset_id: str) -> Path:
+        if dataset_id == HISTORICAL_ID:
+            root = self.root
+        elif self.product_root is not None and dataset_id in self._registrations():
+            root = self.product_root
+        else:
+            raise ExperimentInputError("DATASET_NOT_REGISTERED")
+        try:
+            return LocalDatasetCatalog(root).dataset_root(dataset_id)
+        except DatasetNotFoundError as exc:
+            raise ExperimentInputError("DATASET_INTEGRITY_FAILED") from exc
+
+    def manifest(self, dataset_id: str = HISTORICAL_ID) -> DatasetManifest:
+        path = self.dataset_root(dataset_id)
+        if not (path / "manifest.json").is_file() or (
+            dataset_id == HISTORICAL_ID and not (path / MARKER).is_file()
+        ):
             raise FileNotFoundError("DATASET_NOT_MOUNTED")
         manifest = load_manifest(path / "manifest.json")
-        record = json.loads((path / MARKER).read_bytes())
-        if (
-            manifest.dataset_id != HISTORICAL_ID
-            or manifest.canonical_sha256 != record["dataset_manifest_sha256"]
-            or canonical_sha256({k: v for k, v in record.items() if k != "freeze_record_sha256"})
-            != record["freeze_record_sha256"]
+        if manifest.dataset_id != dataset_id or any(
+            not (path / item.relative_path).resolve().is_relative_to(path)
+            or not (path / item.relative_path).is_file()
+            for item in manifest.partitions
         ):
+            raise ExperimentInputError("DATASET_INTEGRITY_FAILED")
+        if dataset_id == HISTORICAL_ID:
+            record = json.loads((path / MARKER).read_bytes())
+            if (
+                not isinstance(record, dict)
+                or manifest.canonical_sha256 != record["dataset_manifest_sha256"]
+                or canonical_sha256(
+                    {k: v for k, v in record.items() if k != "freeze_record_sha256"}
+                )
+                != record["freeze_record_sha256"]
+            ):
+                raise ExperimentInputError("DATASET_INTEGRITY_FAILED")
+        elif manifest.canonical_sha256 != self._registrations().get(dataset_id):
+            raise ExperimentInputError("DATASET_INTEGRITY_FAILED")
+        if dataset_id != HISTORICAL_ID and not {
+            "securities.parquet",
+            "calendar.parquet",
+            "adjustment-factors.parquet",
+            "feature-only-observations.parquet",
+            "suspension-events.parquet",
+        }.issubset({item.relative_path for item in manifest.partitions}):
             raise ExperimentInputError("DATASET_INTEGRITY_FAILED")
         return manifest
 
@@ -55,6 +138,8 @@ class ExperimentDatasetRegistry:
             "dataset_id": DEMO_ID,
             "mode": "synthetic_demo",
             "available": True,
+            "execution_available": True,
+            "execution_reason_code": None,
             "reason_code": None,
             "coverage_start": DEMO_START.isoformat(),
             "coverage_end": DEMO_END.isoformat(),
@@ -66,15 +151,26 @@ class ExperimentDatasetRegistry:
             "universes": ["ALL", "SSE"],
             "benchmark_id": "SYNTHETIC_EQUAL_WEIGHT",
         }
+        try:
+            inspection_ids = sorted(self._registrations())
+        except ExperimentInputError:
+            # An unrelated malformed product index cannot remove the clean-install demo.
+            inspection_ids = []
+        historical = [
+            self._historical(dataset_id) for dataset_id in [HISTORICAL_ID, *inspection_ids]
+        ]
+        return [*historical, demo]
+
+    def _historical(self, dataset_id: str) -> dict[str, Any]:
         historical: dict[str, Any] = {
-            "dataset_id": HISTORICAL_ID,
+            "dataset_id": dataset_id,
             "mode": "historical_exploration",
             "available": False,
             "reason_code": "DATASET_NOT_MOUNTED",
-            "coverage_start": "2010-01-01",
-            "coverage_end": "2025-12-31",
-            "default_start": "2011-01-04",
-            "default_end": "2011-06-30",
+            "coverage_start": "2010-01-01" if dataset_id == HISTORICAL_ID else "",
+            "coverage_end": "2025-12-31" if dataset_id == HISTORICAL_ID else "",
+            "default_start": "2011-01-04" if dataset_id == HISTORICAL_ID else "",
+            "default_end": "2011-06-30" if dataset_id == HISTORICAL_ID else "",
             "security_count": 0,
             "sha256": None,
             "as_of": None,
@@ -82,7 +178,7 @@ class ExperimentDatasetRegistry:
             "benchmark_id": "CSI300",
         }
         try:
-            manifest = self.manifest()
+            manifest = self.manifest(dataset_id)
             historical.update(
                 available=True,
                 reason_code=None,
@@ -92,18 +188,43 @@ class ExperimentDatasetRegistry:
                 sha256=manifest.canonical_sha256,
                 as_of=manifest.coverage_end.isoformat(),
             )
+            if dataset_id != HISTORICAL_ID:
+                historical.update(
+                    default_start=manifest.coverage_start.isoformat(),
+                    default_end=manifest.coverage_end.isoformat(),
+                )
         except FileNotFoundError:
             pass
         except (ValueError, KeyError, OSError):
             historical["reason_code"] = "DATASET_INTEGRITY_FAILED"
-        return [historical, demo]
+        historical["current_dataset_quality"] = current_dataset_quality(
+            historical["dataset_id"], historical["sha256"]
+        )
+        historical["current_source_integrity"] = current_source_integrity(
+            historical["dataset_id"], historical["sha256"]
+        )
+        historical["execution_reason_code"] = (
+            historical["reason_code"]
+            if not historical["available"]
+            else historical["current_source_integrity"] or "DATASET_EXECUTION_NOT_ACCEPTED"
+        )
+        historical["execution_available"] = historical["execution_reason_code"] is None
+        return historical
 
-    def resolve(self, dataset_id: str) -> dict[str, Any]:
+    def resolve(
+        self, dataset_id: str, *, for_execution: bool = True, expected_sha256: str | None = None
+    ) -> dict[str, Any]:
         for item in self.datasets():
             if item["dataset_id"] == dataset_id:
                 if not item["available"]:
                     raise ExperimentInputError(item["reason_code"])
+                if expected_sha256 is not None and item["sha256"] != expected_sha256:
+                    raise ExperimentInputError("DATASET_CHANGED_SINCE_SUBMISSION")
+                if for_execution and not item["execution_available"]:
+                    raise ExperimentInputError(item["execution_reason_code"])
                 return item
+        # Preserve a typed error for a requested invalid product registration.
+        self._registrations()
         raise ExperimentInputError("DATASET_NOT_REGISTERED")
 
     def capabilities(self) -> dict[str, Any]:
@@ -178,13 +299,19 @@ def load_experiment_dataset(
     start: date,
     end: date,
 ) -> FullDataset | SyntheticExperimentDataset:
+    registry.resolve(dataset_id)
     if dataset_id == DEMO_ID:
         return SyntheticExperimentDataset(end)
-    if dataset_id != HISTORICAL_ID:
-        raise ExperimentInputError("DATASET_NOT_REGISTERED")
     # FULL_PERIOD is only a loader date container; no formal study runner or OOS lock is called.
-    return FullDataset(
-        registry.root / HISTORICAL_ID,
-        registry.manifest(),
-        TemporalPeriod(ResearchPeriodKind.FULL_PERIOD, start, end),
-    )
+    try:
+        return FullDataset(
+            registry.dataset_root(dataset_id),
+            registry.manifest(dataset_id),
+            TemporalPeriod(ResearchPeriodKind.FULL_PERIOD, start, end),
+        )
+    except (OSError, KeyError) as exc:
+        raise ExperimentInputError("DATASET_INTEGRITY_FAILED") from exc
+    except ValueError as exc:
+        if not str(exc).startswith("FROZEN_PARTITION_CHANGED:"):
+            raise
+        raise ExperimentInputError("DATASET_INTEGRITY_FAILED") from exc

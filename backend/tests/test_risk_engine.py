@@ -1,5 +1,5 @@
 from datetime import UTC, datetime
-from decimal import ROUND_DOWN, Decimal, localcontext
+from decimal import ROUND_DOWN, ROUND_UP, Decimal, localcontext
 from typing import Any
 from uuid import UUID
 
@@ -415,6 +415,57 @@ def test_risk_evaluation_is_pure_and_reproducible() -> None:
     assert second == first
     assert state.positions[0].quantity == Decimal(4)
     assert marks == {"AAPL": Decimal(100)}
+
+
+@pytest.mark.parametrize("rounding", [ROUND_DOWN, ROUND_UP])
+@pytest.mark.parametrize(
+    "case", ["reserved_position", "position", "purchase_cost", "available_cash"]
+)
+def test_risk_boundaries_do_not_depend_on_callers_decimal_context(case: str, rounding: str) -> None:
+    symbol = "600000"
+    state = snapshot(cash="100000")
+    intent = proposal(quantity="100000", symbol=symbol)
+    marks = {symbol: Decimal(1)}
+    reserved: dict[str, Decimal] = {}
+    cost = Decimal(1)
+    buying_power = ZERO
+    config = RiskConfig(enforce_buying_power=True)
+    expected = RiskReasonCode.INSUFFICIENT_BUYING_POWER
+    if case in {"reserved_position", "position"}:
+        state = snapshot((position(symbol, "100001", "1"),), cash="1000000")
+        intent = proposal(quantity="100", symbol=symbol)
+        reserved = {symbol: Decimal(100)} if case == "reserved_position" else {}
+        limit = "100200" if reserved else "100100"
+        config = RiskConfig(max_position_quantity=Decimal(limit))
+        expected = RiskReasonCode.POSITION_LIMIT
+    elif case == "available_cash":
+        state = snapshot(cash="100001")
+        cost = ZERO
+        buying_power = Decimal("1.1")
+    engine = RiskEngine(config)
+
+    def evaluate() -> RiskDecision:
+        return engine.evaluate(
+            intent,
+            state,
+            marks,
+            reserved_quantities=reserved,
+            estimated_transaction_cost=cost,
+            reserved_buying_power=buying_power,
+        )
+
+    baseline = evaluate()
+    assert baseline.reason_code is expected
+    before = (state.model_copy(deep=True), intent.model_copy(deep=True), dict(reserved))
+    with localcontext() as context:
+        context.prec = 5
+        context.rounding = rounding
+        context.clear_flags()
+        result = evaluate()
+        assert result == baseline
+        assert context.prec == 5 and context.rounding == rounding
+        assert not any(context.flags.values())
+    assert (state, intent, reserved) == before
 
 
 def test_invalid_reserved_buying_power_is_rejected_explicitly() -> None:

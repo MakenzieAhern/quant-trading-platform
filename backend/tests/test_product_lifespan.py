@@ -46,7 +46,54 @@ async def test_lifespan_always_releases_local_managers(monkeypatch, failure):
             await run()
     else:
         await run()
-    expected = ["paper.recover", "experiment.start", "market.start"]
+    expected = ["experiment.start", "market.start"]
     if failure != "start":
-        expected.append("serving")
-    assert calls == [*expected, "market.shutdown", "experiment.shutdown", "paper.shutdown"]
+        expected.extend(["paper.recover", "serving"])
+    assert calls == [*expected, "paper.shutdown", "market.shutdown", "experiment.shutdown"]
+
+
+async def test_rejected_second_startup_does_not_interrupt_paper(monkeypatch):
+    calls = []
+
+    async def reject_owner():
+        calls.append("experiment.start")
+        raise RuntimeError("another process owns the exploratory job queue")
+
+    async def operation(label):
+        calls.append(label)
+        return 0
+
+    monkeypatch.setattr(
+        main,
+        "paper_manager",
+        SimpleNamespace(
+            recover_interrupted=lambda: operation("paper.recover"),
+            shutdown=lambda: operation("paper.shutdown"),
+        ),
+    )
+    monkeypatch.setattr(
+        main,
+        "experiment_manager",
+        SimpleNamespace(
+            start=reject_owner,
+            shutdown=lambda: operation("experiment.shutdown"),
+        ),
+    )
+    monkeypatch.setattr(
+        main,
+        "market_update_manager",
+        SimpleNamespace(
+            start=lambda: operation("market.start"),
+            shutdown=lambda: operation("market.shutdown"),
+        ),
+    )
+
+    with pytest.raises(RuntimeError, match="another process owns"):
+        async with main.lifespan(main.app):
+            pass
+    assert calls == [
+        "experiment.start",
+        "paper.shutdown",
+        "market.shutdown",
+        "experiment.shutdown",
+    ]

@@ -4,7 +4,7 @@ from datetime import date, datetime
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Index, Integer, String
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Index, Integer, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -14,7 +14,10 @@ from app.db.base import Base
 
 class MarketUpdateJobModel(Base):
     __tablename__ = "product_market_update_jobs"
-    __table_args__ = (Index("ix_market_update_status_created", "status", "created_at"),)
+    __table_args__ = (
+        Index("ix_market_update_status_created", "status", "created_at"),
+        UniqueConstraint("retry_of", name="uq_product_market_update_retry_of"),
+    )
 
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True)
     request_key: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)

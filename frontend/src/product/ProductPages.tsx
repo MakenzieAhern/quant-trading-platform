@@ -1,24 +1,67 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ApiError } from "../api/client";
 import { Link } from "../components/Link";
 import { LanguageSelector } from "../components/LanguageSelector";
 import { useApiResource } from "../hooks/useApiResource";
-import { navigate } from "../utils/navigation";
+import { navigate, replaceUrl } from "../utils/navigation";
 import { experimentApi } from "./experiments/api";
+import { useExperimentCopy } from "./experiments/copy";
 import { readExperimentDraft } from "./experiments/draft";
-import { explainExperimentCode } from "./experiments/codes";
-import { useProductCopy } from "./copy";
+import { datasetExecutionCode } from "./experiments/errors";
+import {
+  explainDatasetFindings,
+  explainExperimentCode,
+} from "./experiments/codes";
+import { productHelpTopics, useProductCopy } from "./copy";
 import { Dialog } from "./Dialog";
 import { usePreferences } from "./preferences";
 import { MarketUpdatesPanel } from "./marketUpdates";
 
-export function ProductError({ retry }: { retry: () => void }) {
+export function ProductError({
+  error,
+  retry,
+  fallback,
+  retryLabel,
+}: {
+  error: unknown;
+  retry: () => void;
+  fallback?: string;
+  retryLabel?: string;
+}) {
   const c = useProductCopy();
+  const { t } = useTranslation("common");
+  const reason =
+    error instanceof ApiError
+      ? error.status === 401 || error.status === 403
+        ? "permission"
+        : error.status === 408
+          ? "timeout"
+          : null
+      : error instanceof TypeError
+        ? "offline"
+        : null;
   return (
     <div className="productError" role="alert">
-      <p>{c.loadingError}</p>
-      <button className="button secondary" onClick={retry}>
-        {c.retry}
+      <p>{reason ? t(`loadErrors.${reason}`) : (fallback ?? c.loadingError)}</p>
+      <button
+        className="button secondary"
+        onClick={(event) => {
+          const button = event.currentTarget;
+          const main = button.closest("main");
+          const heading =
+            button.closest("dialog")?.querySelector("h2") ??
+            button.closest("section, aside")?.querySelector("h2, h3") ??
+            main?.querySelector("h1");
+          retry();
+          if (document.activeElement !== button) return;
+          if (heading) {
+            heading.tabIndex = -1;
+            heading.focus();
+          } else main?.focus();
+        }}
+      >
+        {retryLabel ?? c.retry}
       </button>
     </div>
   );
@@ -43,8 +86,15 @@ export function ModeGuide() {
 }
 export function WorkbenchPage() {
   const c = useProductCopy();
+  const experiments = useExperimentCopy();
   const { i18n } = useTranslation();
   const [retry, setRetry] = useState(0);
+  const dataHeading = useRef<HTMLHeadingElement>(null);
+  const recentHeading = useRef<HTMLHeadingElement>(null);
+  const retryRead = (heading: HTMLHeadingElement | null) => {
+    if (document.activeElement?.closest(".productError")) heading?.focus();
+    setRetry((value) => value + 1);
+  };
   const data = useApiResource(
     (signal) => experimentApi.capabilities(signal),
     [retry],
@@ -86,7 +136,7 @@ export function WorkbenchPage() {
           <h2>{c.lead}</h2>
           <p className="welcomeDescription">{c.intro}</p>
           <div className="welcomeActions">
-            <Link className="button" href="/research/new">
+            <Link className="button" href="/research/new?new=1">
               {c.start}
               <span aria-hidden="true">→</span>
             </Link>
@@ -99,11 +149,16 @@ export function WorkbenchPage() {
           </button>
         </section>
         <aside className="dataOverview">
-          <h2>{c.environment}</h2>
+          <h2 ref={dataHeading} tabIndex={-1}>
+            {c.environment}
+          </h2>
           {data.loading ? (
             <p role="status">{c.loading}</p>
           ) : data.error ? (
-            <ProductError retry={() => setRetry(retry + 1)} />
+            <ProductError
+              error={data.error}
+              retry={() => retryRead(dataHeading.current)}
+            />
           ) : (
             <>
               <span className="quietTag">
@@ -153,7 +208,9 @@ export function WorkbenchPage() {
       </section>
       <section className="panel">
         <div className="panelHeader">
-          <h2>{c.recent}</h2>
+          <h2 ref={recentHeading} tabIndex={-1}>
+            {c.recent}
+          </h2>
           <Link className="textLink" href="/experiments">
             {c.viewAll} →
           </Link>
@@ -163,7 +220,10 @@ export function WorkbenchPage() {
             {c.loading}
           </p>
         ) : jobs.error ? (
-          <ProductError retry={() => setRetry(retry + 1)} />
+          <ProductError
+            error={jobs.error}
+            retry={() => retryRead(recentHeading.current)}
+          />
         ) : jobs.data?.items.length ? (
           <div className="recentStudies">
             {jobs.data.items.map((job) => (
@@ -172,7 +232,8 @@ export function WorkbenchPage() {
                   <strong>{job.name}</strong>
                   <span>
                     {job.configuration.start_date} —{" "}
-                    {job.configuration.end_date}
+                    {job.configuration.end_date} ·{" "}
+                    {experiments.statuses[job.status]}
                   </span>
                 </div>
                 <span className="quietTag">
@@ -208,7 +269,6 @@ export function WorkbenchPage() {
             className="button"
             onClick={() => {
               setGuide(false);
-              localStorage.setItem("quant.product.guide-seen", "1");
             }}
           >
             {c.skip}
@@ -249,7 +309,9 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
     (signal) => experimentApi.capabilities(signal),
     [retry],
   );
-  const [selected, setSelected] = useState<string | null>(strategyDrawerFromUrl);
+  const [selected, setSelected] = useState<string | null>(
+    strategyDrawerFromUrl,
+  );
   useEffect(() => {
     const sync = () => setSelected(strategyDrawerFromUrl());
     window.addEventListener("hashchange", sync);
@@ -273,11 +335,7 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
   const closeDrawer = () => {
     if (window.history.state?.productStrategyDrawer) window.history.back();
     else {
-      window.history.replaceState(
-        window.history.state,
-        "",
-        window.location.pathname + window.location.search,
-      );
+      replaceUrl(window.location.pathname + window.location.search);
       setSelected(null);
     }
   };
@@ -288,23 +346,31 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
     ? i18n.language.startsWith("zh")
       ? strategy.name_zh
       : strategy.name_en
-    : c.strategyName;
+    : c.strategies;
   return (
     <div className="productPage">
       <header className="pageHeader">
         <div>
           <p className="eyebrow">{c.strategies}</p>
           <h1>{strategyId ? name : c.strategyTitle}</h1>
-          <p>{c.strategyIntro}</p>
+          {(!strategyId || strategy) && <p>{c.strategyIntro}</p>}
         </div>
         {strategyId && strategy && (
-          <Link className="button" href="/research/new">
+          <Link
+            className="button"
+            href={
+              "/research/new?new=1&strategy=" +
+              encodeURIComponent(strategy.strategy_id)
+            }
+          >
             {c.configure} →
           </Link>
         )}
       </header>
       {catalog.loading && <p role="status">{c.loading}</p>}
-      {catalog.error && <ProductError retry={() => setRetry(retry + 1)} />}
+      {catalog.error && (
+        <ProductError error={catalog.error} retry={() => setRetry(retry + 1)} />
+      )}
       {strategyId ? (
         strategy ? (
           <>
@@ -323,7 +389,16 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
             </details>
           </>
         ) : (
-          !catalog.loading && !catalog.error && <p>{c.noStrategies}</p>
+          !catalog.loading &&
+          !catalog.error &&
+          catalog.data && (
+            <section className="stateCallout" role="alert">
+              <p>{c.strategyNotFound}</p>
+              <Link className="button secondary" href="/strategies">
+                {c.strategies}
+              </Link>
+            </section>
+          )
         )
       ) : (
         <div className="productStrategyCards">
@@ -358,7 +433,10 @@ export function ProductStrategiesPage({ strategyId }: { strategyId?: string }) {
           <div className="drawerActions">
             <Link
               className="button"
-              href="/research/new"
+              href={
+                "/research/new?new=1&strategy=" +
+                encodeURIComponent(strategy.strategy_id)
+              }
               onClick={() => setSelected(null)}
             >
               {c.configure}
@@ -394,59 +472,106 @@ export function DataCenterPage() {
         </div>
       </header>
       {data.loading && <p role="status">{c.loading}</p>}
-      {data.error && <ProductError retry={() => setRetry(retry + 1)} />}
-      {data.data?.datasets.map((item) => (
-        <section className="panel dataSourceCard" key={item.dataset_id}>
-          <div className="panelHeader">
-            <h2>{item.mode === "synthetic_demo" ? c.demo : c.historical}</h2>
-            <span className="quietTag">
-              {item.available ? c.available : c.unavailable}
-            </span>
-          </div>
-          <div className="dataFacts">
-            <div>
-              <span>{c.coverage}</span>
-              <strong>
-                {item.coverage_start ?? c.notRecorded} —{" "}
-                {item.coverage_end ?? c.notRecorded}
-              </strong>
+      {data.error && (
+        <ProductError error={data.error} retry={() => setRetry(retry + 1)} />
+      )}
+      {data.data?.datasets.map((item) => {
+        const executionCode = datasetExecutionCode(item);
+        return (
+          <section className="panel dataSourceCard" key={item.dataset_id}>
+            <div className="panelHeader">
+              <h2>{item.mode === "synthetic_demo" ? c.demo : c.historical}</h2>
+              <span className="quietTag">
+                {!item.available
+                  ? c.unavailable
+                  : executionCode
+                    ? c.readOnlyData
+                    : c.readableData}
+              </span>
             </div>
-            <div>
-              <span>{c.securities}</span>
-              <strong>{item.security_count.toLocaleString()}</strong>
+            <div className="dataFacts">
+              <div>
+                <span>{c.coverage}</span>
+                <strong>
+                  {item.coverage_start ?? c.notRecorded} —{" "}
+                  {item.coverage_end ?? c.notRecorded}
+                </strong>
+              </div>
+              <div>
+                <span>{c.securities}</span>
+                <strong>{item.security_count.toLocaleString()}</strong>
+              </div>
+              <div>
+                <span>{c.dataDate}</span>
+                <strong>{item.as_of ?? c.notRecorded}</strong>
+              </div>
             </div>
-            <div>
-              <span>{c.dataDate}</span>
-              <strong>{item.as_of ?? c.notRecorded}</strong>
-            </div>
-          </div>
-          {!item.available && item.reason_code && (
-            <p role="status" className="inlineNotice">
-              {explainExperimentCode(item.reason_code, i18n.language)}
-            </p>
-          )}
-          <p className="dataCardNote">
-            {item.mode === "synthetic_demo" ? c.demoHelp : c.staleHint}
-          </p>
-          <details className="technicalDetails">
-            <summary>{c.details}</summary>
-            <dl>
-              <dt>{c.dataset}</dt>
-              <dd>{item.dataset_id}</dd>
-              <dt>SHA-256</dt>
-              <dd>{item.sha256 ?? c.notRecorded}</dd>
-              <dt>{c.mode}</dt>
-              <dd>{item.mode}</dd>
-            </dl>
-            {item.mode === "historical_exploration" && (
-              <Link href={`/research/a-share/datasets/${item.dataset_id}`}>
-                {c.archive} ↗
-              </Link>
+            {!item.available && item.reason_code && (
+              <p role="status" className="inlineNotice">
+                {explainExperimentCode(item.reason_code, i18n.language)}
+              </p>
             )}
-          </details>
-        </section>
-      ))}
-      <MarketUpdatesPanel />
+            <p className="dataCardNote">
+              {item.mode === "synthetic_demo" ? c.demoHelp : c.staleHint}
+            </p>
+            {(item.current_dataset_quality ||
+              item.current_source_integrity) && (
+              <p className="inlineNotice" role="note">
+                {explainDatasetFindings(item, i18n.language)}
+              </p>
+            )}
+            {item.available &&
+              executionCode &&
+              executionCode !== item.current_source_integrity && (
+                <p className="inlineNotice" role="note">
+                  {explainExperimentCode(executionCode, i18n.language)}
+                </p>
+              )}
+            <details className="technicalDetails">
+              <summary>{c.details}</summary>
+              <dl>
+                <dt>{c.dataset}</dt>
+                <dd>{item.dataset_id}</dd>
+                <dt>SHA-256</dt>
+                <dd>{item.sha256 ?? c.notRecorded}</dd>
+                <dt>{c.mode}</dt>
+                <dd>{item.mode}</dd>
+              </dl>
+              {item.mode === "historical_exploration" && (
+                <Link href={`/research/a-share/datasets/${item.dataset_id}`}>
+                  {c.archive} ↗
+                </Link>
+              )}
+            </details>
+            {item.mode === "historical_exploration" && executionCode && (
+              <div className="inlineNotice">
+                <h3>{c.dataRecoveryTitle}</h3>
+                <p>{c.dataRecoveryHint}</p>
+                <div className="welcomeActions">
+                  {item.available && (
+                    <Link
+                      className="button secondary"
+                      href={`/markets?dataset=${encodeURIComponent(item.dataset_id)}`}
+                    >
+                      {c.browseCachedData}
+                    </Link>
+                  )}
+                  <Link className="button secondary" href="/experiments">
+                    {c.browseSavedResearch}
+                  </Link>
+                  <Link
+                    className="button secondary"
+                    href="/help#help-data-blocked"
+                  >
+                    {c.blockedDataHelp}
+                  </Link>
+                </div>
+              </div>
+            )}
+          </section>
+        );
+      })}
+      <MarketUpdatesPanel dataReady={!data.loading} />
       <p className="inlineNotice">{c.futureUnavailable}</p>
       <p className="smallText">{c.dateZone}</p>
     </div>
@@ -454,8 +579,33 @@ export function DataCenterPage() {
 }
 export function HelpPage() {
   const c = useProductCopy();
+  const page = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let frame = 0;
+    const reveal = () => {
+      const answer = Array.from(
+        page.current?.querySelectorAll<HTMLDetailsElement>("details[id]") ?? [],
+      ).find((item) => window.location.hash === `#${item.id}`);
+      window.cancelAnimationFrame(frame);
+      if (!answer) return;
+      answer.open = true;
+      // Focus after the command dialog closes and restores its trigger.
+      frame = window.requestAnimationFrame(() => {
+        answer.querySelector("summary")?.focus({ preventScroll: true });
+        answer.scrollIntoView?.({ block: "start" });
+      });
+    };
+    reveal();
+    window.addEventListener("popstate", reveal);
+    window.addEventListener("hashchange", reveal);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("popstate", reveal);
+      window.removeEventListener("hashchange", reveal);
+    };
+  }, []);
   return (
-    <div className="productPage readingPage">
+    <div ref={page} className="productPage readingPage">
       <header className="pageHeader">
         <div>
           <p className="eyebrow">{c.help}</p>
@@ -466,18 +616,13 @@ export function HelpPage() {
         <h2>{c.guideTitle}</h2>
         <ModeGuide />
       </section>
-      {[
-        [c.backtestQuestion, c.backtestAnswer],
-        [c.drawdownQuestion, c.drawdownAnswer],
-        [c.winQuestion, c.winAnswer],
-        [c.benchmarkQuestion, c.benchmarkAnswer],
-      ].map(([q, a]) => (
-        <details className="helpQuestion" key={q}>
-          <summary>{q}</summary>
-          <p>{a}</p>
+      {productHelpTopics(c).map(({ id, question, answer }) => (
+        <details id={`help-${id}`} className="helpQuestion" key={id}>
+          <summary>{question}</summary>
+          <p>{answer}</p>
         </details>
       ))}
-      <Link className="button" href="/research/new">
+      <Link className="button" href="/research/new?new=1">
         {c.start} →
       </Link>
     </div>

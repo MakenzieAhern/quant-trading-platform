@@ -61,13 +61,121 @@ Phase 10 adds a second registered simulation route for the frozen A-share strate
 product fixture, not an extension of the audited dataset or formal research evidence. This route
 does not read, rerun, or replace the consumed Official OOS artifact.
 
+The optional receipt-bound forward route uses that same completed-session runtime,
+not a second financial engine. A server-configured product-local contract path and
+SHA-256 bind independent source-use evidence, authority coverage, accepted calendar,
+warmup and point-in-time context. An HTTP caller cannot register or approve inputs.
+The optional settings are `PAPER_FORWARD_CONTRACT_PATH` and
+`PAPER_FORWARD_CONTRACT_SHA256`; both must be supplied together and resolve within
+independent product data, outside the research archive. Default Compose supplies
+neither. Setting those names or authoring a manifest is not source qualification.
+No actual contract ships with the app; public forward creation remains unavailable
+until the separate real-source and product acceptance gates are completed.
+
+The canonical observation's original receipt is revalidated against raw source bytes,
+normalized rows and all relevant overlapping receipts. Contradictory recaptures fail;
+later acquisition cannot move first receipt time. Daily provenance binds the account,
+receipt IDs, authority/calendar/session hashes and original UTC reception window.
+Warmup is not account history. The existing atomic financial batch carries its plan
+and provenance; a subsequent `input.committed` journal observation binds the actual
+completed batch and acknowledgement time. Missing/late acknowledgement cannot be
+invented on resume and cannot authorize the next day's processing. This separate
+acknowledgement does not roll back a financial batch already committed before failure.
+Process-loss sessions remain INTERRUPTED, not silently restarted.
+
+The V1 contract remains finite and requires all daily context at creation for
+compatibility. V2 instead fixes source eligibility, a reviewed verifier identity,
+security scope, warmup and a finite accepted calendar without future daily facts.
+The factory refuses V2 creation/start without that verifier. API composition
+currently registers none: no complete current official-source verifier is accepted.
+Qualification must independently reconstruct facts and coverage from retained
+source bytes and original receipts, not trust candidate fields or absence of events.
+Root authority/cost coverage is checked before creation; daily rules/facts are
+checked on arrival. This engineering interface is not real-source admission.
+
+The same session source waits for qualified context and canonical raw observations.
+V2 daily provenance pins the candidate, immutable capture intent, original source
+receipts and registration time into the plan, market and portfolio journal payloads.
+Resume reads and requalifies that exact candidate, never the latest version; new
+dates reject ambiguous candidate versions and cannot skip a missing day. Live
+commit and resume share the maximum input-availability timestamp; a wall-clock
+rollback fails before acknowledging the batch or advancing to the next day.
+An already committed financial batch is retained, not erased on that failure.
+
+Base transaction-cost schedules must cover each admitted day and agree with its
+rule context; explicit user broker commission overrides retain their existing
+meaning. Actual fills use effective-dated fees. The reused commission model's
+buying-power estimate intentionally uses its latest buy-side schedule conservatively;
+this is not a claim that a risk estimate equals that day's final charged fees.
+
+Receipt parsing has separate inspection and execution policies: two immutable
+historical manifest/job bindings documented in SOURCE_READINESS retain their original
+parser labels and receive `PARSER_LABEL_MISMATCH_READ_ONLY`. Inspection reproduces
+their bytes; strict receipt verification refuses their use in the forward route.
+These exceptions are not source admission and cannot be inherited by repackaged data.
+
+The completed-session provider also accepts an asynchronous iterator. Waiting for
+its next item races the session's stop signal; unread items lose to stop, while an
+in-flight handler finishes its existing batch. The provider owns and cleans up
+the iterator/read tasks, preserves shutdown cancellation and source errors, and
+resume reconstructs from a fresh source through the original journal checks.
+This is a lifecycle contract, not a registered new-market provider, source-use
+authorization, or an endless-feed retention guarantee.
+
+The incremental context-arrival foundation stores unqualified candidate frames
+and their immutable source copies separately from account execution. File and
+observation intent publication precede append-only PostgreSQL registration under
+Alembic0018. Duplicate candidate identities retain the winning local observation;
+conflicting versions are all returned within explicit byte/security/version
+budgets, never silently selected by recency. Reads revalidate archived bytes and
+DB bindings. An orphan intent after DB failure is retried from its archived
+candidate and sources, keeping the old observation time.
+
+This storage is not itself a registered source parser. The local
+observation belongs to that candidate identity, not global first-seen upstream
+information; changing roots or parsers cannot establish new-market causality.
+No HTTP approved flag or automatic capture worker exists. The V2 qualified reader
+is connected to the existing account/journal path, with an empty production verifier
+registry. Real current-source coverage and a complete durable acquisition-to-runtime
+acceptance remain required; synthetic parsers/clock tests do not satisfy them.
+No evidence cleanup is automatic.
+
 Phase 9 runtime collections are bounded by the finite, registered replay dataset; the runtime, provider, strategies, OMS, broker, and their in-memory histories are released when the session task reaches a terminal state. Durable history belongs to PostgreSQL. This finite-replay bound is not a claim that the same collections are ready for an endless vendor feed; any future streaming adapter must introduce explicit rolling retention before it is eligible for use.
 
 The lifecycle is `CREATED -> STARTING -> RUNNING -> STOPPING -> STOPPED`, with terminal `FAILED` and `INTERRUPTED` outcomes. Creation, start, and stop are retry-safe. Lifecycle and typed market/signal/risk/order/fill/portfolio events are appended to PostgreSQL in deterministic sequence. A per-session row lock serializes sequence allocation; lifecycle state and its event commit in one transaction, and each completed-Bar financial batch commits before WebSocket publication. Pending local Orders are explicitly moved from `ACCEPTED` to `CANCELLED` on stop/failure/interruption and their OMS reservations are released before the terminal batch is stored. REST snapshots reconstruct current state from that durable journal and are the recovery authority. An active in-memory runtime is never resumed after process loss: graceful shutdown marks it `INTERRUPTED`, and startup converts any orphaned active row to `INTERRUPTED` before serving traffic.
 
+Paper creation keeps its original request and idempotency key until a durable
+session receipt is confirmed. A read-only key lookup can recover an already
+committed session when a later POST fails validation before reaching the
+idempotency check. A missing lookup result means only that no row is committed
+yet; the earlier POST may still commit, so it never authorizes discarding the
+key or making a new request. There is no cancellation/tombstone protocol.
+
+The read-only paper `/sessions/capabilities` endpoint checks the registered local
+replay file and historical execution admission, without opening a database
+session or starting a worker. Its three provider identities are fixed; forward
+mode remains explicitly unavailable. This is a current configuration hint, not
+an execution token or financial certification. The create form blocks new intents
+while availability is unknown or denied, but keeps saved-key recovery independent.
+After asynchronous receipt verification, it rechecks the active page and latest
+availability before generating a new key. Server-side creation and start checks
+remain authoritative; an already committed key is still resolved before mutable
+source checks.
+
 For each completed replay Bar, the durable delivery order is `market.bar`, any prior accepted Order's `order.updated` to `FILLED`, its `fill.created`, current-Bar `signal.created`, `risk.decision`, newly accepted/rejected `order.updated`, then `portfolio.snapshot`. This reflects next-Bar OPEN execution before the strategy consumes that completed Bar while still recording the newly observed Bar first for consumers. A single transaction stores the whole sequence, and WebSocket publication happens only after commit.
 
 WebSocket delivery is incremental, not authoritative history. Every connection owns a bounded queue of 64 events. Publishing never awaits a browser. When a consumer falls behind, all stale queued items are discarded, then `stream.resync_required` and the newest event occupy the bounded queue; the client closes and reloads REST rather than applying that uncertain increment. Server-side receive monitoring detects a disconnected client even when no market event is being sent, so the queue is removed promptly. The React client connects, hydrates REST, applies only increasing event sequences, deduplicates record identities, strictly validates event envelopes and payloads, and performs authoritative rehydration on reconnect. Terminal sessions close the socket without reconnecting. Origin checks use the configured frontend origin. Payload DTOs expose only explicit JSON fields and Decimal strings—never ORM or arbitrary Python objects.
+
+The additive paper `/state` read holds the same shared writer-row lock and
+returns a journal watermark plus latest bar/session/portfolio and the last
+preview plan, without historical signal/risk/order/fill arrays. Collection reads
+use that validated watermark, SQL counts and at most 100 events per page.
+Orders retain the latest state per canonical UUID, ordered by first appearance;
+signals, risk decisions and fills retain every event in sequence order, including
+multiple fills for one order. Later appends cannot leak into an older page.
+The full `/snapshot`, journal and resume paths remain compatible recovery
+interfaces. This bounds page materialization/transport, not SQL scan complexity
+or an endless provider's in-memory runtime history.
 
 **There is no live broker connectivity in the Phase 9 MVP.** `PaperBroker` is local simulation only. No brokerage credentials, external order endpoints, dynamic providers, or real-money routes exist.
 
@@ -120,7 +228,61 @@ Collection endpoints order by per-run sequence and enforce `1 <= limit <= 200`. 
 
 Phase 7 execution is intentionally synchronous. FastAPI creates and closes one `AsyncSession` per request, and transaction context managers roll back on exceptions or cancellation. A client disconnect does not provide durable job ownership: cancellation or a process crash after `RUNNING` may leave a stale run because Phase 7 has no worker or recovery lease. Operators can identify those rows by status and timestamps. Automated stale-run recovery, durable cancellation, queues, and workers are explicitly deferred to a future job-execution phase; Phase 7 does not claim crash-safe execution recovery.
 
+## Personal experiment failure diagnostics
+
+The shared held-reference guard stops before daily accounting and reports only
+the observed trading date and stable held security identities. Personal jobs
+persist this allowlisted context in nullable `error_context` JSONB in the same
+FAILED transaction, independently of `summary` and result rows. Temporary terminal
+write retries retain the context; process death before commit is not durable
+recovery. API/browser validation prevents diagnostics from becoming a result.
+Older records remain unknown, never inferred from progress or backfilled.
+Alembic `20261007_0017` must precede backend rollout; downgrade removes only this
+diagnostic column and therefore intentionally removes its newly stored context.
+
+## Product dataset-version boundary
+
+The product reuses `ExperimentDatasetRegistry` and `LocalDatasetCatalog` rather
+than scanning archive directories. Optional `PRODUCT_DATA_PATH/datasets/registry.json`
+entries bind an explicit dataset ID to its canonical manifest SHA; the ID resolves
+only beneath that product dataset root. U5 reads and caches use the selected
+root and manifest identity. All additional versions are inspection-only: default
+resolution and the shared U3/U6 loader reject execution until a separate economic
+admission exists. A registration or freeze marker is not that admission. The
+existing research v1 and explicitly synthetic demo remain compatible.
+
 ## Market-data flow
+
+Independent successor materialization reuses the existing offline full-dataset
+pipeline through an explicit input specification, not frozen `.research` state.
+New ID/coverage/source selection, raw and auxiliary bytes, producer ownership and
+isolated atomic output/report identity are checked before reuse/publication.
+This creates no execution admission, registration or freeze. See
+[successor build contract](docs/product/DATASET_SUCCESSOR.md) for boundaries and
+the separate remaining financial/source and version-aware audit work.
+
+Explicit issuer repurchase-excluded ordinary-distribution price inputs are a
+separate immutable `OrdinaryDistributionReference`, never an accounting event.
+New candidate manifests may bind `ORDINARY_REFERENCE` rows in the existing
+corporate-actions partition. The loader requires a unique effective-dated record,
+its own checksum and exact cash/share event checksums, dates and final source
+identity. Only price comparison uses the companion; Portfolio receives unchanged
+shareholder cash/share events. A reference carried across absent bars cannot use
+a later rights/structural boundary to bypass price validation. Mixed boundaries
+remain unexplained; old datasets without companions keep their existing behavior.
+Adjusted-close views share the original fixed 28-digit context independently of
+the caller. Runtime support is not economic admission, source completeness or
+permission to modify frozen datasets or financial results.
+
+Accepted suspension timestamps are interpreted once in `app.data.suspensions`,
+shared by bounded market inspection and `FullDataset`. The loader indexes the
+complete interval over its accepted calendar, normalizing slash/intraday dates
+before comparison. SSE end-stop dates are not inferred resumption-at-open dates;
+SZSE start and resumption flags retain their distinct meanings. Overlaps use
+blocked > unknown > open, independently of input order. Unknown opens retain an
+`UNCERTAIN_OPEN` lineage marker and prohibit execution conservatively. This fixes
+the former start-day-only index; it does not change frozen inputs or revalidate
+saved financial results. Original studies remain untouched.
 
 ```text
 CSV / future data source

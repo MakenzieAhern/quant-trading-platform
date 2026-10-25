@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatUtc } from "../../utils/format";
-import { navigate } from "../../utils/navigation";
+import { navigate, replaceUrl } from "../../utils/navigation";
 import { Dialog } from "../Dialog";
+import { ProductError } from "../ProductPages";
 import { usePageDataContext } from "../dataContext";
-import { marketApi, securityName } from "./api";
+import {
+  explainDatasetFindings,
+  explainExperimentCode,
+} from "../experiments/codes";
+import { canReadWatchlistItem, marketApi, securityName } from "./api";
 import { boardLabel, useMarketCopy } from "./copy";
 import { MarketDetail } from "./MarketDetail";
 import type { MarketDataset, MarketRange, Security } from "./types";
@@ -17,6 +23,11 @@ function detailFromHash(hash: string) {
   const datasetId = params.get("dataset");
   const securityId = params.get("security");
   return datasetId && securityId ? { datasetId, securityId } : null;
+}
+
+function exchangeFromUrl() {
+  const value = new URLSearchParams(window.location.search).get("exchange");
+  return value === "SSE" || value === "SZSE" ? value : "ALL";
 }
 
 export function MarketsPage() {
@@ -37,15 +48,12 @@ export function MarketsPage() {
       </p>
       {datasets.loading && <p role="status">{c.loading}</p>}
       {datasets.error && (
-        <div role="alert">
-          <p>{c.error}</p>
-          <button
-            className="button secondary"
-            onClick={() => setRevision((n) => n + 1)}
-          >
-            {c.retry}
-          </button>
-        </div>
+        <ProductError
+          error={datasets.error}
+          fallback={c.error}
+          retryLabel={c.retry}
+          retry={() => setRevision((n) => n + 1)}
+        />
       )}
       {datasets.data && <MarketWorkspace datasets={datasets.data} />}
     </div>
@@ -54,6 +62,7 @@ export function MarketsPage() {
 
 function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
   const c = useMarketCopy();
+  const { i18n } = useTranslation();
   const defaultDatasetId =
     (
       datasets.find(
@@ -73,7 +82,8 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
       new URLSearchParams(window.location.search).get("q")?.slice(0, 80) ?? "",
   );
   const [query, setQuery] = useState(q);
-  const [exchange, setExchange] = useState("ALL");
+  const draftPending = q.trim() !== query;
+  const [exchange, setExchange] = useState(exchangeFromUrl);
   const [offset, setOffset] = useState(0);
   const [revision, setRevision] = useState(0);
   const [watchOffset, setWatchOffset] = useState(0);
@@ -83,14 +93,26 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
     security: Security;
     dataset: MarketDataset;
   } | null>(null);
-  const [detailError, setDetailError] = useState(false);
+  const [detailError, setDetailError] = useState<Error | null>(null);
+  const [detailRevision, setDetailRevision] = useState(0);
   const [ranges, setRanges] = useState<Record<string, MarketRange>>({});
   const [pending, setPending] = useState<string | null>(null);
   const [outcome, setOutcome] = useState<"saved" | "removed" | "error" | null>(
     null,
   );
   const lock = useRef(false);
+  const watchlistSection = useRef<HTMLElement>(null);
   const lastSearch = useRef(window.location.search);
+  const persistFilters = (source: string, term: string, venue: string) => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("dataset", source);
+    if (term) params.set("q", term);
+    else params.delete("q");
+    if (venue !== "ALL") params.set("exchange", venue);
+    else params.delete("exchange");
+    replaceUrl(`${window.location.pathname}?${params}${window.location.hash}`);
+    lastSearch.current = window.location.search;
+  };
   const detail = detailFromHash(detailHash);
   const detailDatasetId = detail?.datasetId ?? "";
   const detailSecurityId = detail?.securityId ?? "";
@@ -112,12 +134,13 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
   );
   const results = useApiResource(
     (signal) =>
-      dataset?.available
+      dataset?.available && !draftPending
         ? marketApi.search(dataset.dataset_id, query, exchange, offset, signal)
         : Promise.resolve(null),
     [
       dataset?.dataset_id,
       dataset?.available,
+      draftPending,
       query,
       exchange,
       offset,
@@ -137,9 +160,10 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
         setQ(value);
         setQuery(value);
         setDatasetId(params.get("dataset") ?? defaultDatasetId);
+        setExchange(exchangeFromUrl());
         setOffset(0);
       }
-      setDetailError(false);
+      setDetailError(null);
       setDetailHash(window.location.hash);
     };
     window.addEventListener("popstate", update);
@@ -161,20 +185,31 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
           (item) => item.security_id === detailSecurityId,
         );
         if (security) setSelected({ security, dataset: detailSource });
-        else setDetailError(true);
+        else setDetailError(new Error("Security not found"));
       })
-      .catch(() => {
-        if (active) setDetailError(true);
+      .catch((reason: unknown) => {
+        if (active)
+          setDetailError(
+            reason instanceof Error ? reason : new Error("Detail read failed"),
+          );
       });
     return () => {
       active = false;
       controller.abort();
     };
-  }, [activeSelection, canResolveDetail, detailDatasetId, detailSecurityId, detailSource]);
+  }, [
+    activeSelection,
+    canResolveDetail,
+    detailDatasetId,
+    detailSecurityId,
+    detailSource,
+    detailRevision,
+  ]);
   async function changeWatchlist(
     kind: "add" | "remove",
     source: string,
     id: string,
+    trigger?: HTMLButtonElement,
   ) {
     if (lock.current) return;
     lock.current = true;
@@ -186,6 +221,8 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
         setWatchOffset(0);
       } else {
         await marketApi.remove(source, id);
+        if (document.activeElement === trigger)
+          watchlistSection.current?.focus();
         if (watchlist.data?.items.length === 1 && watchOffset > 0)
           setWatchOffset(Math.max(0, watchOffset - 20));
       }
@@ -214,11 +251,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
   const closeDetail = () => {
     if (window.history.state?.productMarketDetail) window.history.back();
     else {
-      window.history.replaceState(
-        window.history.state,
-        "",
-        window.location.pathname + window.location.search,
-      );
+      replaceUrl(window.location.pathname + window.location.search);
       setDetailHash("");
     }
   };
@@ -232,6 +265,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             onChange={(event) => {
               setDatasetId(event.target.value);
               setOffset(0);
+              persistFilters(event.target.value, query, exchange);
             }}
           >
             {!dataset && (
@@ -262,6 +296,12 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             <p>
               {c.asOf}: {dataset.as_of ?? c.notRecorded}
             </p>
+            {(dataset.current_dataset_quality ||
+              dataset.current_source_integrity) && (
+              <p className="marketNotice" role="note">
+                {explainDatasetFindings(dataset, i18n.language)}
+              </p>
+            )}
           </>
         )}
         {(!dataset || !dataset.available) && (
@@ -269,8 +309,26 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             <p>
               {c.unavailable}. {c.sourceUnavailableHelp}
             </p>
-            {dataset?.reason_code && <code>{dataset.reason_code}</code>}
+            {dataset?.reason_code && (
+              <>
+                <p>
+                  {explainExperimentCode(dataset.reason_code, i18n.language)}
+                </p>
+                <details className="technicalDetails">
+                  <summary>{c.lineage}</summary>
+                  <code>{dataset.reason_code}</code>
+                </details>
+              </>
+            )}
           </div>
+        )}
+        {dataset?.available && dataset.execution_available === false && (
+          <p role="status">
+            {explainExperimentCode(
+              dataset.execution_reason_code ?? "DATASET_EXECUTION_NOT_ACCEPTED",
+              i18n.language,
+            )}
+          </p>
         )}
       </section>
       <section className="marketPanel" aria-label={c.search}>
@@ -280,8 +338,10 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
           className="marketControls"
           onSubmit={(event) => {
             event.preventDefault();
-            setQuery(q.trim());
+            const term = q.trim();
+            setQuery(term);
             setOffset(0);
+            persistFilters(datasetId, term, exchange);
           }}
         >
           <label className="marketField marketSearchField">
@@ -300,6 +360,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
               onChange={(event) => {
                 setExchange(event.target.value);
                 setOffset(0);
+                persistFilters(datasetId, query, event.target.value);
               }}
             >
               <option value="ALL">{c.all}</option>
@@ -311,21 +372,21 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
             {c.search}
           </button>
         </form>
-        {dataset?.available && results.loading && (
+        {dataset?.available && draftPending && (
+          <p role="status">{c.pendingSearch}</p>
+        )}
+        {dataset?.available && !draftPending && results.loading && (
           <p role="status">{c.loading}</p>
         )}
-        {results.error && (
-          <div role="alert">
-            <p>{c.error}</p>
-            <button
-              className="button secondary"
-              onClick={() => setRevision((n) => n + 1)}
-            >
-              {c.retry}
-            </button>
-          </div>
+        {!draftPending && results.error && (
+          <ProductError
+            error={results.error}
+            fallback={c.error}
+            retryLabel={c.retry}
+            retry={() => setRevision((n) => n + 1)}
+          />
         )}
-        {results.data && dataset && (
+        {!draftPending && results.data && dataset && (
           <>
             <p className="marketHelp">
               {c.provider}: {results.data.metadata.provider} ·{" "}
@@ -342,9 +403,10 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                 <div
                   className="marketTableScroll"
                   tabIndex={0}
-                  aria-label={c.search}
+                  role="region"
+                  aria-label={`${c.search} · ${c.scroll}`}
                 >
-                  <table>
+                  <table aria-label={c.search}>
                     <thead>
                       <tr>
                         <th scope="col">{c.security}</th>
@@ -379,7 +441,8 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                           <td>
                             <button
                               className="button secondary"
-                              disabled={pending !== null}
+                              aria-disabled={pending !== null}
+                              aria-label={`${pending === `add:${datasetId}:${item.security_id}` ? c.saving : c.save}: ${item.security_id}`}
                               onClick={() =>
                                 void changeWatchlist(
                                   "add",
@@ -401,16 +464,25 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                 </div>
               </>
             )}
-            <Pagination
-              offset={results.data.offset}
-              limit={results.data.limit}
-              total={results.data.total}
-              onChange={setOffset}
-            />
           </>
         )}
+        {!draftPending && (
+          <Pagination
+            label={c.search}
+            offset={offset}
+            limit={results.data?.limit ?? 20}
+            total={results.data?.total ?? null}
+            loading={results.loading && !!dataset?.available}
+            onChange={setOffset}
+          />
+        )}
       </section>
-      <section className="marketPanel" aria-label={c.watchlist}>
+      <section
+        className="marketPanel"
+        aria-label={c.watchlist}
+        ref={watchlistSection}
+        tabIndex={-1}
+      >
         <h2>{c.watchlist}</h2>
         <p className="marketHelp">{c.watchlistHelp}</p>
         {outcome && (
@@ -424,15 +496,12 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
         )}
         {watchlist.loading && <p role="status">{c.loading}</p>}
         {watchlist.error && (
-          <div role="alert">
-            <p>{c.error}</p>
-            <button
-              className="button secondary"
-              onClick={() => setWatchRevision((n) => n + 1)}
-            >
-              {c.retry}
-            </button>
-          </div>
+          <ProductError
+            error={watchlist.error}
+            fallback={c.error}
+            retryLabel={c.retry}
+            retry={() => setWatchRevision((n) => n + 1)}
+          />
         )}
         {watchlist.data && (
           <>
@@ -442,7 +511,7 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                 const source = datasets.find(
                   (d) => d.dataset_id === item.dataset_id,
                 );
-                const canRead = item.source_available && source?.available;
+                const canRead = canReadWatchlistItem(item, source);
                 return (
                   <article
                     className="marketWatchItem"
@@ -465,18 +534,21 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                       <button
                         className="button secondary"
                         disabled={!canRead}
+                        aria-label={`${c.inspect}: ${item.security_id} · ${item.dataset_id}`}
                         onClick={() => source && inspect(item.security, source)}
                       >
                         {c.inspect}
                       </button>
                       <button
                         className="button secondary"
-                        disabled={pending !== null}
-                        onClick={() =>
+                        aria-disabled={pending !== null}
+                        aria-label={`${pending === `remove:${item.dataset_id}:${item.security_id}` ? c.removing : c.remove}: ${item.security_id} · ${item.dataset_id}`}
+                        onClick={(event) =>
                           void changeWatchlist(
                             "remove",
                             item.dataset_id,
                             item.security_id,
+                            event.currentTarget,
                           )
                         }
                       >
@@ -490,24 +562,40 @@ function MarketWorkspace({ datasets }: { datasets: MarketDataset[] }) {
                 );
               })}
             </div>
-            <Pagination
-              offset={watchlist.data.offset}
-              limit={watchlist.data.limit}
-              total={watchlist.data.total}
-              onChange={setWatchOffset}
-            />
           </>
         )}
+        <Pagination
+          label={c.watchlist}
+          offset={watchOffset}
+          limit={watchlist.data?.limit ?? 20}
+          total={watchlist.data?.total ?? null}
+          loading={watchlist.loading}
+          onChange={setWatchOffset}
+        />
       </section>
       {detail && !activeSelection && (
-        <p role={detailError || !canResolveDetail ? "alert" : "status"}>
-          {detailError || !canResolveDetail ? c.detailUnavailable : c.loading}{" "}
+        <div>
+          {detailError ? (
+            <ProductError
+              error={detailError}
+              fallback={c.detailUnavailable}
+              retryLabel={c.retry}
+              retry={() => {
+                setDetailError(null);
+                setDetailRevision((n) => n + 1);
+              }}
+            />
+          ) : (
+            <p role={!canResolveDetail ? "alert" : "status"}>
+              {!canResolveDetail ? c.detailUnavailable : c.loading}
+            </p>
+          )}
           {(detailError || !canResolveDetail) && (
             <button className="button secondary" onClick={closeDetail}>
               {c.closeDetail}
             </button>
           )}
-        </p>
+        </div>
       )}
       {activeSelection && (
         <Dialog

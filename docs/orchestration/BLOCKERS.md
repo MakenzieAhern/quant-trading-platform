@@ -1,5 +1,163 @@
 # Blockers
 
+## Current context-arrival work — 2026-10-14
+
+Candidate storage prerequisite passes scoped persistence/regression checks but
+does not resolve U7: qualified-source registration and V2 account consumption are
+still missing. Continue that safe engineering work; no full-goal BLOCKED claim.
+Docker was restored, with an explicitly recorded unplanned automatic empty0018
+migration. Original selected records and health are preserved; do not retry a
+production downgrade or cite the prior rollout as proof of this new restart.
+Source/financial300147/000425, actual lawful after-start source evidence, genuine
+missing-ledger disposition and full remaining product gates stay unresolved.
+
+## Latest runtime and next engineering gap — 2026-10-13
+
+Receipt milestone4eb7bdf is published and exactCI38406422590 is PASS; Docker,
+GitHub CI and this rollout are not blockers. Finite source context still requires
+future facts at creation. Safe next work is an append-only day-context registration
+and consumption path after start, preserving V1 compatibility and causal journal
+pins. Source qualification, financial/lifecycle gaps300147/000425, genuine missing
+ledger disposition and remaining product quality/delivery gates stay incomplete.
+Do not relabel the full goal blocked while this engineering work is executable.
+
+## v1.2 current blockers and executable work — 2026-10-13
+
+Docker and GitHub CI are not current blockers. Exact `aa5f529` run38395584853
+is SUCCESS, and the frontend correction has been published. Earlier GitHub HOLD
+and pending-publication entries below are historical.
+
+Full product acceptance remains incomplete. Source/financial admission has
+unresolved 300147 and 000425 findings; the final targeted 300147 supporting
+notice itself contains a conflicting total and does not close that finding.
+Genuine missing-ledger recovery/disposition, lawful forward-source evidence and
+the complete quality/release gates remain separate requirements.
+
+Reader semantic verification and the finite receipt-to-paper integration now pass
+full isolated regression. Safe engineering continues with append-only qualified
+daily context arriving after start; the fixed future-context contract does not
+meet that requirement. This is not permission to activate a raw candidate feed,
+modify frozen research or substitute synthetic sessions for real forward acceptance.
+New code needs exact-head CI/publication; current served aa5f529 remains available.
+
+## v1.2 stale raw checkpoint defect RESOLVED_SCOPED — 2026-10-08
+
+Shared resume now binds complete input and parser context, rejects stale/legacy
+receipt or partition sets and preserves published output on mismatch. Independent
+Decimal, metadata-cleanup and predictable-temp hardlink defects are also closed.
+244 related tests/static/type checks and two retained fixture repeats pass.
+
+This does not clear financial/lifecycle/source admission. No real dataset was
+built or registered. Next explicit successor-version input/approval/owned output
+contract remains necessary; no use of INSPECTION_ONLY as approval, frozen-state
+fallback, or legacy literal financial PASS. Unpublished partial directory cleanup
+still requires explicit ownership in that entry. Other full objective obligations
+and GitHub HOLD remain; do not repeat completed source chain/raw-guard work.
+
+## v1.2 candidate reference-chain defect RESOLVED_SCOPED — 2026-10-08
+
+An independent15-source inspection now passes exact canonical/file/lineage checks,
+without changing the original65 reference or inheriting approval. The original
+frozen version remains FAIL and source execution remains blocked appropriately.
+This is a prerequisite repair, NOT financial/data acceptance or a new dataset.
+
+Actual candidate publication canonicaldfdd998f/43-bound proofadf9a80e is complete.
+Do not repeat its build or already-closed600725 arithmetic/seven price companions.
+Economic/lifecycle gaps still require whole-scope closure; missing600725 official
+resumption body remains STOP. Fixed-v1 materializer still has no independent
+successor identity/output/approved-input contract; safe engineering can proceed
+without invoking it or using inspection as authorization. Other full objective
+external/quality/delivery requirements and GitHub HOLD remain.
+
+## v1.2 original runtime rollout RESOLVED_SCOPED — 2026-10-08
+
+Original local backend/frontend now serve d183ad3 source admission/findings.
+Docker/service availability and this rollout are no longer active blockers.
+323-entry publication proof binds real saved GET preservation, independent19
+saved-version mappings, backend restart, frontend assets and bilingual actual UI.
+No original create/start POST was submitted; rejection is source-bound test proof.
+
+Legacy65 source reference and economic incompleteness remain FAIL/PARTIAL.
+Next actionable local unit: distinct candidate-only full15-source/preflight/pin
+chain, preserving original bytes and old authority; no copied approval or financial
+admission. 600725 component arithmetic and seven price companions already done;
+missing official resumption body remains STOP, not a reason to repeat or bypass.
+Full goal ACTIVE; lawful-forward/genuine-ledger/current broad quality/release
+requirements remain. GitHub HOLD and all previous denied-route boundaries remain.
+
+## v1.2 source admission repaired; original runtime rollout pending — 2026-10-08
+
+Known invalid provenance no longer admits NEW execution in tested source.
+Saved ID+SHA findings and bilingual UI/errors pass scoped tests/browser review.
+Engineering omission RESOLVED_SCOPED, not original runtime deployment:8000/5173
+still serve the prior loaded application. Safe existing-container rollout is
+next; it must verify no active jobs or pending receipts and preserve real state.
+Current original0017 equals repository head; startup has real queue-recovery
+side effects even when the migration is a no-op. Do not call restart read-only.
+
+Legacy65 reference/economic incompleteness remain FAIL/PARTIAL, full financial
+admission false. Unknown future versions remain UNVERIFIED; no frozen repair,
+new dataset authority or full15-source online verification is inferred.
+External lawful-forward/genuine-lost-ledger/current broad quality/release gates
+remain. No denied scratch/source-copy/44table-refresh/download workaround.
+Full goal ACTIVE; GitHub HOLD does not prevent local work.
+
+## v1.2 market omission resolved; invalid-source execution boundary pending — 2026-10-08
+
+U5/U8 dropped economic-quality parsing/display is RESOLVED_SCOPED: 829frontend,
+static/build/current IAB ENZH/cache/demo-switch/API evidence; deployed locally
+without restart, native222 proof306e8db6 twicePASS. Not a source-integrity or
+financial acceptance. Originalservices/data/frozen/research/tag unchanged.
+
+Known legacy source-contract FAIL still requires separate application disclosure
+and fail-closed NEW execution admission: current API catalog execution_available
+is true. Existing readonly cache, saved result/provenance and idempotent receipts
+must remain accessible/intact. Full-source script validation needs state/preflight
+and source paths absent from the ordinary Docker mount; do not invent an online
+15-source PASS. This engineering work is independently actionable without new
+methodology/source acquisition. Other full financial/forward/lawful rights/genuine
+lost ledger/current quality/remote-release requirements remain. Full goal ACTIVE.
+GitHub HOLD does not prevent the working local5173/API8000 program.
+
+## v1.2 source guard repaired; legacy integrity/product gaps remain — 2026-10-08
+
+The missing publication/acceptance guard is RESOLVED_ENGINEERING_ONLY: shared
+fresh/resume/audit/freeze validation and exact four-way freeze identity reject
+unapproved refs. 155 focused/1563 full backend+1 optional SKIP/static/type/Alembic
+PASS; independent scoped review complete. No actual new dataset was admitted.
+
+`SOURCE_CONTRACT_MANIFEST_REFERENCE_MISMATCH` remains a real legacy artifact
+failure: 65-character P0 reference still in frozen provenance/preflight/state;
+no immutable record overwritten. All source bytes and P0 master binding remain
+valid. A metadata-only RAM correction still fails approved preflight. Full
+economic coverage and financial admission remain PARTIAL/false.
+
+Next independently actionable U5/U8 defect: markets receives existing economic
+quality metadata but its parser and page/detail omit validation/notices. Repair
+with existing parser/explanation, not source reacquisition or new methodology.
+Separate source-integrity API/UI propagation remains needed; an economic notice
+must not imply source-integrity PASS. Lawful forward-data rights/genuine lost
+ledger/full current AA/native200/performance/delivery and remote release remain.
+GitHub HOLD does not prevent local5173/API8000 usage. Goal ACTIVE/full scope intact.
+
+## v1.2 new-version source-contract integrity gap — 2026-10-08
+
+`SOURCE_CONTRACT_MANIFEST_REFERENCE_MISMATCH`:SECURITY_MASTER's frozen provenance
+references a65-character digest, actual canonicalP0 SHA is64characters. The master
+array/sourcefile is intact;15sourcebytechecks and14other selfmanifest references
+pass. The legacy65reference persists through state/preflight/contracts/catalog/
+freeze. Do not overwrite any of those immutable research artifacts or call the
+contract PASS merely because market/source bytes are valid. New-version source
+reference validation is the next safe engineering action; no new acquisition or
+methodology decision needed. Specific002168 date clauses are already available.
+
+Current v1.2 overall financial admission remains PARTIAL/false;missing share-event
+and other full-input/source contradictions remain, not solved by this metadata
+finding alone. Separate lawful forward-data rights/genuine lostledger/current
+quality and remote release gates remain. GitHub user-outage HOLD is not a runtime
+blocker:original5173/API8000paper/Composehealthy. Historicalv1.1 checkpoints below
+remain historical;fullv1.2 product goal ACTIVE, not complete/narrowed/blocked.
+
 ## Current release status — 2026-09-22
 
 No active local release blocker remains. `DOCKER_SAILOR_INGEST_SOCKET_STALE_ACCESS_FAILURE` is

@@ -11,7 +11,9 @@ describe("backtest history", () => {
       jsonResponse({ items: [run()], limit: 20, offset: 0, total: 1 }),
     );
     render(<BacktestHistoryPage />);
-    expect(await screen.findByText("SUCCEEDED")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Completed", { selector: ".statusBadge" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("moving average crossover")).toBeInTheDocument();
     expect(screen.getAllByText(/2024-01-02 00:00:0\dZ \(UTC\)/)).toHaveLength(
       3,
@@ -41,8 +43,10 @@ describe("backtest history", () => {
       }),
     );
     render(<BacktestHistoryPage />);
-    for (const status of ["CREATED", "RUNNING", "SUCCEEDED", "FAILED"])
-      expect(await screen.findByText(status)).toBeInTheDocument();
+    for (const label of ["Created", "Running", "Completed", "Failed"])
+      expect(
+        await screen.findByText(label, { selector: ".statusBadge" }),
+      ).toBeInTheDocument();
   });
 
   it("loads the limit-plus-one boundary without duplicate rows", async () => {

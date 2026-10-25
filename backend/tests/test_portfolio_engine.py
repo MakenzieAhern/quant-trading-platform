@@ -186,6 +186,33 @@ def test_complete_cash_and_stock_actions_update_long_position_economics() -> Non
     )
 
 
+@pytest.mark.parametrize("kind", ("CASH_DIVIDEND", "STOCK_DIVIDEND", "BONUS_SHARE"))
+def test_combined_cash_share_carrier_is_rejected_without_partial_accounting(kind):
+    portfolio = PortfolioEngine(EventBus(), Decimal(2000))
+    portfolio.apply_fill(make_fill(1, OrderSide.BUY, "100", "10", symbol="600000.SSE"))
+    before = portfolio.snapshot_at(START + timedelta(days=2))
+    action = CorporateAction(
+        security_id=SecurityId(value="CN-A:SSE:600000"),
+        action_type=kind,
+        ex_date=date(2024, 1, 3),
+        cash_per_share=Decimal("0.1"),
+        share_ratio=Decimal("0.2"),
+        source_provider="synthetic",
+        source_version="1",
+        source_record_hash="d" * 64,
+        completeness="COMPLETE",
+    )
+    with pytest.raises(PortfolioError, match="UNSUPPORTED"):
+        portfolio.apply_corporate_action("600000.SSE", action, START + timedelta(days=3))
+    after = portfolio.snapshot_at(START + timedelta(days=3))
+    assert (after.cash, after.positions, after.corporate_action_realized_pnl) == (
+        before.cash,
+        before.positions,
+        before.corporate_action_realized_pnl,
+    )
+    assert not portfolio.retained_bonus_rounding_audits
+
+
 @pytest.mark.parametrize("ratio", (Decimal(1), Decimal(2)))
 def test_retained_bonus_is_independent_of_ambient_decimal_precision(ratio: Decimal) -> None:
     positions = []

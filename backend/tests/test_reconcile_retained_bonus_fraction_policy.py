@@ -33,6 +33,17 @@ def test_combined_ratio_ignores_conflicting_per_share_summary_typo():
     assert combined_retained_ratio(pages, "600667") == 1
 
 
+@pytest.mark.parametrize(
+    "pages",
+    [
+        ["每10股转增7股的比例对全体股东实施。其余转增股份不向原股东分配。"],
+        ["其余转增股份不向原股东分配。每10股转增7股的比例对全体股东实施。"],
+    ],
+)
+def test_positive_direct_holder_component_is_not_overridden_by_other_no_award(pages):
+    assert restructuring_holder_ratio(pages) == Decimal("0.7")
+
+
 def test_combined_ratio_collapses_total_and_tax_components():
     pages = ["证券代码:600763\n每股转增1股;其中每股转增0.34股,另每股转增0.66股"]
     assert combined_retained_ratio(pages, "600763") == 1

@@ -9,7 +9,8 @@ const en = {
   strategies: "Strategies",
   research: "Research",
   tasks: "Task center",
-  tasksIntro: "Reopen saved research and raw-data request tasks. Opening this page does not start new work.",
+  tasksIntro:
+    "Reopen saved research and raw-data request tasks. Opening this page does not start new work.",
   researchTasks: "Research tasks",
   updateTasks: "Raw-data request tasks",
   noResearchTasks: "No personal research tasks yet.",
@@ -24,8 +25,8 @@ const en = {
   legacy: "Legacy fixture backtests",
   search: "Search pages, strategies, research and watchlist",
   searchScope:
-    "Studies are searched by saved name or ID; watchlist entries by symbol, ID or saved source name. Both searches cover server history, 20 matches per page. Formal archive contents are not searched.",
-  searchCommands: "Pages and registered strategies",
+    "Search pages, registered strategies and help questions by name. Studies are searched by saved name or ID; watchlist entries by symbol, ID or saved source name. Both searches cover server history, 20 matches per page. Formal archive contents are not searched.",
+  searchCommands: "Pages, registered strategies and help",
   searchStudies: "Matching personal studies",
   searchWatchlist: "Matching watchlist entries",
   searchMatches: "Server matches",
@@ -74,7 +75,7 @@ const en = {
   welcome: "A clearer way to explore A-shares",
   lead: "Understand the risk. Then test the idea.",
   intro:
-    "Choose a strategy, set your assumptions, then examine its returns, costs and risks using a simulated account.",
+    "Choose a strategy, set your assumptions, then examine its returns, costs and risks in a guided backtest.",
   start: "Start guided backtest",
   existing: "View existing research",
   guide: "How this workspace works",
@@ -100,6 +101,14 @@ const en = {
   mode: "Data mode",
   audited: "Frozen research dataset",
   available: "Available",
+  readableData: "Cached data available",
+  readOnlyData: "View only · new execution blocked",
+  dataRecoveryTitle: "What can I do now?",
+  dataRecoveryHint:
+    "Repeated submissions or raw-data updates will not repair this data version. Keep the original records; a maintainer must verify the source and coverage before execution can be restored. These links only open pages and do not start a task.",
+  browseCachedData: "Browse this cached dataset",
+  browseSavedResearch: "View saved research",
+  blockedDataHelp: "Why is execution blocked?",
   unavailable: "Unavailable",
   coverage: "Date coverage",
   securities: "Securities",
@@ -113,12 +122,11 @@ const en = {
   step3Hint: "Compare returns with drawdowns and the benchmark.",
   noGuarantee: "Historical results do not guarantee future returns.",
   loadingError:
-    "We could not load this information. Check that the local service is running, then retry. Your saved work is preserved.",
+    "We could not load this information, so we cannot verify that saved records are available. Check that the local service is running, then retry. Open Help for safe recovery steps.",
   strategyTitle: "Know the rules before you run",
   strategyIntro:
     "Explore the strategy that is actually implemented. Start with its behavior and risks, then inspect the evidence.",
   registered: "Registered A-share strategy",
-  strategyName: "Momentum & lower volatility",
   strategySummary:
     "Ranks eligible A-shares by past momentum, trend and volatility, then periodically builds an equal-weight portfolio.",
   inspectStrategy: "Explore strategy",
@@ -142,8 +150,8 @@ const en = {
   parametersBody:
     "Initial cash, available dates, exchange universe, rebalance sessions, maximum holdings, commission and risk limits. Statutory fees and cash-account safeguards remain active.",
   fullMethod: "Open the frozen methodology",
-  noStrategies:
-    "Strategy metadata is unavailable. Retry when the service is running.",
+  strategyNotFound:
+    "This strategy is not registered. Open the strategy list to choose an available one.",
   guideTitle: "Four modes, different meanings",
   historicalHelp:
     "An experiment on a fixed historical dataset. The dates have already been observed; results are exploratory.",
@@ -152,8 +160,15 @@ const en = {
   demoHelp:
     "Made-up prices in a deterministic scenario teach the controls and test the product. They are not investment evidence.",
   forwardHelp:
-    "A deliberately started account processes new completed market data received after it starts. This requires a verified source; past data or the 2030 demo cannot prove it works.",
+    "Not available yet. This mode requires a legally usable, verified source and an explicitly started account that processes newly completed sessions received after start. Historical backfill and the 2030 demo do not prove forward acceptance.",
   helpTitle: "A few ideas that make the results clearer",
+  dataBlockedQuestion: "Why can I view data but not run a new study?",
+  dataBlockedAnswer:
+    "Reading stored prices and results is different from approving them for new execution. Source verification checks whether the evidence matches the registered version; economic coverage checks whether events such as dividends and share changes are modeled. A failed or unverified check blocks new research and historical simulation, even when the service is online. Preserve old records and their warnings; do not treat their returns as validated. Repeated submissions, changing dates or requesting newer raw prices cannot repair the same version. Ask the maintainer to verify and register a corrected version without overwriting frozen evidence. You can still inspect readable cached data and saved results. To learn the controls, deliberately choose the labeled synthetic demonstration in the guided backtest; it does not repair historical data or prove investment performance. New-market forward simulation has its own source and receipt requirements.",
+  localAppQuestion:
+    "Can I use the local app while GitHub CI/CD is unavailable?",
+  localAppAnswer:
+    "Yes, when this PC's installed services are running, open http://localhost:5173/ in the same browser. GitHub CI/CD checks and publishes changes; it is not required to use the existing local app. Local checks do not replace remote CI or release approval. Service online does not mean prices are current or economically validated: check dates, mode and limits in Data center. If the page or service is unavailable, open the installed Docker Desktop from the Windows Start menu, wait for its engine, then refresh the same page. If it still fails, ask the maintainer to check services; do not reset Docker or delete data. Keep the same address to retain browser-saved drafts and uncertain request IDs.",
   backtestQuestion: "What is a backtest?",
   backtestAnswer:
     "It applies explicit trading rules to past data with simulated costs and execution constraints. It tells you what this model did in that history, not what it will earn next.",
@@ -170,7 +185,7 @@ const en = {
   settingsHint:
     "These choices change presentation, never cash, returns, trading dates or risk decisions.",
   futureUnavailable:
-    "Raw candidate updates do not establish validated forward simulation. Historical research and synthetic demonstration remain available.",
+    "Raw candidate updates do not establish validated forward simulation.",
   emptySearch:
     "No matching page, strategy or study. Try a name or open Research.",
   navigation: "Workspace navigation",
@@ -209,8 +224,8 @@ const zh: Record<keyof typeof en, string> = {
   legacy: "旧版样例回测",
   search: "搜索页面、策略、研究和自选",
   searchScope:
-    "研究按保存名称或标识搜索，自选按代码、标识或保存的来源名称搜索。两者查询服务器完整记录，每页最多 20 项；不检索正式研究档案内容。",
-  searchCommands: "页面与已注册策略",
+    "页面、已注册策略和帮助问题按名称搜索。研究按保存名称或标识搜索，自选按代码、标识或保存的来源名称搜索。两者查询服务器完整记录，每页最多 20 项；不检索正式研究档案内容。",
+  searchCommands: "页面、已注册策略和帮助",
   searchStudies: "匹配的个人研究",
   searchWatchlist: "匹配的自选记录",
   searchMatches: "服务器匹配数",
@@ -281,6 +296,14 @@ const zh: Record<keyof typeof en, string> = {
   mode: "数据模式",
   audited: "已冻结的研究数据",
   available: "可用",
+  readableData: "可查看缓存",
+  readOnlyData: "仅可查看 · 禁止新执行",
+  dataRecoveryTitle: "现在可以做什么？",
+  dataRecoveryHint:
+    "重复提交或更新原始行情不能修复此数据版本。请保留原始记录，由维护者核验来源与经济覆盖后再恢复执行。以下入口只打开页面，不会启动任务。",
+  browseCachedData: "查看此数据集的缓存",
+  browseSavedResearch: "查看已保存研究",
+  blockedDataHelp: "为什么不能运行？",
   unavailable: "不可用",
   coverage: "覆盖区间",
   securities: "证券",
@@ -294,11 +317,10 @@ const zh: Record<keyof typeof en, string> = {
   step3Hint: "把收益、回撤与市场基准放在一起看。",
   noGuarantee: "历史结果不保证未来收益。",
   loadingError:
-    "暂时无法加载。请确认本地服务已启动后重试，已保存的工作不会因此丢失。",
+    "暂时无法加载，尚不能核验已保存记录是否可用。请确认本地服务已启动后重试；安全恢复步骤可在“帮助”中查看。",
   strategyTitle: "知道规则，再开始研究",
   strategyIntro: "这里展示已实现的策略。先理解行为和风险，再查看研究证据。",
   registered: "已注册的 A 股策略",
-  strategyName: "动量与低波动",
   strategySummary:
     "综合过去的动量、趋势和波动率，为符合条件的 A 股排序，定期建立等权组合。",
   inspectStrategy: "了解策略",
@@ -322,15 +344,21 @@ const zh: Record<keyof typeof en, string> = {
   parametersBody:
     "本金、可用区间、交易所股票范围、调仓间隔、最多持仓数、佣金和风险限制。法定税费和现金账户约束始终有效。",
   fullMethod: "查看冻结方法说明",
-  noStrategies: "暂时无法读取策略信息。服务恢复后请重试。",
+  strategyNotFound: "该策略未注册。请返回策略中心选择可用策略。",
   guideTitle: "四种模式，四种不同含义",
   historicalHelp:
     "在固定历史数据集上检验假设。这些日期已经被看过，结果属于探索性实验。",
   replayHelp: "让模拟账户依次走过已存储的历史交易日。这不是新到达的市场数据。",
   demoHelp: "用确定性的虚构价格学习操作、验证产品流程，不作为投资收益证据。",
   forwardHelp:
-    "主动启动会话后，接收新到达的已完成交易日数据并模拟处理。必须先验证数据来源；历史补录和2030演示不能替代这一验收。",
+    "尚未开放。此模式需要合法可用且经过核验的数据来源，由用户主动启动会话后接收新到达的已完成交易日数据并模拟处理。历史补录和2030演示不能替代前向验收。",
   helpTitle: "读懂结果，从几个概念开始",
+  dataBlockedQuestion: "为什么能查看数据，却不能运行新的研究？",
+  dataBlockedAnswer:
+    "能读取已存价格和结果，不等于获准用它们进行新执行。来源核验检查证据是否匹配登记的数据版本；经济覆盖核验检查分红、股份变动等事件是否已建模。检查失败或尚未验证时，即使服务在线，也会阻止新的研究和历史模拟。保留旧记录及警告，不要把旧收益视为已验证。重复提交、修改日期或请求更新的原始价格，都不能修复同一版本。请维护者核验并登记修正版本，不覆盖冻结证据。你仍可查看可读取的缓存和已保存结果。若只想学习操作，可在引导式回测中主动选择明确标记的合成演示；它不会修复历史数据，也不证明投资表现。真实新行情前向模拟另有来源与接收时间要求。",
+  localAppQuestion: "GitHub CI/CD 暂停时，本地平台还能用吗？",
+  localAppAnswer:
+    "可以，前提是这台 PC 已安装的服务正在运行；在同一浏览器打开 http://localhost:5173/。GitHub CI/CD 用于检查与发布修改，不是使用现有本地平台的前提。本地检查不能替代远端 CI 或发布审批。服务在线不代表行情最新，也不代表经济完整性已验证；请在数据中心查看日期、模式和限制。如果页面或服务无法连接，从 Windows 开始菜单打开已安装的 Docker Desktop，等待引擎运行后刷新原页面。仍然失败时，请维护者检查服务；不要重置 Docker 或删除数据。保留同一地址，避免丢失该浏览器来源下保存的草稿与待确认请求标识。",
   backtestQuestion: "什么是回测？",
   backtestAnswer:
     "把明确的交易规则放到历史数据中，加入模拟成本和成交限制。它描述模型在这段历史里的表现，不预测下一次会赚多少。",
@@ -345,8 +373,7 @@ const zh: Record<keyof typeof en, string> = {
     "宽基指数提供市场背景。跑赢下跌的市场，账户仍然可能亏钱。沪深300比较序列也不等同于可直接复制的含分红投资回报。",
   settingsTitle: "让工作台更适合你",
   settingsHint: "这些设置只影响展示，不改变本金、收益、交易日期或风控判断。",
-  futureUnavailable:
-    "原始候选更新不代表前向模拟已通过验收。历史研究和合成演示仍可使用。",
+  futureUnavailable: "原始候选更新不代表前向模拟已通过验收。",
   emptySearch: "没有找到匹配的页面、策略或研究。可以换个名称，或打开研究列表。",
   navigation: "工作区导航",
   footer: "本地研究与模拟执行 · 不发送真实资金订单",
@@ -363,4 +390,35 @@ const zh: Record<keyof typeof en, string> = {
 export function useProductCopy(): Record<keyof typeof en, string> {
   const { i18n } = useTranslation();
   return i18n.language.startsWith("zh") ? zh : en;
+}
+
+export function productHelpTopics(copy: ReturnType<typeof useProductCopy>) {
+  return [
+    {
+      id: "data-blocked",
+      question: copy.dataBlockedQuestion,
+      answer: copy.dataBlockedAnswer,
+    },
+    {
+      id: "local-app",
+      question: copy.localAppQuestion,
+      answer: copy.localAppAnswer,
+    },
+    {
+      id: "backtest",
+      question: copy.backtestQuestion,
+      answer: copy.backtestAnswer,
+    },
+    {
+      id: "drawdown",
+      question: copy.drawdownQuestion,
+      answer: copy.drawdownAnswer,
+    },
+    { id: "win", question: copy.winQuestion, answer: copy.winAnswer },
+    {
+      id: "benchmark",
+      question: copy.benchmarkQuestion,
+      answer: copy.benchmarkAnswer,
+    },
+  ];
 }

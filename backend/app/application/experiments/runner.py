@@ -4,7 +4,7 @@ from collections import Counter
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, replace
 from datetime import date, datetime
-from decimal import ROUND_FLOOR, Decimal
+from decimal import ROUND_FLOOR, ROUND_HALF_EVEN, Context, Decimal, localcontext
 from enum import Enum
 from pathlib import Path
 from threading import Event
@@ -19,20 +19,26 @@ from app.application.experiments.data import (
     ExperimentInputError,
     load_experiment_dataset,
 )
-from app.application.experiments.models import CreateExperimentRequest
+from app.application.experiments.models import CreateExperimentRequest, ExperimentFailureContext
 from app.data.catalog.checksums import canonical_sha256, sha256_file
 from app.data.full_dataset import FullDataset
 from app.domain.markets.calendar import TradingCalendar
+from app.domain.markets.corporate_actions import OrdinaryDistributionInputError
 from app.domain.risk import RiskConfig
 from app.domain.trading import PortfolioSnapshot
 from app.research.analytics import analyze_research_period
 from app.research.costs import EffectiveDatedAShareCommission
-from app.research.engine import ResearchExecutionDelta, ResearchExecutionEngine
+from app.research.engine import (
+    ResearchExecutionDelta,
+    ResearchExecutionEngine,
+    UnexplainedReferenceAdjustment,
+)
 from app.research.models import PortfolioTarget, ResearchSession
 from app.research.strategy import ChinaAMomentumLowVolResearchStrategy
 from app.strategies.research import ChinaAMomentumLowVolConfig
 
 TRADING_ZONE = ZoneInfo("Asia/Shanghai")
+EXPERIMENT_CONTEXT = Context(prec=28, rounding=ROUND_HALF_EVEN)
 
 
 def json_value(value: Any) -> Any:
@@ -89,17 +95,18 @@ class ExploratoryStrategy(ChinaAMomentumLowVolResearchStrategy):
             return None
         lots = dict(session.buy_lot_sizes)
         positions = []
-        for item in target.positions:
-            weight = min(item.target_weight, self.max_weight)
-            lot = Decimal(lots[item.security_id])
-            quantity = (available_equity * weight / (item.reference_price * lot)).to_integral_value(
-                rounding=ROUND_FLOOR
-            ) * lot
-            positions.append(replace(item, target_weight=weight, quantity=quantity))
-        invested = sum((p.quantity * p.reference_price for p in positions), Decimal(0))
-        self.last_target = PortfolioTarget(
-            positions=tuple(positions), residual_cash=available_equity - invested
-        )
+        with localcontext(EXPERIMENT_CONTEXT):
+            for item in target.positions:
+                weight = min(item.target_weight, self.max_weight)
+                lot = Decimal(lots[item.security_id])
+                quantity = (
+                    available_equity * weight / (item.reference_price * lot)
+                ).to_integral_value(rounding=ROUND_FLOOR) * lot
+                positions.append(replace(item, target_weight=weight, quantity=quantity))
+            invested = sum((p.quantity * p.reference_price for p in positions), Decimal(0))
+            self.last_target = PortfolioTarget(
+                positions=tuple(positions), residual_cash=available_equity - invested
+            )
         return self.last_target
 
     def reset(self) -> None:
@@ -173,17 +180,29 @@ def run_experiment(
     last_delta: ResearchExecutionDelta | None = None
     for completed, session in enumerate(data.sessions(), start=1):
         check_cancelled()
-        last_delta = engine.process_session(session)
+        try:
+            last_delta = engine.process_session(session)
+        except UnexplainedReferenceAdjustment as exc:
+            # ponytail: first 100 identities bound job-list payloads; the count explicitly
+            # reports truncation. Add a paginated diagnostic collection if more are needed.
+            context = ExperimentFailureContext(
+                trading_date=exc.trading_date,
+                security_ids=exc.security_ids[:100],
+                security_count=len(exc.security_ids),
+            )
+            raise ExperimentInputError(exc.code, context) from exc
+        except OrdinaryDistributionInputError as exc:
+            raise ExperimentInputError(exc.code) from exc
         if completed % 10 == 0 or completed == total:
             progress("EXECUTING", completed, total)
     check_cancelled()
     assert last_delta is not None
-    plan = _plan_preview(
+    plan = build_plan_preview(
         request,
         registered["sha256"],
         registered["mode"],
         last_delta,
-        strategy.last_target,
+        last_delta.target,
         data.next_session.session_date if data.next_session is not None else None,
         total,
     )
@@ -193,21 +212,22 @@ def run_experiment(
     )
     dates = tuple(s.timestamp.date() for s in snapshots)
     equity = tuple(s.equity for s in snapshots)
-    benchmark = tuple(
-        request.initial_cash
-        * data.benchmark[day.isoformat()]
-        / data.benchmark[dates[0].isoformat()]
-        for day in dates
-    )
-    costs = sum((f.commission for f in result.fills), Decimal(0))
-    traded_notional = sum((f.quantity * f.price for f in result.fills), Decimal(0))
-    mean_equity = sum(equity, Decimal(0)) / Decimal(len(equity))
-    analysis = analyze_research_period(
-        equity=equity,
-        benchmark_equity=benchmark,
-        transaction_costs=costs,
-        turnover=traded_notional / mean_equity,
-    )
+    with localcontext(EXPERIMENT_CONTEXT):
+        benchmark = tuple(
+            request.initial_cash
+            * data.benchmark[day.isoformat()]
+            / data.benchmark[dates[0].isoformat()]
+            for day in dates
+        )
+        costs = sum((f.commission for f in result.fills), Decimal(0))
+        traded_notional = sum((f.quantity * f.price for f in result.fills), Decimal(0))
+        mean_equity = sum(equity, Decimal(0)) / Decimal(len(equity))
+        analysis = analyze_research_period(
+            equity=equity,
+            benchmark_equity=benchmark,
+            transaction_costs=costs,
+            turnover=traded_notional / mean_equity,
+        )
     metrics = json_value(asdict(analysis))
     metrics["number_of_trades"] = len(result.fills)
     metrics["number_of_fills"] = len(result.fills)
@@ -346,7 +366,7 @@ def run_experiment(
     )
 
 
-def _plan_preview(
+def build_plan_preview(
     request: CreateExperimentRequest,
     dataset_sha256: str,
     mode: str,
@@ -354,11 +374,20 @@ def _plan_preview(
     target: PortfolioTarget | None,
     next_session: date | None,
     completed_sessions: int,
+    *,
+    legacy_checkpoint: bool = False,
 ) -> dict[str, Any]:
     """Describe the existing engine's final-session account and OMS decisions."""
 
     snapshot = delta.snapshot
     as_of = delta.session.trading_date
+    # V1 replay only: reproduce already persisted projections without rewriting history.
+    if (
+        not legacy_checkpoint
+        and snapshot is not None
+        and snapshot.timestamp.astimezone(TRADING_ZONE).date() != as_of
+    ):
+        snapshot = None
     status = (
         "ACCOUNT_SNAPSHOT_UNAVAILABLE"
         if snapshot is None
@@ -397,6 +426,10 @@ def _plan_preview(
             }
         ),
     }
+    if not legacy_checkpoint:
+        common["account_snapshot_trading_date"] = (
+            snapshot.timestamp.astimezone(TRADING_ZONE).date().isoformat() if snapshot else None
+        )
     if snapshot is None:
         return {**common, "account": None, "candidates": [], "estimated_cash_required": None}
 
@@ -433,14 +466,17 @@ def _plan_preview(
             if proposal
             else ("BUY" if desired > held else "SELL" if desired < held else "HOLD")
         )
-        if proposal and decision and decision.approved and side == "BUY":
-            if decision.reference_price is None or decision.estimated_transaction_cost is None:
-                cash_known = False
-            else:
-                cash_required += (
-                    proposal.quantity * decision.reference_price
-                    + decision.estimated_transaction_cost
-                )
+        # Match the engine's precision without inheriting caller rounding or traps.
+        with localcontext(EXPERIMENT_CONTEXT):
+            desired_change = abs(desired - held)
+            if proposal and decision and decision.approved and side == "BUY":
+                if decision.reference_price is None or decision.estimated_transaction_cost is None:
+                    cash_known = False
+                else:
+                    cash_required += (
+                        proposal.quantity * decision.reference_price
+                        + decision.estimated_transaction_cost
+                    )
         candidates.append(
             json_value(
                 {
@@ -448,7 +484,7 @@ def _plan_preview(
                     "target_weight": targets[sid].target_weight if sid in targets else Decimal(0),
                     "held_quantity": held,
                     "target_quantity": desired,
-                    "desired_change_quantity": abs(desired - held),
+                    "desired_change_quantity": desired_change,
                     "proposed_quantity": proposal.quantity if proposal else Decimal(0),
                     "side": side,
                     "reference_raw_close": prices.get(sid),
@@ -481,42 +517,43 @@ def _security_id(symbol: str) -> str:
 
 
 def _holdings_row(sequence: int, snapshot: PortfolioSnapshot) -> dict[str, Any]:
-    result: dict[str, Any] = json_value(
-        {
-            "sequence": sequence,
-            "trading_date": snapshot.timestamp.astimezone(TRADING_ZONE).date(),
-            "timestamp": snapshot.timestamp,
-            "cash": snapshot.cash,
-            "equity": snapshot.equity,
-            "market_value": snapshot.market_value,
-            "realized_pnl": snapshot.realized_pnl,
-            "corporate_action_realized_pnl": snapshot.corporate_action_realized_pnl,
-            "total_pnl": snapshot.total_pnl,
-            "unrealized_pnl": snapshot.unrealized_pnl,
-            "cumulative_commission": snapshot.cumulative_commission,
-            "pending_corporate_action_value": sum(
-                (
-                    item.carrying_value
-                    for item in (*snapshot.pending_demergers, *snapshot.pending_mergers)
+    with localcontext(EXPERIMENT_CONTEXT):
+        result: dict[str, Any] = json_value(
+            {
+                "sequence": sequence,
+                "trading_date": snapshot.timestamp.astimezone(TRADING_ZONE).date(),
+                "timestamp": snapshot.timestamp,
+                "cash": snapshot.cash,
+                "equity": snapshot.equity,
+                "market_value": snapshot.market_value,
+                "realized_pnl": snapshot.realized_pnl,
+                "corporate_action_realized_pnl": snapshot.corporate_action_realized_pnl,
+                "total_pnl": snapshot.total_pnl,
+                "unrealized_pnl": snapshot.unrealized_pnl,
+                "cumulative_commission": snapshot.cumulative_commission,
+                "pending_corporate_action_value": sum(
+                    (
+                        item.carrying_value
+                        for item in (*snapshot.pending_demergers, *snapshot.pending_mergers)
+                    ),
+                    Decimal(0),
                 ),
-                Decimal(0),
-            ),
-            "positions": [
-                {
-                    "security_id": _security_id(position.symbol),
-                    "quantity": position.quantity,
-                    "average_price": position.average_price,
-                    "market_price": position.market_price,
-                    "market_value": position.quantity * position.market_price,
-                    "weight": (position.quantity * position.market_price / snapshot.equity)
-                    if snapshot.equity > 0
-                    else None,
-                }
-                for position in snapshot.positions
-                if position.quantity != 0
-            ],
-        }
-    )
+                "positions": [
+                    {
+                        "security_id": _security_id(position.symbol),
+                        "quantity": position.quantity,
+                        "average_price": position.average_price,
+                        "market_price": position.market_price,
+                        "market_value": position.quantity * position.market_price,
+                        "weight": (position.quantity * position.market_price / snapshot.equity)
+                        if snapshot.equity > 0
+                        else None,
+                    }
+                    for position in snapshot.positions
+                    if position.quantity != 0
+                ],
+            }
+        )
     return result
 
 

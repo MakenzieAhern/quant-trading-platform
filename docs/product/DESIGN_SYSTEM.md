@@ -26,6 +26,10 @@ neutral surfaces; dark graphite; indigo action accent. Theme defaults to system;
 saved choice and market-color preference independent of locale. System fonts only.
 Body 15px, line-height 1.65, tabular numbers; h1 28–32px desktop, 26px mobile.
 Spacing 4/8/12/16/24/32; radii 6/10/14px; hairline border; restrained shadow.
+Form controls use a separate `--field-border` token: isolated Chrome measured the
+previous search-field boundary at 1.17–1.48:1 against adjacent light/dark colors;
+the new shared token measures at least 3.41:1 in the sampled raised panels. Card
+borders stay quiet. This follows [W3C non-text contrast guidance](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html), not a claim that all screens pass WCAG.
 Sidebar 224px; compact header 64px; workspace max 1440px with 24–32px padding.
 Mobile navigation collapses with visible menu control, no full-page horizontal scroll.
 Focusable targets ≥40px where possible, 2px focus ring + offset, semantic form labels.
@@ -34,8 +38,11 @@ Primary action visually unique on first use. Avoid giant financial KPIs on homep
 No long hashes on first-use surfaces; lineage remains available in disclosure/details.
 All async areas keep their surrounding navigation. Errors explain next step and retry.
 Drafts persist before leaving; exit has explicit keep/discard/stay semantics.
-Dialog uses native modal focus handling; all essential actions also visible outside
-keyboard shortcuts. The strategy card drawer uses a URL fragment so Back closes it,
+Dialog uses native modal focus handling with a shared Tab/Shift+Tab edge loop:
+only the first/last visible, enabled, non-inert sequential control is wrapped.
+Interior navigation, child-handled keys, browser-modified shortcuts, native Esc
+and trigger-focus restoration retain their existing behavior. Essential actions
+are also visible outside keyboard shortcuts. The strategy card drawer uses a URL fragment so Back closes it,
 Forward restores it, and a direct link opens it without changing the list's scroll.
 Market security detail uses the same native modal/history behavior with exact
 dataset and security IDs in its fragment; hash-only traversal preserves the

@@ -1,8 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
-import { formatDecimal, formatPercent } from "../../utils/format";
+import {
+  formatDecimal,
+  formatPercent,
+  formatSignedPercent,
+  formatUtc,
+} from "../../utils/format";
 import { experimentApi } from "./api";
 import {
   comparisonConditions,
@@ -10,8 +15,8 @@ import {
   parseComparisonIds,
 } from "./comparison";
 import { useComparisonCopy } from "./comparisonCopy";
-import { useExperimentCopy } from "./copy";
-import { explainExperimentCode } from "./codes";
+import { experimentBenchmarkName, useExperimentCopy } from "./copy";
+import { explainDatasetFindings, explainExperimentCode } from "./codes";
 import { experimentError } from "./errors";
 import type { Experiment, ExperimentResult } from "./types";
 import "./experiments.css";
@@ -24,9 +29,14 @@ type ComparedRun = {
   notReady?: boolean;
 };
 
+function runLabel(job: Experiment, index: number) {
+  return `${index + 1}. ${job.name} · ${formatUtc(job.created_at)}`;
+}
+
 export function ExperimentComparePage() {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
+  const heading = useRef<HTMLHeadingElement>(null);
   const [search, setSearch] = useState(window.location.search);
   useEffect(() => {
     const update = () => setSearch(window.location.search);
@@ -36,26 +46,40 @@ export function ExperimentComparePage() {
   const ids = parseComparisonIds(search);
   return (
     <div className="experimentWorkspace">
-      <Link className="experimentBack" href="/experiments">
+      <Link back className="experimentBack" href="/experiments">
         ← {c.backList}
       </Link>
       <header className="experimentHeader">
-        <h1>{u.comparison}</h1>
+        <h1 ref={heading} tabIndex={-1}>
+          {u.comparison}
+        </h1>
         <p>{u.comparisonHelp}</p>
       </header>
       {ids ? (
-        <Comparison key={ids.join(",")} ids={ids} />
+        <Comparison
+          key={ids.join(",")}
+          ids={ids}
+          focusHeading={() => heading.current?.focus()}
+        />
       ) : (
         <div className="experimentNotice" role="alert">
           <p>{u.invalidIds}</p>
-          <Link href="/experiments">{c.backList}</Link>
+          <Link back href="/experiments">
+            {c.backList}
+          </Link>
         </div>
       )}
     </div>
   );
 }
 
-function Comparison({ ids }: { ids: string[] }) {
+function Comparison({
+  ids,
+  focusHeading,
+}: {
+  ids: string[];
+  focusHeading: () => void;
+}) {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
   const { i18n } = useTranslation();
@@ -66,13 +90,14 @@ function Comparison({ ids }: { ids: string[] }) {
     async (signal) =>
       Promise.all(
         ids.map(async (id): Promise<ComparedRun> => {
+          let job: Experiment | undefined;
           try {
-            const job = await experimentApi.get(id, signal);
+            job = await experimentApi.get(id, signal);
             if (job.status !== "SUCCEEDED" || !job.result_available)
               return { id, job, notReady: true };
             return { id, job, result: await experimentApi.result(id, signal) };
           } catch (error) {
-            return { id, error };
+            return { id, job, error };
           }
         }),
       ),
@@ -85,10 +110,12 @@ function Comparison({ ids }: { ids: string[] }) {
       <div className="experimentNotice" role="alert">
         <h2>{u.incomplete}</h2>
         <ul>
-          {entries?.map((entry) => (
+          {entries?.map((entry, index) => (
             <li key={entry.id}>
               <Link href={`/experiments/${entry.id}`}>
-                {entry.job?.name ?? entry.id}
+                {entry.job
+                  ? runLabel(entry.job, index)
+                  : `${index + 1}. ${entry.id}`}
               </Link>
               :{" "}
               {entry.notReady
@@ -101,7 +128,10 @@ function Comparison({ ids }: { ids: string[] }) {
         </ul>
         <button
           className="button secondary"
-          onClick={() => setRevision((value) => value + 1)}
+          onClick={(event) => {
+            if (document.activeElement === event.currentTarget) focusHeading();
+            setRevision((value) => value + 1);
+          }}
         >
           {c.retryLoad}
         </button>
@@ -111,7 +141,9 @@ function Comparison({ ids }: { ids: string[] }) {
     job: Experiment;
     result: ExperimentResult;
   })[];
-  const conditions = completed.map(({ job }) => comparisonConditions(job));
+  const conditions = completed.map(({ job, result }) =>
+    comparisonConditions(job, result),
+  );
   const rows = [
     {
       key: "data",
@@ -122,8 +154,8 @@ function Comparison({ ids }: { ids: string[] }) {
     {
       key: "period",
       label: u.periodCondition,
-      value: (job: Experiment) =>
-        `${job.configuration.start_date} → ${job.configuration.end_date}\nAsia/Shanghai`,
+      value: (job: Experiment, result: ExperimentResult) =>
+        `${u.requestedPeriod}: ${job.configuration.start_date} → ${job.configuration.end_date}\n${u.actualPeriod}: ${result.date_start} → ${result.date_end}\nAsia/Shanghai`,
     },
     {
       key: "costs",
@@ -157,7 +189,7 @@ function Comparison({ ids }: { ids: string[] }) {
     {
       label: c.return,
       value: (r: ExperimentResult) =>
-        formatPercent(r.metrics.cumulative_return, places),
+        formatSignedPercent(r.metrics.cumulative_return, places),
     },
     {
       label: c.drawdownMetric,
@@ -172,12 +204,12 @@ function Comparison({ ids }: { ids: string[] }) {
     {
       label: c.benchmark,
       value: (r: ExperimentResult) =>
-        `${formatPercent(r.metrics.benchmark_return, places)}\n${r.benchmark_id}`,
+        `${formatSignedPercent(r.metrics.benchmark_return, places)}\n${experimentBenchmarkName(r.benchmark_id, c)}`,
     },
     {
       label: c.excess,
       value: (r: ExperimentResult) =>
-        formatPercent(r.metrics.excess_return, places),
+        formatSignedPercent(r.metrics.excess_return, places),
     },
     {
       label: c.capitalEnd,
@@ -192,9 +224,14 @@ function Comparison({ ids }: { ids: string[] }) {
   const headers = (
     <tr>
       <th scope="col">{u.condition}</th>
-      {completed.map(({ job }) => (
+      {completed.map(({ job }, index) => (
         <th scope="col" key={job.job_id}>
-          <Link href={`/experiments/${job.job_id}`}>{job.name}</Link>
+          <Link href={`/experiments/${job.job_id}`}>
+            {runLabel(job, index)}
+          </Link>
+          <p className="experimentMode">
+            {job.mode === "synthetic_demo" ? c.demo : c.historical}
+          </p>
         </th>
       ))}
     </tr>
@@ -215,6 +252,23 @@ function Comparison({ ids }: { ids: string[] }) {
         <p>{u.versionBoundary}</p>
         <p>{u.noRecommendation}</p>
       </section>
+      {completed.some(
+        ({ result }) =>
+          result.current_dataset_quality || result.current_source_integrity,
+      ) && (
+        <section className="experimentNotice" role="note">
+          <h2>{c.limits}</h2>
+          {completed.map(({ id, job, result }, index) =>
+            result.current_dataset_quality ||
+            result.current_source_integrity ? (
+              <div key={id}>
+                <h3>{runLabel(job, index)}</h3>
+                <p>{explainDatasetFindings(result, i18n.language)}</p>
+              </div>
+            ) : null,
+          )}
+        </section>
+      )}
       <section className="experimentPanel">
         <h2>{u.comparisonMetrics}</h2>
         <label className="experimentCheck">
@@ -229,10 +283,11 @@ function Comparison({ ids }: { ids: string[] }) {
         <p className="experimentHelp">{c.tableScroll}</p>
         <div
           className="experimentTableScroll experimentComparisonTable"
+          role="region"
           tabIndex={0}
           aria-label={u.comparisonMetrics}
         >
-          <table>
+          <table aria-label={u.comparisonMetrics}>
             <thead>{headers}</thead>
             <tbody>
               {metrics.map((row) => (
@@ -251,10 +306,11 @@ function Comparison({ ids }: { ids: string[] }) {
         <h2>{u.compatibility}</h2>
         <div
           className="experimentTableScroll experimentComparisonTable"
+          role="region"
           tabIndex={0}
           aria-label={u.compatibility}
         >
-          <table>
+          <table aria-label={u.compatibility}>
             <thead>{headers}</thead>
             <tbody>
               {rows.map((row) => (
@@ -269,8 +325,8 @@ function Comparison({ ids }: { ids: string[] }) {
                         : u.same}
                     </span>
                   </th>
-                  {completed.map(({ id, job }) => (
-                    <td key={id}>{row.value(job)}</td>
+                  {completed.map(({ id, job, result }) => (
+                    <td key={id}>{row.value(job, result)}</td>
                   ))}
                 </tr>
               ))}
@@ -281,22 +337,39 @@ function Comparison({ ids }: { ids: string[] }) {
       <section className="experimentPanel">
         <h2>{c.limits}</h2>
         <div className="experimentComparisonLimits">
-          {completed.map(({ id, job, result }) => (
+          {completed.map(({ id, job, result }, index) => (
             <article key={id}>
-              <h3>{job.name}</h3>
+              <h3>{runLabel(job, index)}</h3>
               <p>
                 {job.mode === "synthetic_demo"
                   ? c.warningDemo
                   : c.warningHistorical}
               </p>
+              {job.dataset_id === "cn-a-research-20100101-20251231-v1" && (
+                <p>
+                  {job.mode === "historical_exploration" &&
+                  result.mode === "historical_exploration"
+                    ? c.historicalExecutionIssue
+                    : c.historicalExecutionUnverified}
+                </p>
+              )}
               <ul>
+                {(result.current_dataset_quality ||
+                  result.current_source_integrity) && (
+                  <li>{explainDatasetFindings(result, i18n.language)}</li>
+                )}
                 {result.limitations.map((code) => (
                   <li key={code}>
                     {explainExperimentCode(code, i18n.language)}
                   </li>
                 ))}
               </ul>
-              <Link href={`/experiments/${id}`}>{c.open}</Link>
+              <Link
+                href={`/experiments/${id}`}
+                aria-label={`${c.open}: ${runLabel(job, index)}`}
+              >
+                {c.open}
+              </Link>
             </article>
           ))}
         </div>

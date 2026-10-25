@@ -1,4 +1,4 @@
-import type { Experiment } from "./types";
+import type { Experiment, ExperimentResult } from "./types";
 
 export const comparisonUrl = (ids: string[]) =>
   `/experiments/compare?ids=${ids.join(",")}`;
@@ -31,6 +31,7 @@ export function comparableDecimal(value: string): string {
 
 export function comparisonConditions(
   job: Experiment,
+  result: Pick<ExperimentResult, "date_start" | "date_end">,
 ): Record<"data" | "period" | "costs" | "cash" | "risk" | "strategy", string> {
   const { configuration: c } = job;
   return {
@@ -40,7 +41,12 @@ export function comparisonConditions(
       job.dataset_sha256,
       c.universe,
     ]),
-    period: JSON.stringify([c.start_date, c.end_date]),
+    period: JSON.stringify([
+      c.start_date,
+      c.end_date,
+      result.date_start,
+      result.date_end,
+    ]),
     costs: JSON.stringify([
       comparableDecimal(c.costs.commission_rate),
       comparableDecimal(c.costs.minimum_commission),

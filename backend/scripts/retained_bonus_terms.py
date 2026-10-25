@@ -2,9 +2,296 @@
 
 import re
 import unicodedata
+from datetime import date
 from decimal import Decimal, localcontext
 
-from scripts.reconcile_distribution_cash import issuer_code_matches
+from scripts.audit_p1_orphan_cash_facts import LEGACY_NOT_FINAL
+from scripts.audit_p1_retained_cash_sources import NONFINAL_VARIANT, retained_final_title
+from scripts.link_distribution_notices import EX_LABEL, LABEL_DATE_GAP, RECORD_LABELS, notice_dates
+from scripts.reconcile_distribution_cash import issuer_code_matches, normalized_document
+
+
+def same_day_listing(pages, symbol, title, record_date, ex_date):
+    """Accept only explicit final all-holder credit and unrestricted listing on ex-date.
+
+    This is not a next-session estimate or support for delayed/unknown tradability.
+    Other notice layouts remain unresolved until their actual terms are reviewed.
+    """
+    normalized = normalized_document(pages)
+    if (
+        not retained_final_title(title)
+        or NONFINAL_VARIANT.search(title)
+        or LEGACY_NOT_FINAL.search(title)
+        or not issuer_code_matches(normalized, symbol)
+    ):
+        raise ValueError("BONUS_SAME_DAY_FINAL_ISSUER_UNRESOLVED")
+    if date.fromisoformat(record_date) >= date.fromisoformat(ex_date) or notice_dates(pages) != (
+        [record_date],
+        [ex_date],
+    ):
+        raise ValueError("BONUS_SAME_DAY_RECORD_EX_CONFLICT")
+    # Keep page boundaries: a margin/page counter must never complete a date or term.
+    text = "§".join(re.sub(r"\s+", "", unicodedata.normalize("NFKC", page)) for page in pages)
+    # The tentative guard and actual listing matcher must share the same grammar.
+    listing_section = (
+        r"(?:[一二三四五六七八九十]+[、.](?:新增股份起始交易日|转增流通股上市日)?|\d+[、.])"
+    )
+    listing_term = (
+        r"(?:公司)?本次(?:所)?"
+        r"(?:转增|送|新增(?:资本公积金转增股本)?|(?:送)?\(转(?:增)?\)股?)(?:的)?"
+        r"无限售(?:条件)?(?:的)?流通股(?:份)?(?:的)?"
+        r"(?:起始交易(?:日|时间)|上市(?:流通)?日)(?:为)?:?"
+    )
+    # A complete quoted hypothetical option adjustment is not an actual consolidation.
+    # Only the guard uses this view; every effective-date/holder check keeps the full text.
+    guard_text = re.sub(
+        r"(?<=》规定:)若在行权前公司有资本公积金转增股份、派送股票红利、"
+        r"股票拆细、配股或缩股等事项,应对股票期权数量和行权价格进行相应的调整。",
+        "",
+        text,
+    )
+    if re.search(
+        r"差异化分红送转:是|让渡|重整|缩股|吸收合并|另行公告|拟于|拟实施|B股|H股|"
+        r"未确定|待定|另行通知|待通知|取消|撤销|终止|延期|暂停|暂缓|预计|预期|"
+        r"拟新增|拟上市|拟转增|拟送|计划(?:本次)?(?:所)?(?:新增|资本公积金转增|转增|送|\(转(?:增)?\))|"
+        r"(?:拟将|讨论)[一二三四五六七八九十]+[、.](?:(?:股权|权益)登记日|分红派息日期)|"
+        r"(?:拟将|讨论)" + listing_section + listing_term,
+        guard_text,
+    ):
+        raise ValueError("BONUS_SAME_DAY_NONSTANDARD_OR_TENTATIVE")
+    dated = r"(20\d{2})年(\d{1,2})月(\d{1,2})日"
+    plain_date = r"20\d{2}年\d{1,2}月\d{1,2}日"
+    # Recognized current metadata cannot contradict listing evidence or prove it.
+    listing_metadata = re.findall(
+        r"(?:新增可流通股份上市日|转增可流通股上市日|转增流通股上市日)(?:为)?:?" + dated, text
+    )
+    try:
+        consistent = all(
+            date(*map(int, fields)).isoformat() == ex_date for fields in listing_metadata
+        )
+    except ValueError:
+        consistent = False
+    if not consistent:
+        error = ValueError("BONUS_SAME_DAY_DATES_UNRESOLVED")
+        error.add_note("LISTING_METADATA_CONFLICT")
+        raise error
+    page_number = r"(?:[-—]\d+[-—]|\d+(?:/\d+)?)?"
+    page_counter = r"(?:§" + page_number + ")?"
+    repeated_header = re.match(
+        r"([\u4e00-\u9fff]+股份有限公司20\d{2}年(?:度|半年度)权益分派实施(?:的)?公告)\d+", text
+    )
+    boundary = r"(?:^|[。;]|§" + page_number
+    if repeated_header:
+        # Only the identical first-page running header is a page-start boundary.
+        boundary += "|§" + re.escape(repeated_header[1]) + r"\d+"
+    boundary += ")"
+    metadata = (
+        r"[一二三四五六七八九十]+、(?:股权登记日、除权除息日、"
+        r"新增无限售条件流通股份上市日和红利发放日|"
+        r"股权登记日、除权日、新增无限售条件流通股份上市日|分红派息日期|权益分派日期)"
+        r"1[、.]股权登记日(?:为)?:?"
+        + plain_date
+        + r"2[、.](?:除权除息日|除权日)(?:为)?:?"
+        + plain_date
+    )
+    holder_metadata = (
+        # 可流通 only supplies metadata structure, never unrestricted listing proof.
+        r"(?:[一二三四五六七八九十]+、分红派息日期"
+        r"(?:本公司及董事会全体成员保证信息披露的内容真实、准确、完整,没有虚假记载、"
+        r"误导性陈述或重大遗漏。§" + page_number + r")?"
+        r"(?:1[、.])?(?:本次分红派息)?股权登记日(?:为)?:?"
+        + plain_date
+        + r"(?:2[、.])?(?:除权除息日|除权日\(除息日\))(?:为)?:?"
+        + plain_date
+        + page_counter
+        + r"(?:3[、.])?新增可流通股份上市日(?:为)?:?"
+        + plain_date
+        + r"(?:4[、.])?(?:现金)?(?:股利|红利)发放日(?:为)?:?"
+        + plain_date
+        + "|"
+        + metadata
+        + r"(?:3[、.]新增无限售条件流通股份上市(?:交易)?日:?"
+        + plain_date
+        + r")?|"
+        r"[一二三四五六七八九十]+、(?:(?:股权|权益)登记日与除权除息日|"
+        r"股权登记日、除息日、红利发放日|利润分配方案具体实施日期)"
+        r"(?:1[、.])?股权登记日(?:为)?:?"
+        + plain_date
+        + page_counter
+        + r"(?:2[、.])?除(?:权除)?息日(?:为)?:?"
+        + plain_date
+        + r"(?:(?:3[、.])?(?:现金)?红利发放日(?:为)?:?"
+        + plain_date
+        + r")?|"
+        r"[一二三四五六七八九十]+、股权登记日与除权除息日"
+        r"(?:1[、.])?本次(?:权益分派|利润分配及资本公积金转增股本方案)股权登记日(?:为)?:?"
+        + plain_date
+        + r";?(?:2[、.])?(?:本次权益分派)?除权除息日(?:为)?:?"
+        + plain_date
+        # 可流通 is only adjacent metadata, never independent unrestricted proof.
+        + r"(?:3[、.]转增可流通股上市日:?"
+        + plain_date
+        + r")?"
+        + "|"
+        r"[一二三四五六七八九十]+、股权登记日与除权除息日"
+        r"本次权益分派的股权登记日为:?" + plain_date + r"除权出息日为:?" + plain_date + "|"
+        r"[一二三四五六七八九十]+、股权登记日与除权\(除息\)日"
+        r"本次权益分派股权登记日为:?" + plain_date + r"除权\(除息\)日为:?" + plain_date + "|"
+        r"[一二三四五六七八九十]+、股权登记日、除权除息日股权登记日:?"
+        + plain_date
+        + r"(?:\(周[一二三四五六日天]\))?除权除息日:?"
+        + plain_date
+        + r"(?:\(周[一二三四五六日天]\))?|"
+        r"[一二三四五六七八九十]+、股权登记日与除权除息日"
+        r"本次权益分派股权登记日为:?"
+        + plain_date
+        + r"(?:\(下周[一二三四五六日天]\))?,除权除息日为:?"
+        + plain_date
+        + r"(?:\(下周[一二三四五六日天]\))?,新增可流通股份上市日:?"
+        + plain_date
+        + r",红利发放日:?"
+        + plain_date
+        + ")"
+    )
+    # Page markers remain in prose; neither a date nor another declaration can
+    # be assembled across pages. A holder sentence cannot swallow a later section/date.
+    # Reviewed boxes are above the body but displaced to page extraction tails.
+    # Accept a complete known box only within holder prose, never strip source text.
+    holder_banner = (
+        r"(?:本公司及全体董事、监事、高级管理人员保证公告内容真实、准确和完整,"
+        r"不存在虚假记载、误导性陈述或者重大遗漏。|"
+        r"本公司及董事会全体成员保证(?:公告内容|信息披露的内容)真实、准确、完整,"
+        r"没有虚假记载、误导性陈述或重大遗漏。|"
+        r"本公司及其董事、监事、高级管理人员保证公告内容真实、准确和完整,"
+        r"并对公告中的虚假记载、误导性陈述或者重大遗漏承担责任。)"
+    )
+    holder_prose = (
+        r"(?:(?![一二三四五六七八九十]+[、.]|\d+[、.]|20\d{2}年|讨论|次日)(?:"
+        # An identical running margin can interrupt prose, never a date field.
+        + ("§" + re.escape(repeated_header[1]) + r"\d+|" if repeated_header else "")
+        + holder_banner
+        + r"(?=§)|(?!本公司及)[^。;]))"
+    )
+    holder_page_counter = r"(?:" + holder_banner + r"?§" + page_number + ")?"
+    # A weekday annotation supplements a complete date, never supplies one.
+    for year, month, day, weekday in re.findall(
+        dated + r"\((?:星期|下周|周)([^()§。;]{1,4})\)", text
+    ):
+        try:
+            if (
+                weekday.replace("天", "日")
+                != "一二三四五六日"[date(int(year), int(month), int(day)).weekday()]
+            ):
+                raise ValueError("BONUS_SAME_DAY_WEEKDAY_CONFLICT")
+        except ValueError as exc:
+            raise ValueError("BONUS_SAME_DAY_WEEKDAY_CONFLICT") from exc
+    # Only identical declared-title or issuer/notice margins are running headers.
+    # Guards above retain the full source; never join a date across page boundaries.
+    compact_pages = [re.sub(r"\s+", "", unicodedata.normalize("NFKC", page)) for page in pages]
+    compact_lines = [re.sub(r"[^\S\n]+", "", unicodedata.normalize("NFKC", page)) for page in pages]
+    issuer_heading = re.match(
+        r"证券代码:"
+        + re.escape(symbol)
+        + r"证券简称:[A-Za-z\u4e00-\u9fff*]+公告编号:20\d{2}-\d+\n",
+        compact_lines[0],
+    )
+    if (
+        len(pages) > 1
+        and issuer_heading
+        and all(page.startswith(issuer_heading[0]) for page in compact_lines)
+    ):
+        # Retain the newline when checking the whole identifier, not a numeric prefix.
+        compact_pages = [
+            page.removeprefix(issuer_heading[0].rstrip("\n")) for page in compact_pages
+        ]
+        text = "§".join(compact_pages)
+    heading = re.sub(r"\s+", "", unicodedata.normalize("NFKC", title))
+    if len(compact_pages) > 1 and all(page.startswith(heading) for page in compact_pages):
+        # Identical title/company page margins can precede continued prose,
+        # but the retained page marker still cannot complete any date.
+        company = re.match(r"[\u4e00-\u9fff]+股份有限公司", compact_pages[0][len(heading) :])
+        if company and all(page.startswith(heading + company[0]) for page in compact_pages):
+            heading += company[0]
+        text = "§".join(page.removeprefix(heading) for page in compact_pages)
+    patterns = (
+        "(?:" + "|".join(RECORD_LABELS) + ")" + LABEL_DATE_GAP + dated,
+        EX_LABEL + LABEL_DATE_GAP + dated,
+        boundary
+        + r"(?:转增流通股上市日:?"
+        + plain_date
+        + r")?"
+        + r"(?:\d+[、.]红利发放日:?"
+        + plain_date
+        + "|"
+        + holder_metadata
+        + r")?"
+        r"(?:[一二三四五六七八九十]+[、.](?:分派对象|权益分派对象(?:为)?|转增股本对象|"
+        r"分红派息及资本公积金转增股本对象|利润分配及资本公积金转增股本对象|分红派息对象|"
+        r"利润分配和资本公积金转增股本对象|利润分配、转增股本的对象):?)?"
+        + page_counter
+        + r"(?:本次(?:(?:权益)?分[派配]|转增股本|利润分配及资本公积金转增股本方案|"
+        r"分红派息(?:及资本公积金转增股本)?)"
+        r"(?:的)?对象为:?(?:截[止至])?|"
+        r"本次权益分派对象:|"
+        r"[一二三四五六七八九十]+、(?:分红派息及资本公积金转增股本|权益分派|"
+        r"分红派息|利润分配和转增)对象:?截[止至]|"
+        r"[一二三四五六七八九十]+[、.](?:权益分派对象|分派对象):?(?:截[止至])?)"
+        + r"(?:股权登记日(?P<holder_parenthesis>\()?)?"
+        + dated
+        + r"(?(holder_parenthesis)\))(?!\))"
+        + holder_prose
+        + r"{0,200}?(?:收"
+        + page_counter
+        + r"市后|收市时(?=,))"
+        + holder_prose
+        + r"{0,200}?登"
+        + holder_page_counter
+        + "记"
+        + holder_page_counter
+        + "在"
+        + holder_page_counter
+        + "册"
+        + holder_prose
+        + r"{0,30}?全体股东",
+        "(?:" + boundary + r"(?:[一二三四五六七八九十]+[、.]"
+        r"(?:转增股本方法|权益分[派配]方法|权益分派办法|分配办法|分配实施办法|"
+        r"分配分派方法|实施方法|"
+        r"利润分配和(?:资本公积金)?转增股本方法|分配、转增股(?:份|本)方法|"
+        r"分红派息(?:及资本公积金转增股本)?方法):?)?(?:\d+[、.])?"
+        r"(?:公司)?本次(?:所|资本公积金|资本公积所)?"
+        r"(?:转增(?:的)?股(?:份)?|送(?:红)?股(?:份)?|送转(?:的)?股份|新增股份|"
+        r"(?:送)?\(转(?:增)?\)(?:的)?股(?:份)?)|"
+        r"(?:^|[。;§]|[一二三四五六七八九十]+、转增股本方法)资本公积金转增的股份)(?:将)?于"
+        + dated
+        + r"(?:\(星期[一二三四五六日天]\))?直接[记计]入股东(?:的)?(?:证券)?[账帐]"
+        + page_counter
+        + "户",
+        r"(?:(?:^|[。;§]|" + listing_section + ")" + listing_term + "|"
+        r"(?:^|[。;§])(?:" + metadata + r")?"
+        r"(?:[一二三四五六七八九十]+、|\d+[、.])?"
+        r"新增无限售条件流通股份上市(?:交易)?日:?)" + dated,
+    )
+    for pattern, expected, role in zip(
+        patterns,
+        (record_date, ex_date, record_date, ex_date, ex_date),
+        ("RECORD_DATE", "EX_DATE", "HOLDER_CUTOFF", "SHARE_CREDIT", "UNRESTRICTED_LISTING"),
+        strict=True,
+    ):
+        matches = re.findall(pattern, text)
+        if role == "HOLDER_CUTOFF":
+            # The structural opening-parenthesis capture is not a date field.
+            matches = [match[1:] for match in matches]
+        try:
+            values = {date(*map(int, match)).isoformat() for match in matches}
+        except ValueError as exc:
+            error = ValueError("BONUS_SAME_DAY_DATES_UNRESOLVED")
+            error.add_note(role)
+            raise error from exc
+        if values != {expected}:
+            error = ValueError("BONUS_SAME_DAY_DATES_UNRESOLVED")
+            error.add_note(role)
+            raise error
+    return ex_date
 
 
 def retained_ratio(pages, symbol, *, require_integral_components=False):

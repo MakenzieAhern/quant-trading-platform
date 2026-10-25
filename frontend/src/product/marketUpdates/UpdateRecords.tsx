@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatUtc } from "../../utils/format";
 import { marketUpdateApi } from "./api";
-import { useUpdateCopy } from "./copy";
+import { updateError, useUpdateCopy } from "./copy";
 import type { UpdateJob } from "./types";
 
 export function UpdateRecords({
@@ -14,6 +15,7 @@ export function UpdateRecords({
   revision: number;
 }) {
   const c = useUpdateCopy();
+  const { i18n } = useTranslation();
   const [security, setSecurity] = useState(job.configuration.security_ids[0]);
   const [receiptOffset, setReceiptOffset] = useState(0);
   const [observationOffset, setObservationOffset] = useState(0);
@@ -85,7 +87,9 @@ export function UpdateRecords({
         </details>
       )}
       {observations.loading && <p role="status">{c.loading}</p>}
-      {observations.error && <p role="alert">{c.loadFailed}</p>}
+      {observations.error && (
+        <p role="alert">{updateError(observations.error, i18n.language)}</p>
+      )}
       {observations.data && (
         <>
           {!observations.data.items.length && <p>{c.noObservations}</p>}
@@ -93,9 +97,9 @@ export function UpdateRecords({
             className="updateTableScroll"
             tabIndex={0}
             role="region"
-            aria-label={c.scroll}
+            aria-label={`${c.observations} · ${c.scroll}`}
           >
-            <table>
+            <table aria-label={c.observations}>
               <thead>
                 <tr>
                   {[
@@ -148,17 +152,21 @@ export function UpdateRecords({
               </tbody>
             </table>
           </div>
-          <Pagination
-            offset={observationOffset}
-            limit={50}
-            total={observations.data.total}
-            onChange={setObservationOffset}
-          />
         </>
       )}
+      <Pagination
+        label={c.observations}
+        offset={observationOffset}
+        limit={50}
+        total={observations.data?.total ?? null}
+        loading={observations.loading}
+        onChange={setObservationOffset}
+      />
       <h4>{c.receipts}</h4>
       {receipts.loading && <p role="status">{c.loading}</p>}
-      {receipts.error && <p role="alert">{c.loadFailed}</p>}
+      {receipts.error && (
+        <p role="alert">{updateError(receipts.error, i18n.language)}</p>
+      )}
       {receipts.data && (
         <>
           {!receipts.data.items.length && <p>{c.noReceipts}</p>}
@@ -167,7 +175,17 @@ export function UpdateRecords({
               <summary>
                 {row.security_id} · {formatUtc(row.received_at_utc)} ·{" "}
                 {c.rowCount}: {row.row_count}
+                {row.reader_diagnostics?.includes(
+                  "PARSER_LABEL_MISMATCH_READ_ONLY",
+                ) && ` · ${c.legacyReadOnly}`}
               </summary>
+              {row.reader_diagnostics?.includes(
+                "PARSER_LABEL_MISMATCH_READ_ONLY",
+              ) && (
+                <p className="stateCallout" role="note">
+                  {c.parserLabelMismatch}
+                </p>
+              )}
               <dl>
                 <dt>{c.receiptId}</dt>
                 <dd>{row.receipt_id}</dd>
@@ -188,14 +206,16 @@ export function UpdateRecords({
               <pre>{JSON.stringify(row, null, 2)}</pre>
             </details>
           ))}
-          <Pagination
-            offset={receiptOffset}
-            limit={20}
-            total={receipts.data.total}
-            onChange={setReceiptOffset}
-          />
         </>
       )}
+      <Pagination
+        label={c.receipts}
+        offset={receiptOffset}
+        limit={20}
+        total={receipts.data?.total ?? null}
+        loading={receipts.loading}
+        onChange={setReceiptOffset}
+      />
     </div>
   );
 }

@@ -15,11 +15,27 @@ const en = {
   save: "Save draft",
   saved: "Draft saved on this device",
   restored: "Your saved draft has been restored.",
+  newDraftTitle: "A saved draft already exists",
+  newDraftHint:
+    "Starting a new backtest saves the current draft as a separate browser version first. It does not run either configuration.",
+  newDraftStart: "Back up draft and start new",
+  newDraftResume: "Continue saved draft",
+  unreadableDraftTitle: "Saved draft needs recovery",
+  unreadableDraftHint:
+    "This browser cannot read the saved draft. Its exact original text will be kept as a read-only browser copy before a new draft opens. Nothing is submitted.",
+  unreadableDraftText: "Show original draft text for copying",
+  unreadableDraftStart: "Preserve original and start new",
   exit: "Save & exit",
   exitConfirm:
     "Leave this configuration? Your latest draft is saved on this device.",
+  unsavedLeaveConfirm:
+    "Your latest changes may not be saved. Leave this configuration?",
+  draftConflict:
+    "The draft changed in another tab. Your latest values are in Browser page recovery drafts below. Reload this page, review both drafts, then restore the one you want. This page cannot save or run now.",
+  draftConflictStorageFailed:
+    "Another tab changed the draft, and this browser could not save your recovery copy. Keep this page open and copy your values manually; do not reload or run.",
   storageError:
-    "This browser could not save your draft. Keep this page open or allow local storage before leaving.",
+    "This browser could not save your draft and request ID. Keep this page open; allow local storage before running or leaving, then retry.",
   summary: "Your configuration",
   registered: "Registered strategy",
   noStrategies:
@@ -51,7 +67,7 @@ const en = {
     "Factor definitions and accounting rules remain the registered implementation. Only the settings shown here are configurable.",
   commission: "Commission rate (decimal fraction)",
   commissionHint:
-    "0.0003 means 0.03% per transaction, subject to the minimum. Effective-dated statutory costs are added by the engine.",
+    "Broker commission is a simulation assumption, not a verified quote. 0.0003 means 0.03% per transaction, subject to the minimum. Effective-dated statutory costs are added by the engine.",
   minimum: "Minimum commission per trade (CNY)",
   drawdown: "Drawdown risk limit (negative fraction)",
   drawdownHint:
@@ -62,13 +78,33 @@ const en = {
   confirm: "Run this configuration",
   submitting: "Submitting…",
   submitInfo:
-    "The task is saved on the server. You can leave and reopen it while it runs.",
+    "Once created, the task is saved on the server. You can leave and reopen it while it runs.",
   acknowledge:
     "I understand that this is an exploratory simulation, not new unseen evidence or a trading recommendation.",
   validation:
     "Check the highlighted step: use a name, available dates, positive capital, whole-number strategy settings, valid costs and risk limits.",
+  fieldErrors: {
+    strategy: "Choose an available registered strategy.",
+    dataset: "Choose an available data source.",
+    name: "Enter an experiment name, not only spaces (up to 120 characters).",
+    cash: "Starting capital must be a positive decimal, at most 1,000,000,000,000 CNY.",
+    start:
+      "Choose a first trading date within the data source's available dates.",
+    end: "Choose a last trading date on or after the first date, within the available dates.",
+    universe: "Choose a stock universe supported by this data source.",
+    rebalance:
+      "Enter a whole-number rebalance interval within the strategy's displayed limits.",
+    holdings:
+      "Enter a whole-number maximum holdings within the strategy's displayed limits.",
+    commission: "Commission rate must be a decimal from 0 to 0.01 (0% to 1%).",
+    minimum: "Minimum commission must be a decimal from 0 to 1,000 CNY.",
+    drawdown:
+      "Drawdown risk limit must be a decimal from -1 to 0 (-100% to 0%).",
+    position:
+      "Maximum target weight must be a positive decimal, at most 1 (100%).",
+  },
   networkError:
-    "The service could not be reached. Check its status, then retry. An unchanged submission keeps the same request key.",
+    "Could not confirm a response from the service. Check its status before retrying. An unchanged submission keeps the same request key.",
   validationError:
     "The server rejected this configuration. Review dates, available data and the cost/risk limits, then try again.",
   conflictError:
@@ -76,7 +112,10 @@ const en = {
   notFoundError:
     "This task is not available. Return to your experiment list or check the identifier.",
   serverError:
-    "The server could not finish this request. Refresh the task before retrying; completed work remains saved.",
+    "The server response could not be confirmed. Check the latest task status before retrying; completed work remains saved.",
+  uncertainSubmission:
+    "A task may already exist. Retrying without editing keeps the same request ID and reopens any accepted task; editing creates a new request.",
+  checkTaskCenter: "Check task center",
   technical: "Technical details",
   refresh: "Refresh",
   loading: "Loading…",
@@ -97,8 +136,10 @@ const en = {
   saveView: "Save this view",
   clearView: "Reset view",
   viewSaved: "View saved on this device.",
-  viewSaveFailed: "This browser could not save the view. Keep this page open or allow local storage.",
-  noMatches: "No studies match these filters. Clear a filter or reset the view.",
+  viewSaveFailed:
+    "This browser could not save the view. Keep this page open or allow local storage.",
+  noMatches:
+    "No studies match these filters. Clear a filter or reset the view.",
   removeFilter: "Remove filter",
   newExperiment: "New guided backtest",
   formalArchive: "Published research archive",
@@ -128,6 +169,12 @@ const en = {
     "This task and its status are saved. It is safe to leave and return.",
   failureHelp:
     "The task stopped without a complete result. Review the error and data status before starting a linked retry.",
+  failureDate: "Stopped before trading session (Asia/Shanghai)",
+  failureSecurities: "Affected held securities",
+  failureContextMissing:
+    "This record did not save the exact failure date or securities. They remain unknown; completed-session progress cannot identify them.",
+  failureContextTruncated:
+    "Technical details list the first 100 identities in stable order, not the full affected set.",
   cancelledHelp:
     "This task was cancelled. No incomplete result is presented as a completed study.",
   interruptedHelp:
@@ -137,15 +184,27 @@ const en = {
   drawdownMetric: "Maximum drawdown",
   cost: "Transaction costs (CNY)",
   benchmark: "Benchmark return",
+  benchmarkNames: {
+    CSI300: "CSI 300 Index",
+    SYNTHETIC: "Synthetic demo benchmark",
+    SYNTHETIC_EQUAL_WEIGHT: "Synthetic equal-weight benchmark (demo)",
+  },
   excess: "Return above benchmark",
   capitalEnd: "Final equity (CNY)",
   limits: "Before interpreting these results",
   warningHistorical:
-    "This is an exploration of already inspected historical data, not a new Official OOS study. Differences from a formal report do not replace it.",
+    "This explores dates already inspected, not new unseen market data. It cannot replace the published formal report.",
+  historicalExecutionIssue:
+    "Earlier versions of this historical execution engine could incorrectly reject otherwise executable securities. Older saved results may be affected; the impact on a particular report is not quantified. Fixing the engine does not revalidate old returns. Original reports, frozen data and the out-of-sample lock remain unchanged.",
+  historicalExecutionUnverified:
+    "The saved execution source is not sufficiently verified. We cannot determine whether this report involves the known older-engine rejection issue; do not assume it is unaffected. Original results remain unchanged and have not been revalidated.",
   warningDemo:
     "These prices are synthetic and intentionally demonstrate the workflow. Returns cannot be used as investment evidence.",
   noGuarantee:
     "Past simulated results do not establish reliable future returns. Costs, execution constraints and data limits affect what can be inferred.",
+  paperHandoff: "Review these settings in a separate historical paper account",
+  paperHandoffHelp:
+    "This opens a separate account form; it does not copy results, create an account or submit an order. Historical replay is limited to 93 calendar days.",
   chart: "Equity and drawdown",
   table: "Exact chart data",
   equity: "Portfolio equity (CNY)",
@@ -154,6 +213,9 @@ const en = {
   shownPage:
     "Chart shows this page of data only. Summary metrics always describe the complete run.",
   showBenchmark: "Show benchmark",
+  benchmarkUnavailable:
+    "No complete benchmark series for these displayed dates.",
+  drawdownUnavailable: "No complete drawdown series for these displayed dates.",
   selectedDate: "Selected trading date",
   selectDate: "Inspect a trading date",
   geometryUnavailable:
@@ -229,9 +291,25 @@ const zh: typeof en = {
   save: "保存草稿",
   saved: "草稿已保存在本机",
   restored: "已恢复上次保存的草稿。",
+  newDraftTitle: "已有保存的草稿",
+  newDraftHint:
+    "新建回测前会先将当前草稿另存为浏览器配置版本，不会运行任何配置。",
+  newDraftStart: "备份草稿并新建",
+  newDraftResume: "继续已保存草稿",
+  unreadableDraftTitle: "已保存草稿需要恢复",
+  unreadableDraftHint:
+    "当前浏览器无法解析已保存的草稿。新建前会将原始文本完整保留为只读浏览器副本；不会提交实验。",
+  unreadableDraftText: "查看原始草稿文本以便复制",
+  unreadableDraftStart: "保留原文并新建",
   exit: "保存并退出",
   exitConfirm: "离开当前配置？最新草稿已保存在本机。",
-  storageError: "浏览器无法保存草稿。请保留此页面，或允许本地存储后再离开。",
+  unsavedLeaveConfirm: "最新修改可能尚未保存。确定离开当前配置吗？",
+  draftConflict:
+    "草稿已在另一标签页改变。本页最新值已存入下方的浏览器页面草稿恢复。请刷新页面，核对两份草稿，再恢复所需副本；当前页面不能保存或运行。",
+  draftConflictStorageFailed:
+    "另一标签页已修改草稿，但浏览器无法保存本页恢复副本。请保持此页面打开，手动复制当前数值；不要刷新或运行。",
+  storageError:
+    "浏览器无法保存草稿和请求编号。请保留此页面，允许本地存储后再运行或离开，然后重试。",
   summary: "当前配置",
   registered: "已注册策略",
   noStrategies: "暂无可执行策略。请检查数据中心或重新加载。",
@@ -259,7 +337,7 @@ const zh: typeof en = {
   fixedStrategy: "因子定义与会计规则沿用已注册实现，仅支持调整此处列出的设置。",
   commission: "佣金比例（小数）",
   commissionHint:
-    "0.0003 表示每笔 0.03%，不足最低佣金时按最低值计。引擎另按生效日期计算法定费用。",
+    "券商佣金是模拟假设，不是已核实的报价。0.0003 表示每笔 0.03%，不足最低佣金时按最低值计。引擎另按生效日期计算法定费用。",
   minimum: "每笔最低佣金（人民币）",
   drawdown: "回撤风险阈值（负小数）",
   drawdownHint:
@@ -272,13 +350,32 @@ const zh: typeof en = {
   acknowledge: "我理解这是探索性模拟，不是新的未见样本证据，也不是交易建议。",
   validation:
     "请检查当前步骤：名称、可用日期、正数本金、整数策略参数，以及有效的成本和风险范围。",
+  fieldErrors: {
+    strategy: "请选择可用的已注册策略。",
+    dataset: "请选择可用的数据来源。",
+    name: "请输入实验名称，不能只有空格（最多 120 个字符）。",
+    cash: "初始本金须为正小数，最多 1,000,000,000,000 元。",
+    start: "请选择数据来源可用日期范围内的开始交易日。",
+    end: "结束交易日不得早于开始日，且须在可用日期范围内。",
+    universe: "请选择此数据来源支持的股票范围。",
+    rebalance: "调仓间隔须为整数，且在策略显示的限制范围内。",
+    holdings: "最大持仓数须为整数，且在策略显示的限制范围内。",
+    commission: "佣金比例须为 0 至 0.01 的小数（0% 至 1%）。",
+    minimum: "每笔最低佣金须为 0 至 1,000 元的小数。",
+    drawdown: "回撤风险阈值须为 -1 至 0 的小数（-100% 至 0%）。",
+    position: "单只证券最大目标权重须为正小数，最多为 1（100%）。",
+  },
   networkError:
-    "无法连接服务。请检查服务状态后重试。配置未变时会使用同一请求标识，避免重复创建。",
+    "未能确认服务响应。请检查服务状态后重试。配置未变时会使用同一请求标识，避免重复创建。",
   validationError:
     "服务端未接受此配置。请检查日期、可用数据、成本与风险限制后重试。",
   conflictError: "该操作与任务当前状态冲突。请刷新查看最新状态。",
   notFoundError: "找不到该任务。请返回实验列表，或检查任务标识。",
-  serverError: "服务端未完成请求。请先刷新任务再重试；已完成的内容仍会保存。",
+  serverError:
+    "未能确认服务端响应。重试前请检查任务的最新状态；已完成的内容仍会保存。",
+  uncertainSubmission:
+    "任务可能已经创建。不修改配置重试会保留同一请求编号，并重新打开已接受的任务；修改配置会创建新的请求。",
+  checkTaskCenter: "查看任务中心",
   technical: "技术详情",
   refresh: "刷新",
   loading: "正在加载…",
@@ -326,6 +423,12 @@ const zh: typeof en = {
   persisted: "任务及状态已保存，可离开页面后继续查看。",
   failureHelp:
     "任务在产出完整结果前停止。请检查错误与数据状态，再创建关联重试。",
+  failureDate: "在该交易日处理前停止（Asia/Shanghai）",
+  failureSecurities: "涉及的持仓证券",
+  failureContextMissing:
+    "本记录未保存确切失败交易日及证券，仍为未知；已完成交易日的进度不能用于推断。",
+  failureContextTruncated:
+    "技术详情按稳定顺序列出前 100 个标识，不代表完整受影响集合。",
   cancelledHelp: "任务已取消。不完整结果不会被展示为已完成研究。",
   interruptedHelp: "服务在任务完成前重启。可使用已保存配置创建新的关联重试。",
   resultTitle: "如何理解这次结果",
@@ -333,14 +436,26 @@ const zh: typeof en = {
   drawdownMetric: "最大回撤",
   cost: "交易成本（人民币）",
   benchmark: "基准收益",
+  benchmarkNames: {
+    CSI300: "沪深 300 指数",
+    SYNTHETIC: "合成演示基准",
+    SYNTHETIC_EQUAL_WEIGHT: "合成等权基准（演示）",
+  },
   excess: "相对基准收益",
   capitalEnd: "最终权益（人民币）",
   limits: "解读结果前请注意",
   warningHistorical:
-    "这是对已查看历史区间的探索，不是新的 Official OOS 研究。与正式报告的差异不替代原有结果。",
+    "这是用已查看的历史数据做探索，不是对未见市场数据的新检验，也不能替代已发布的正式报告。",
+  historicalExecutionIssue:
+    "旧版历史执行引擎可能错误拒绝本可成交的证券。旧的已保存结果可能受影响，某份报告的具体影响尚未量化。修复引擎不代表旧收益已重新验证；原报告、冻结数据和样本外锁保持不变。",
+  historicalExecutionUnverified:
+    "已保存的执行来源尚未充分核验，无法判定本报告是否涉及已知旧引擎拒单问题，不能据此视为未受影响。原结果保持不变，也未重新验证。",
   warningDemo: "这里使用合成价格演示操作流程。模拟收益不可作为投资证据。",
   noGuarantee:
     "历史模拟结果不能证明未来可靠收益。成本、执行约束与数据限制都会影响结论。",
+  paperHandoff: "用这次研究的设置准备独立历史模拟账户",
+  paperHandoffHelp:
+    "仅打开独立账户表单；不会复制收益、创建账户或提交订单。历史回放单次最多 93 个自然日。",
   chart: "权益与回撤",
   table: "图表精确数据",
   equity: "组合权益（人民币）",
@@ -348,6 +463,8 @@ const zh: typeof en = {
   drawdownSeries: "回撤",
   shownPage: "图表仅显示本页数据。上方汇总指标始终对应完整研究区间。",
   showBenchmark: "显示基准",
+  benchmarkUnavailable: "当前显示日期没有完整的基准序列。",
+  drawdownUnavailable: "当前显示日期没有完整的回撤序列。",
   selectedDate: "已选交易日",
   selectDate: "查看指定交易日",
   geometryUnavailable: "图表无法绘制，请查阅下方精确数据表。",
@@ -415,3 +532,8 @@ export function useExperimentCopy() {
   return i18n.language.startsWith("zh") ? zh : en;
 }
 export type ExperimentCopy = typeof en;
+
+export function experimentBenchmarkName(id: string, copy: ExperimentCopy) {
+  const names: Record<string, string> = copy.benchmarkNames;
+  return Object.hasOwn(names, id) ? names[id] : id;
+}

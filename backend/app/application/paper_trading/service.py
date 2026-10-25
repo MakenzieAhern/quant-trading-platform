@@ -2,7 +2,7 @@ import asyncio
 import hashlib
 import json
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from contextlib import suppress
 from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
@@ -12,28 +12,42 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.application.backtests.decimal_policy import canonical_decimal, validate_storage_decimal
-from app.application.backtests.registry import DatasetRegistry, StrategyRegistry
+from app.application.backtests.registry import (
+    DatasetRegistry,
+    StrategyRegistry,
+    UnknownDatasetError,
+)
 from app.application.experiments.data import (
     HISTORICAL_ID,
     ExperimentDatasetRegistry,
+    ExperimentInputError,
     load_experiment_dataset,
 )
 from app.application.experiments.models import CreateExperimentRequest
-from app.application.experiments.runner import ExploratoryStrategy
+from app.application.experiments.runner import ExploratoryStrategy, build_plan_preview, json_value
+from app.application.paper_trading.receipt_source import (
+    ReceiptSessionFactory,
+    ReceiptSessionSource,
+    validate_commit_history,
+)
+from app.application.paper_trading.source_admission import FORWARD_SOURCE, InputCommitObservation
 from app.backtest import BacktestConfig
+from app.data.catalog.checksums import canonical_sha256
 from app.data.full_dataset import FullDataset
 from app.data.providers import Timeframe
 from app.db.repositories.paper import SQLAlchemyPaperRepository
 from app.domain.market import Bar
 from app.domain.markets.calendar import TradingCalendar
+from app.domain.markets.corporate_actions import OrdinaryDistributionInputError
 from app.domain.risk import RiskConfig, RiskDecision
-from app.domain.trading import Fill, Order, PortfolioSnapshot, Signal
+from app.domain.trading import Fill, Order, OrderStatus, PortfolioSnapshot, Signal
 from app.paper.a_share_fixture import (
     SIMULATED_A_SHARE_DATASET_ID,
     SIMULATED_A_SHARE_SYMBOL,
     SIMULATED_SOURCE,
     simulated_a_share_fixture,
 )
+from app.paper.calendar import CalendarObservation
 from app.paper.hub import PaperEventHub
 from app.paper.models import (
     CreatePaperSessionCommand,
@@ -52,6 +66,7 @@ from app.paper.runtime import (
 )
 from app.research import ResearchExecutionDelta, ResearchSession
 from app.research.costs import EffectiveDatedAShareCommission
+from app.research.engine import UnexplainedReferenceAdjustment
 
 
 class PaperSessionConflictError(ValueError):
@@ -65,6 +80,16 @@ class PaperSessionStateError(ValueError):
 Clock = Callable[[], datetime]
 logger = logging.getLogger(__name__)
 HISTORICAL_SOURCE = "FROZEN_HISTORICAL_A_SHARE_REPLAY_V1"
+HISTORICAL_CAPABILITY_REASONS = frozenset(
+    {
+        "DATASET_NOT_REGISTERED",
+        "DATASET_NOT_MOUNTED",
+        "DATASET_INTEGRITY_FAILED",
+        "SOURCE_CONTRACT_INTEGRITY_FAILED",
+        "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+        "DATASET_EXECUTION_NOT_ACCEPTED",
+    }
+)
 
 
 class PaperTradingManager:
@@ -77,6 +102,7 @@ class PaperTradingManager:
         strategies: StrategyRegistry,
         *,
         historical_datasets: ExperimentDatasetRegistry | None = None,
+        forward_sources: ReceiptSessionFactory | None = None,
         replay_interval_seconds: float = 0.75,
         clock: Clock | None = None,
         hub: PaperEventHub | None = None,
@@ -85,12 +111,75 @@ class PaperTradingManager:
         self._datasets = datasets
         self._strategies = strategies
         self._historical_datasets = historical_datasets
+        self._forward_factory = forward_sources
+        self._forward_sources: dict[UUID, ReceiptSessionSource] = {}
         self._replay_interval_seconds = replay_interval_seconds
         self._clock = clock or (lambda: datetime.now(UTC))
         self.hub = hub or PaperEventHub()
         self._tasks: dict[UUID, asyncio.Task[None]] = {}
         self._providers: dict[UUID, ReplayMarketDataProvider | SimulatedAShareSessionProvider] = {}
         self._lock = asyncio.Lock()
+
+    async def capabilities(self) -> dict[str, object]:
+        """Inspect configured sources, not financial acceptance or permission to create."""
+
+        def replay_available() -> bool:
+            provider = self._datasets.resolve("AAPL_fixture", "AAPL")
+            return bool(provider.get_historical_bars("AAPL", None, None, Timeframe.DAY_1))
+
+        replay_reason = None
+        try:
+            if not await asyncio.to_thread(replay_available):
+                replay_reason = "REPLAY_DATA_UNAVAILABLE"
+        except (UnknownDatasetError, OSError):
+            replay_reason = "REPLAY_DATA_UNAVAILABLE"
+        except ValueError:
+            replay_reason = "REPLAY_DATA_INVALID"
+        except Exception:
+            replay_reason = "PAPER_CAPABILITY_CHECK_FAILED"
+
+        historical_reason = None
+        if self._historical_datasets is None:
+            historical_reason = "DATASET_NOT_REGISTERED"
+        else:
+            try:
+                await asyncio.to_thread(
+                    self._historical_datasets.resolve, HISTORICAL_ID, for_execution=True
+                )
+            except ExperimentInputError as exc:
+                historical_reason = (
+                    exc.code
+                    if exc.code in HISTORICAL_CAPABILITY_REASONS
+                    else "PAPER_CAPABILITY_CHECK_FAILED"
+                )
+            except Exception:
+                historical_reason = "PAPER_CAPABILITY_CHECK_FAILED"
+        return {
+            "providers": [
+                {
+                    "provider_type": "replay",
+                    "dataset_id": "AAPL_fixture",
+                    "symbol": "AAPL",
+                    "available": replay_reason is None,
+                    "reason_code": replay_reason,
+                },
+                {
+                    "provider_type": "simulated_a_share",
+                    "dataset_id": SIMULATED_A_SHARE_DATASET_ID,
+                    "symbol": SIMULATED_A_SHARE_SYMBOL,
+                    "available": True,
+                    "reason_code": None,
+                },
+                {
+                    "provider_type": "historical_a_share",
+                    "dataset_id": HISTORICAL_ID,
+                    "symbol": "CN-A",
+                    "available": historical_reason is None,
+                    "reason_code": historical_reason,
+                },
+            ],
+            "forward": {"available": False, "reason_code": "FORWARD_NOT_AVAILABLE"},
+        }
 
     async def recover_interrupted(self) -> int:
         async with self._session_factory() as db:
@@ -100,10 +189,27 @@ class PaperTradingManager:
         return interrupted
 
     async def create(self, command: CreatePaperSessionCommand) -> PaperSession:
-        if command.provider_type not in {"replay", "simulated_a_share", "historical_a_share"}:
+        if command.provider_type not in {
+            "replay",
+            "simulated_a_share",
+            "historical_a_share",
+            "forward_a_share",
+        }:
             raise ValueError("unknown paper market data provider")
         validate_storage_decimal(command.initial_cash, "initial_cash")
         validate_storage_decimal(command.default_order_quantity, "default_order_quantity")
+        request_hash = self._request_hash(command)
+        if command.client_request_id is not None:
+            async with self._session_factory() as db:
+                existing = await SQLAlchemyPaperRepository(db).get_by_client_request_id(
+                    command.client_request_id
+                )
+                if existing is not None:
+                    if existing.request_hash != request_hash:
+                        raise PaperSessionConflictError(
+                            "idempotency key was already used for different paper session content"
+                        )
+                    return existing
         if command.provider_type == "replay":
             self._datasets.resolve(command.dataset_id, command.symbol)
             self._strategies.build(
@@ -112,6 +218,25 @@ class PaperTradingManager:
                 command.symbol,
                 command.strategy_parameters,
             )
+        elif command.provider_type == "forward_a_share":
+            if (
+                self._forward_factory is None
+                or command.symbol != "CN-A"
+                or command.strategy_type != FROZEN_A_SHARE_STRATEGY_ID
+            ):
+                raise ValueError("FORWARD_SOURCE_NOT_REGISTERED")
+            admitted = await asyncio.to_thread(self._forward_factory.load, command.dataset_id)
+            if (
+                command.strategy_parameters.get("start_date")
+                != admitted.contract.first_forward_session
+                or command.strategy_parameters.get("end_date")
+                != admitted.contract.last_forward_session
+            ):
+                raise ValueError("FORWARD_REQUEST_COVERAGE_MISMATCH")
+            if not command.risk.enforce_buying_power or (
+                command.risk.max_leverage is not None and command.risk.max_leverage > 1
+            ):
+                raise ValueError("FORWARD_UNSAFE_RISK_CONFIGURATION")
         elif command.provider_type == "historical_a_share":
             if (
                 self._historical_datasets is None
@@ -141,20 +266,15 @@ class PaperTradingManager:
             or command.strategy_parameters
         ):
             raise ValueError("invalid frozen A-share paper configuration")
-        request_hash = self._request_hash(command)
         parameters = self._json_decimals(command.strategy_parameters)
         if command.provider_type == "historical_a_share":
             parameters["dataset_sha256"] = str(registered["sha256"])
+            parameters["plan_version"] = "PAPER_ACCOUNT_PLAN_V3"
+        elif command.provider_type == "forward_a_share":
+            parameters["dataset_sha256"] = admitted.sha256
+            parameters["plan_version"] = "PAPER_FORWARD_PLAN_V1"
         async with self._session_factory() as db:
             repository = SQLAlchemyPaperRepository(db)
-            if command.client_request_id is not None:
-                existing = await repository.get_by_client_request_id(command.client_request_id)
-                if existing is not None:
-                    if existing.request_hash != request_hash:
-                        raise PaperSessionConflictError(
-                            "idempotency key was already used for different paper session content"
-                        )
-                    return existing
             session = PaperSession(
                 id=uuid4(),
                 status=PaperSessionStatus.CREATED,
@@ -173,6 +293,11 @@ class PaperTradingManager:
                 client_request_id=command.client_request_id,
                 request_hash=request_hash if command.client_request_id is not None else None,
             )
+            if command.provider_type in {"historical_a_share", "forward_a_share"}:
+                try:
+                    self._historical_request(session)
+                except ValueError as exc:
+                    raise ValueError("invalid historical A-share paper configuration") from exc
             try:
                 created = await repository.create(session)
                 logger.info("Created paper session %s", created.id)
@@ -194,19 +319,41 @@ class PaperTradingManager:
         async with self._session_factory() as db:
             return await SQLAlchemyPaperRepository(db).get(session_id)
 
+    async def get_by_client_request_id(self, key: str) -> PaperSession | None:
+        async with self._session_factory() as db:
+            return await SQLAlchemyPaperRepository(db).get_by_client_request_id(key)
+
     async def list(self, limit: int, offset: int) -> tuple[tuple[PaperSession, ...], int]:
         async with self._session_factory() as db:
             return await SQLAlchemyPaperRepository(db).list(limit, offset)
 
-    async def events(self, session_id: UUID) -> tuple[PaperEventRecord, ...]:
+    async def events(
+        self, session_id: UUID, *, limit: int | None = None, before_sequence: int | None = None
+    ) -> tuple[PaperEventRecord, ...]:
         async with self._session_factory() as db:
-            return await SQLAlchemyPaperRepository(db).list_events(session_id)
+            return await SQLAlchemyPaperRepository(db).list_events(
+                session_id, limit=limit, before_sequence=before_sequence
+            )
 
     async def snapshot(
         self, session_id: UUID
     ) -> tuple[PaperSession, tuple[PaperEventRecord, ...]] | None:
         async with self._session_factory() as db:
             return await SQLAlchemyPaperRepository(db).snapshot(session_id)
+
+    async def state_snapshot(
+        self, session_id: UUID
+    ) -> tuple[PaperSession, int, tuple[PaperEventRecord, ...]] | None:
+        async with self._session_factory() as db:
+            return await SQLAlchemyPaperRepository(db).state_snapshot(session_id)
+
+    async def collection_page(
+        self, session_id: UUID, collection: str, as_of_sequence: int, limit: int, offset: int
+    ) -> tuple[tuple[PaperEventRecord, ...], int] | None:
+        async with self._session_factory() as db:
+            return await SQLAlchemyPaperRepository(db).collection_page(
+                session_id, collection, as_of_sequence, limit, offset
+            )
 
     async def start(self, session_id: UUID) -> PaperSession:
         async with self._lock:
@@ -219,6 +366,19 @@ class PaperTradingManager:
                 raise PaperSessionStateError(
                     f"paper session cannot start from {session.status.value}"
                 )
+            if session.provider_type == "historical_a_share":
+                if self._historical_datasets is None:
+                    raise ExperimentInputError("DATASET_NOT_REGISTERED")
+                pinned = session.strategy_parameters.get("dataset_sha256")
+                if not isinstance(pinned, str) or not pinned:
+                    raise ExperimentInputError("DATASET_CHANGED_SINCE_SUBMISSION")
+                await asyncio.to_thread(
+                    self._historical_datasets.resolve, session.dataset_id, expected_sha256=pinned
+                )
+            elif session.provider_type == "forward_a_share":
+                if self._forward_factory is None:
+                    raise ValueError("FORWARD_SOURCE_NOT_REGISTERED")
+                await asyncio.to_thread(self._forward_factory.build, session, self._now, None)
             session = await self._transition(session, PaperSessionStatus.STARTING, "session.status")
             task = asyncio.create_task(self._run(session), name=f"paper-session-{session_id}")
             self._tasks[session_id] = task
@@ -244,14 +404,7 @@ class PaperTradingManager:
                 logger.info("Stopped idle paper session %s", session_id)
                 return stopped
             if session.status is PaperSessionStatus.PAUSED:
-                events = await self.events(session_id)
-                cancellations = self._pending_order_events(events, self._now())
-                return await self._transition(
-                    session,
-                    PaperSessionStatus.STOPPED,
-                    "session.status",
-                    preceding_events=cancellations,
-                )
+                return await self._transition(session, PaperSessionStatus.STOPPED, "session.status")
             if session.status is PaperSessionStatus.STOPPING:
                 return session
             if session.status not in {
@@ -296,12 +449,40 @@ class PaperTradingManager:
         self._tasks.clear()
         self._providers.clear()
 
+    @staticmethod
+    def _replay_matches(
+        replayed: Sequence[tuple[str, dict[str, object]]],
+        expected: Sequence[tuple[str, dict[str, object]]],
+    ) -> bool:
+        if len(replayed) != len(expected):
+            return False
+        accounting_fields = {"accounting_version", "corporate_action_realized_pnl", "total_pnl"}
+        for (kind, payload), (saved_kind, saved_payload) in zip(replayed, expected, strict=True):
+            if kind != saved_kind:
+                return False
+            if kind == "portfolio.snapshot" and not accounting_fields.intersection(saved_payload):
+                # Legacy journals predate this projection; compare every previously saved field.
+                payload = {
+                    key: value for key, value in payload.items() if key not in accounting_fields
+                }
+            if payload != saved_payload:
+                return False
+        return True
+
     async def _run(self, initial: PaperSession) -> None:
         session = initial
         provider: ReplayMarketDataProvider | SimulatedAShareSessionProvider | None = None
         runtime: PaperTradingRuntime | ASharePaperTradingRuntime | None = None
+        history: tuple[PaperEventRecord, ...] = ()
+        matched_cursor = False
+
         try:
             history = await self.events(session.id)
+            confirmed_inputs = (
+                validate_commit_history(history, session)
+                if session.provider_type == "forward_a_share"
+                else set()
+            )
             resumed = any(
                 item.event_type == "session.status" and item.payload.get("status") == "PAUSED"
                 for item in history
@@ -315,7 +496,7 @@ class PaperTradingManager:
             expected_replay = tuple(
                 (item.event_type, item.payload)
                 for item in history
-                if item.event_type != "session.status"
+                if item.event_type not in {"session.status", "calendar.observed", "input.committed"}
             )
             replayed: list[tuple[str, dict[str, object]]] = []
             if last_market is not None and not expected_replay:
@@ -331,8 +512,40 @@ class PaperTradingManager:
                 else None
             )
             matched_cursor = last_market is None
-            provider, runtime = await asyncio.to_thread(self._build_runtime, session, cursor_date)
+            calendar_records = tuple(
+                item for item in history if item.event_type == "calendar.observed"
+            )
+            observations = tuple(
+                CalendarObservation.model_validate(item.payload) for item in calendar_records
+            )
+            if observations:
+                if observations[0].kind != "initial" or session.provider_type == "replay":
+                    raise ValueError("paper calendar timeline has no initial observation")
+                previous_calendar = observations[0].calendar
+                for index, (record, observation) in enumerate(
+                    zip(calendar_records, observations, strict=True)
+                ):
+                    if record.occurred_at != observation.applied_at:
+                        raise ValueError("calendar application timestamp mismatch")
+                    if index and observation.kind == "initial":
+                        raise ValueError("duplicate initial calendar observation")
+                    observation.validate_current(previous_calendar)
+                    previous_calendar = observation.calendar
+                if any(
+                    item.event_type == market_type and item.sequence < calendar_records[0].sequence
+                    for item in history
+                ):
+                    raise ValueError("initial calendar follows persisted market data")
+                provider, runtime = await asyncio.to_thread(
+                    self._build_runtime, session, cursor_date, observations[0].calendar
+                )
+            else:
+                provider, runtime = await asyncio.to_thread(
+                    self._build_runtime, session, cursor_date
+                )
             assert provider is not None
+            if session.provider_type == "forward_a_share":
+                self._forward_sources[session.id].bind_history(history)
             self._providers[session.id] = provider
             async with self._lock:
                 current = await self.get(session.id)
@@ -342,24 +555,24 @@ class PaperTradingManager:
                     await self._transition(current, PaperSessionStatus.PAUSED, "session.status")
                     return
                 if current.status is PaperSessionStatus.STOPPING:
-                    await self._transition(
-                        current,
-                        PaperSessionStatus.STOPPED,
-                        "session.status",
-                        preceding_events=self._pending_order_events(history, self._now()),
-                    )
+                    await self._transition(current, PaperSessionStatus.STOPPED, "session.status")
                     return
                 session = await self._transition(
                     current, PaperSessionStatus.RUNNING, "session.status"
                 )
+                if session.provider_type == "forward_a_share":
+                    self._forward_sources[session.id].bind_start(session.started_at)
 
             async def persist(
                 events: tuple[tuple[str, datetime, dict[str, object]], ...],
-            ) -> None:
+            ) -> tuple[PaperEventRecord, ...]:
+                if not matched_cursor:
+                    raise ValueError("paper replay checkpoint disappeared from source data")
                 async with self._session_factory() as db:
                     stored = await SQLAlchemyPaperRepository(db).append_events(session.id, events)
                 for event in stored:
                     self.hub.publish(session.id, self._wire_event(event))
+                return stored
 
             if isinstance(provider, ReplayMarketDataProvider):
                 assert isinstance(runtime, PaperTradingRuntime)
@@ -370,7 +583,7 @@ class PaperTradingManager:
                     if cursor_time is not None and bar.timestamp <= cursor_time:
                         replayed.extend((kind, payload) for kind, _, payload in events)
                         if bar.timestamp == cursor_time:
-                            if tuple(replayed) != expected_replay:
+                            if not self._replay_matches(replayed, expected_replay):
                                 raise ValueError("paper replay checkpoint no longer matches")
                             matched_cursor = True
                         return
@@ -382,29 +595,205 @@ class PaperTradingManager:
                 assert isinstance(runtime, ASharePaperTradingRuntime)
                 historical_start = (
                     date.fromisoformat(str(session.strategy_parameters["start_date"]))
-                    if session.provider_type == "historical_a_share"
+                    if session.provider_type in {"historical_a_share", "forward_a_share"}
                     else None
                 )
+                plan_request = (
+                    self._historical_request(session)
+                    if session.strategy_parameters.get("plan_version") is not None
+                    else None
+                )
+                if plan_request is not None and session.strategy_parameters["plan_version"] not in {
+                    "PAPER_ACCOUNT_PLAN_V1",
+                    "PAPER_ACCOUNT_PLAN_V2",
+                    "PAPER_ACCOUNT_PLAN_V3",
+                    "PAPER_FORWARD_PLAN_V1",
+                }:
+                    raise ValueError("unsupported historical paper plan version")
+                recorded_plan_versions = {
+                    str(plan["as_of_trading_date"]): str(plan["plan_version"])
+                    for event in history
+                    if event.event_type == "portfolio.snapshot"
+                    and isinstance(plan := event.payload.get("plan"), dict)
+                }
 
-                async def process_session(item: ResearchSession) -> None:
+                calendar_cursor = 0
+                known_calendars = {item.after_sha256 for item in observations}
+
+                def replay_calendars() -> None:
+                    nonlocal calendar_cursor
+                    while calendar_cursor < len(observations):
+                        observation = observations[calendar_cursor]
+                        if observation.after_completed_sessions > runtime.completed_sessions:
+                            break
+                        if observation.after_completed_sessions != runtime.completed_sessions:
+                            raise ValueError("calendar observation checkpoint disappeared")
+                        if observation.after_trading_date != runtime.last_completed_session:
+                            raise ValueError("calendar observation trading date mismatch")
+                        if observation.kind == "initial" and calendar_cursor != 0:
+                            raise ValueError("duplicate initial calendar observation")
+                        observation.validate_current(runtime.calendar)
+                        runtime.extend_calendar(observation.calendar)
+                        calendar_cursor += 1
+
+                replay_calendars()
+
+                async def observe_calendar(calendar: TradingCalendar) -> None:
+                    digest = canonical_sha256(calendar.model_dump(mode="json"))
+                    if digest in known_calendars:
+                        return  # Saved observations apply only at their journaled boundary.
+                    if calendar_cursor < len(observations):
+                        raise ValueError("new calendar arrived before replay checkpoint")
+                    if not known_calendars and (expected_replay or runtime.completed_sessions):
+                        raise ValueError("legacy account has no initial calendar observation")
+                    async with self._lock:
+                        current = await self.get(session.id)
+                        if current is not None and current.status in {
+                            PaperSessionStatus.PAUSING,
+                            PaperSessionStatus.STOPPING,
+                        }:
+                            return  # A user command won the lock; do not commit new knowledge.
+                        if current is None or current.status is not PaperSessionStatus.RUNNING:
+                            raise PaperSessionConcurrencyError("paper calendar lifecycle changed")
+                        now = self._now()
+                        observation = CalendarObservation(
+                            schema_version="PAPER_CALENDAR_V1",
+                            kind="extension" if known_calendars else "initial",
+                            calendar=calendar,
+                            before_sha256=canonical_sha256(runtime.calendar.model_dump(mode="json"))
+                            if known_calendars
+                            else None,
+                            after_sha256=digest,
+                            applied_at=now,
+                            after_completed_sessions=runtime.completed_sessions,
+                            after_trading_date=runtime.last_completed_session,
+                        )
+                        observation.validate_current(runtime.calendar)
+                        if not matched_cursor:
+                            raise ValueError("new calendar arrived before replay checkpoint")
+                        async with self._session_factory() as db:
+                            stored = await SQLAlchemyPaperRepository(db).append_events(
+                                session.id,
+                                (("calendar.observed", now, observation.model_dump(mode="json")),),
+                            )
+                        runtime.extend_calendar(
+                            calendar
+                        )  # Only committed knowledge can affect consumption.
+                        known_calendars.add(digest)
+                        for event in stored:
+                            self.hub.publish(session.id, self._wire_event(event))
+
+                async def process_session(item: ResearchSession | TradingCalendar) -> None:
                     nonlocal matched_cursor
+                    if isinstance(item, TradingCalendar):
+                        await observe_calendar(item)
+                        return
+                    if (
+                        cursor_date is not None
+                        and item.trading_date > cursor_date
+                        and not matched_cursor
+                    ):
+                        raise ValueError("paper replay checkpoint disappeared from source data")
+                    if (
+                        (cursor_date is None or item.trading_date > cursor_date)
+                        and (historical_start is None or item.trading_date >= historical_start)
+                        and calendar_cursor < len(observations)
+                    ):
+                        raise ValueError("calendar observation checkpoint disappeared")
+                    forward_input = None
+                    is_new = cursor_date is None or item.trading_date > cursor_date
+                    if (
+                        session.provider_type == "forward_a_share"
+                        and historical_start is not None
+                        and item.trading_date >= historical_start
+                    ):
+                        source_stream = self._forward_sources[session.id]
+                        forward_input = source_stream.inputs[item.trading_date]
+                        if is_new:
+                            dates = source_stream.admitted.forward_dates
+                            index = dates.index(item.trading_date)
+                            if index and dates[index - 1] not in confirmed_inputs:
+                                raise ValueError("FORWARD_PREDECESSOR_COMMIT_NOT_CONFIRMED")
+                            if self._now() >= forward_input.next_open_at:
+                                raise ValueError("FORWARD_INPUT_MISSED_NEXT_OPEN")
                     delta = await runtime.process_session(item)
                     if historical_start is not None and item.trading_date < historical_start:
+                        replay_calendars()
                         return  # Warm up from accepted past only; no pre-range account events.
                     source = (
-                        HISTORICAL_SOURCE
+                        FORWARD_SOURCE
+                        if session.provider_type == "forward_a_share"
+                        else HISTORICAL_SOURCE
                         if session.provider_type == "historical_a_share"
                         else SIMULATED_SOURCE
                     )
-                    events = self._serialize_a_share_delta(delta, source=source)
+                    plan = None
+                    if plan_request is not None:
+                        plan = (
+                            self._forward_plan(
+                                session,
+                                plan_request,
+                                delta,
+                                runtime.next_accepted_session(item.trading_date),
+                                runtime.completed_sessions,
+                                forward_input.model_dump(mode="json"),
+                            )
+                            if forward_input is not None
+                            else self._historical_plan(
+                                session,
+                                plan_request,
+                                delta,
+                                runtime.next_accepted_session(item.trading_date),
+                                runtime.completed_sessions,
+                                version=recorded_plan_versions.get(
+                                    item.trading_date.isoformat(), "PAPER_ACCOUNT_PLAN_V3"
+                                )
+                                if cursor_date is not None and item.trading_date <= cursor_date
+                                else "PAPER_ACCOUNT_PLAN_V3",
+                            )
+                        )
+                    events = self._serialize_a_share_delta(delta, source=source, plan=plan)
+                    if forward_input is not None:
+                        lineage = forward_input.model_dump(mode="json")
+                        events = tuple(
+                            (
+                                kind,
+                                timestamp,
+                                {**payload, "input_provenance": lineage}
+                                if kind in {"market.session", "portfolio.snapshot"}
+                                else payload,
+                            )
+                            for kind, timestamp, payload in events
+                        )
                     if cursor_date is not None and item.trading_date <= cursor_date:
                         replayed.extend((kind, payload) for kind, _, payload in events)
                         if item.trading_date == cursor_date:
-                            if tuple(replayed) != expected_replay:
+                            if not self._replay_matches(replayed, expected_replay):
                                 raise ValueError("paper replay checkpoint no longer matches")
                             matched_cursor = True
+                        # Apply knowledge after the original financial batch and plan.
+                        replay_calendars()
                         return
-                    await persist(events)
+                    if forward_input is not None and self._now() >= forward_input.next_open_at:
+                        raise ValueError("FORWARD_PLAN_MISSED_NEXT_OPEN")
+                    stored = await persist(events)
+                    if forward_input is not None:
+                        observed = self._now()
+                        if observed < forward_input.available_at:
+                            raise ValueError("FORWARD_COMMIT_BEFORE_INPUT_AVAILABLE")
+                        marker = InputCommitObservation(
+                            paper_session_id=session.id,
+                            trading_date=item.trading_date,
+                            input_sha256=forward_input.input_sha256,
+                            journal_first_sequence=stored[0].sequence,
+                            journal_last_sequence=stored[-1].sequence,
+                            commit_observed_at=observed,
+                            next_open_at=forward_input.next_open_at,
+                        )
+                        await persist(
+                            (("input.committed", observed, marker.model_dump(mode="json")),)
+                        )
+                        confirmed_inputs.add(item.trading_date)
 
                 await provider.start(process_session)
             async with self._lock:
@@ -412,6 +801,13 @@ class PaperTradingManager:
                 if current is not None and current.status is PaperSessionStatus.PAUSING:
                     await self._transition(current, PaperSessionStatus.PAUSED, "session.status")
                     return
+                if (
+                    current is not None
+                    and current.status is PaperSessionStatus.RUNNING
+                    and isinstance(provider, SimulatedAShareSessionProvider)
+                    and calendar_cursor != len(observations)
+                ):
+                    raise ValueError("calendar observation checkpoint disappeared")
                 if (
                     not matched_cursor
                     and current is not None
@@ -422,18 +818,7 @@ class PaperTradingManager:
                     PaperSessionStatus.RUNNING,
                     PaperSessionStatus.STOPPING,
                 }:
-                    cancelled = runtime.cancel_pending_orders() if matched_cursor else ()
-                    await self._transition(
-                        current,
-                        PaperSessionStatus.STOPPED,
-                        "session.status",
-                        cancelled_orders=cancelled,
-                        preceding_events=(
-                            self._pending_order_events(history, self._now())
-                            if not matched_cursor
-                            else ()
-                        ),
-                    )
+                    await self._transition(current, PaperSessionStatus.STOPPED, "session.status")
                     logger.info("Paper session %s stopped", session.id)
         except asyncio.CancelledError:
             current = await self.get(session.id)
@@ -444,13 +829,11 @@ class PaperTradingManager:
                 PaperSessionStatus.STOPPING,
             }:
                 with suppress(Exception):
-                    cancelled = runtime.cancel_pending_orders() if runtime is not None else ()
                     await self._transition(
                         current,
                         PaperSessionStatus.INTERRUPTED,
                         "session.status",
                         "Paper runtime interrupted by backend shutdown.",
-                        cancelled_orders=cancelled,
                     )
                     logger.warning("Paper session %s interrupted by shutdown", session.id)
             raise
@@ -461,13 +844,7 @@ class PaperTradingManager:
                 and current is not None
                 and current.status is PaperSessionStatus.STOPPING
             ):
-                cancelled = runtime.cancel_pending_orders() if runtime is not None else ()
-                await self._transition(
-                    current,
-                    PaperSessionStatus.STOPPED,
-                    "session.status",
-                    cancelled_orders=cancelled,
-                )
+                await self._transition(current, PaperSessionStatus.STOPPED, "session.status")
                 logger.info("Paper session %s stopped after a concurrent command", session.id)
                 return
             logger.error("Paper session %s failed with %s", session.id, type(exc).__name__)
@@ -478,27 +855,165 @@ class PaperTradingManager:
                 PaperSessionStatus.STOPPING,
             }:
                 with suppress(Exception):
-                    cancelled = runtime.cancel_pending_orders() if runtime is not None else ()
                     await self._transition(
                         current,
                         PaperSessionStatus.FAILED,
                         "session.status",
-                        f"{type(exc).__name__}: paper session failed",
-                        cancelled_orders=cancelled,
+                        exc.code
+                        if isinstance(
+                            exc, (OrdinaryDistributionInputError, UnexplainedReferenceAdjustment)
+                        )
+                        else f"{type(exc).__name__}: paper session failed",
                     )
         finally:
+            self._forward_sources.pop(session.id, None)
             if provider is not None:
                 await provider.stop()
             if self._providers.get(session.id) is provider:
                 self._providers.pop(session.id, None)
 
+    @staticmethod
+    def _historical_request(session: PaperSession) -> CreateExperimentRequest:
+        params = session.strategy_parameters
+        return CreateExperimentRequest.model_validate(
+            {
+                "name": "Historical paper replay",
+                "dataset_id": session.dataset_id,
+                "start_date": params["start_date"],
+                "end_date": params["end_date"],
+                "initial_cash": canonical_decimal(session.initial_cash),
+                "universe": params["universe"],
+                "strategy": {
+                    "rebalance_sessions": params["rebalance_sessions"],
+                    "maximum_holdings": params["maximum_holdings"],
+                },
+                "costs": {
+                    "commission_rate": params["commission_rate"],
+                    "minimum_commission": params["minimum_commission"],
+                },
+                "risk": {
+                    "max_drawdown": session.risk["max_drawdown"],
+                    "max_position_weight": params["max_position_weight"],
+                },
+            }
+        )
+
+    @classmethod
+    def _historical_plan(
+        cls,
+        session: PaperSession,
+        request: CreateExperimentRequest,
+        delta: ResearchExecutionDelta,
+        next_session: date | None,
+        completed_sessions: int,
+        *,
+        version: str = "PAPER_ACCOUNT_PLAN_V3",
+    ) -> dict[str, object]:
+        if version not in {
+            "PAPER_ACCOUNT_PLAN_V1",
+            "PAPER_ACCOUNT_PLAN_V2",
+            "PAPER_ACCOUNT_PLAN_V3",
+        }:
+            raise ValueError("unsupported historical paper plan version")
+        plan = build_plan_preview(
+            request,
+            str(session.strategy_parameters["dataset_sha256"]),
+            "historical_exploration",
+            delta,
+            delta.target,
+            next_session,
+            completed_sessions,
+            legacy_checkpoint=version == "PAPER_ACCOUNT_PLAN_V1",
+        )
+        if version == "PAPER_ACCOUNT_PLAN_V2":
+            plan.pop("account_snapshot_trading_date")  # Preserve the persisted V2 projection.
+        plan.update(
+            paper_session_id=str(session.id),
+            account_mode="HISTORICAL_PAPER_REPLAY",
+            submitted_to_account=bool(delta.proposals),
+            plan_version=version,
+            configuration_sha256=cls._historical_plan_sha(session, request),
+        )
+        return plan
+
+    @classmethod
+    def _historical_plan_sha(cls, session: PaperSession, request: CreateExperimentRequest) -> str:
+        return canonical_sha256(
+            json_value(
+                {
+                    "request": request.model_dump(),
+                    "effective_risk": cls._historical_effective_risk(session).model_dump(),
+                }
+            )
+        )
+
+    @classmethod
+    def _forward_plan(
+        cls,
+        session: PaperSession,
+        request: CreateExperimentRequest,
+        delta: ResearchExecutionDelta,
+        next_session: date | None,
+        completed_sessions: int,
+        provenance: dict[str, object],
+    ) -> dict[str, object]:
+        plan = build_plan_preview(
+            request,
+            str(session.strategy_parameters["dataset_sha256"]),
+            "forward_paper",
+            delta,
+            delta.target,
+            next_session,
+            completed_sessions,
+        )
+        plan.update(
+            paper_session_id=str(session.id),
+            account_mode="FORWARD_PAPER",
+            submitted_to_account=bool(delta.proposals),
+            plan_version="PAPER_FORWARD_PLAN_V1",
+            configuration_sha256=cls._historical_plan_sha(session, request),
+            input_provenance=provenance,
+            data_snapshot_sha256=provenance["input_sha256"],
+        )
+        return plan
+
     def _build_runtime(
-        self, session: PaperSession, cursor_date: date | None = None
+        self,
+        session: PaperSession,
+        cursor_date: date | None = None,
+        initial_calendar: TradingCalendar | None = None,
     ) -> tuple[
         ReplayMarketDataProvider | SimulatedAShareSessionProvider,
         PaperTradingRuntime | ASharePaperTradingRuntime,
     ]:
         risk = self._risk_config(session)
+        if session.provider_type == "forward_a_share":
+            if self._forward_factory is None:
+                raise ValueError("FORWARD_SOURCE_NOT_REGISTERED")
+            source = self._forward_factory.build(session, self._now, cursor_date)
+            self._forward_sources[session.id] = source
+            request = self._historical_request(session)
+            commission = EffectiveDatedAShareCommission(
+                tuple(
+                    item.model_copy(
+                        update={
+                            "commission_rate": request.costs.commission_rate,
+                            "minimum_commission": request.costs.minimum_commission,
+                        }
+                    )
+                    for item in source.admitted.contract.transaction_costs
+                )
+            )
+            return (
+                SimulatedAShareSessionProvider(source.sessions(), self._replay_interval_seconds),
+                ASharePaperTradingRuntime(
+                    initial_cash=session.initial_cash,
+                    commission_model=commission,
+                    calendar=initial_calendar or source.admitted.calendar,
+                    risk_config=self._historical_effective_risk(session),
+                    strategy=ExploratoryStrategy(request),
+                ),
+            )
         if session.provider_type == "simulated_a_share":
             calendar, sessions, commission = simulated_a_share_fixture()
             return (
@@ -510,35 +1025,14 @@ class PaperTradingManager:
                 ASharePaperTradingRuntime(
                     initial_cash=session.initial_cash,
                     commission_model=commission,
-                    calendar=calendar,
+                    calendar=initial_calendar or calendar,
                     risk_config=risk,
                 ),
             )
         if session.provider_type == "historical_a_share":
             assert self._historical_datasets is not None
             params = session.strategy_parameters
-            request = CreateExperimentRequest.model_validate(
-                {
-                    "name": "Historical paper replay",
-                    "dataset_id": session.dataset_id,
-                    "start_date": params["start_date"],
-                    "end_date": params["end_date"],
-                    "initial_cash": canonical_decimal(session.initial_cash),
-                    "universe": params["universe"],
-                    "strategy": {
-                        "rebalance_sessions": params["rebalance_sessions"],
-                        "maximum_holdings": params["maximum_holdings"],
-                    },
-                    "costs": {
-                        "commission_rate": params["commission_rate"],
-                        "minimum_commission": params["minimum_commission"],
-                    },
-                    "risk": {
-                        "max_drawdown": session.risk["max_drawdown"],
-                        "max_position_weight": params["max_position_weight"],
-                    },
-                }
-            )
+            request = self._historical_request(session)
             data = load_experiment_dataset(
                 self._historical_datasets, session.dataset_id, request.start_date, request.end_date
             )
@@ -576,14 +1070,8 @@ class PaperTradingManager:
                 ASharePaperTradingRuntime(
                     initial_cash=session.initial_cash,
                     commission_model=commission,
-                    calendar=calendar,
-                    risk_config=RiskConfig(
-                        **{
-                            **risk.model_dump(),
-                            "enforce_buying_power": True,
-                            "max_leverage": Decimal(1),
-                        }
-                    ),
+                    calendar=initial_calendar or calendar,
+                    risk_config=self._historical_effective_risk(session),
                     strategy=ExploratoryStrategy(request),
                 ),
             )
@@ -613,20 +1101,6 @@ class PaperTradingManager:
         return provider, runtime
 
     @staticmethod
-    def _pending_order_events(
-        events: tuple[PaperEventRecord, ...], timestamp: datetime
-    ) -> tuple[tuple[str, datetime, dict[str, object]], ...]:
-        latest: dict[str, dict[str, object]] = {}
-        for event in events:
-            if event.event_type == "order.updated":
-                latest[str(event.payload["order_id"])] = event.payload
-        return tuple(
-            ("order.updated", timestamp, {**payload, "status": "CANCELLED"})
-            for payload in latest.values()
-            if payload.get("status") in {"CREATED", "SUBMITTED", "ACCEPTED", "PARTIALLY_FILLED"}
-        )
-
-    @staticmethod
     def _risk_config(session: PaperSession) -> RiskConfig:
         def optional_decimal(name: str) -> Decimal | None:
             value = session.risk.get(name)
@@ -642,19 +1116,24 @@ class PaperTradingManager:
             max_drawdown=optional_decimal("max_drawdown"),
         )
 
+    @classmethod
+    def _historical_effective_risk(cls, session: PaperSession) -> RiskConfig:
+        return RiskConfig(
+            **{
+                **cls._risk_config(session).model_dump(),
+                "enforce_buying_power": True,
+                "max_leverage": Decimal(1),
+            }
+        )
+
     async def _transition(
         self,
         session: PaperSession,
         target: PaperSessionStatus,
         event_type: str,
         error_message: str | None = None,
-        cancelled_orders: tuple[Order, ...] = (),
-        preceding_events: tuple[tuple[str, datetime, dict[str, object]], ...] = (),
     ) -> PaperSession:
         now = self._now()
-        cancellations = tuple(
-            ("order.updated", now, self._order(order)) for order in cancelled_orders
-        )
         async with self._session_factory() as db:
             repository = SQLAlchemyPaperRepository(db)
             updated, stored = await repository.transition_with_event(
@@ -664,7 +1143,6 @@ class PaperTradingManager:
                 now,
                 event_type,
                 error_message,
-                (*preceding_events, *cancellations),
             )
         for event in stored:
             self.hub.publish(session.id, self._wire_event(event))
@@ -677,12 +1155,18 @@ class PaperTradingManager:
         events: list[tuple[str, datetime, dict[str, object]]] = [
             ("market.bar", delta.bar.timestamp, cls._bar(delta.bar))
         ]
-        filled_order_ids = {fill.order_id for fill in delta.fills}
-        events.extend(
-            ("order.updated", delta.bar.timestamp, cls._order(item))
+        completed_order_ids = {
+            item.id
             for item in delta.orders
-            if item.id in filled_order_ids
-        )
+            if item.status in {OrderStatus.FILLED, OrderStatus.CANCELLED}
+        }
+        for item in delta.orders:
+            if item.id not in completed_order_ids:
+                continue
+            payload = cls._order(item)
+            if item.status is OrderStatus.CANCELLED:
+                payload["cancellation_reason_code"] = "INSUFFICIENT_BUYING_POWER"
+            events.append(("order.updated", delta.bar.timestamp, payload))
         events.extend(("fill.created", item.timestamp, cls._fill(item)) for item in delta.fills)
         events.extend(
             ("signal.created", item.timestamp, cls._signal(item)) for item in delta.signals
@@ -693,7 +1177,7 @@ class PaperTradingManager:
         events.extend(
             ("order.updated", item.created_at, cls._order(item))
             for item in delta.orders
-            if item.id not in filled_order_ids
+            if item.id not in completed_order_ids
         )
         events.append(
             (
@@ -706,7 +1190,11 @@ class PaperTradingManager:
 
     @classmethod
     def _serialize_a_share_delta(
-        cls, delta: ResearchExecutionDelta, *, source: str = SIMULATED_SOURCE
+        cls,
+        delta: ResearchExecutionDelta,
+        *,
+        source: str = SIMULATED_SOURCE,
+        plan: dict[str, object] | None = None,
     ) -> tuple[tuple[str, datetime, dict[str, object]], ...]:
         if delta.snapshot is None:
             raise RuntimeError("A-share session did not produce a portfolio snapshot")
@@ -750,7 +1238,10 @@ class PaperTradingManager:
             for item in delta.orders
             if item.id not in filled_order_ids
         )
-        events.append(("portfolio.snapshot", timestamp, cls._snapshot(delta.snapshot)))
+        snapshot = cls._snapshot(delta.snapshot)
+        if plan is not None:
+            snapshot["plan"] = plan
+        events.append(("portfolio.snapshot", timestamp, snapshot))
         return tuple(events)
 
     @staticmethod
@@ -833,6 +1324,11 @@ class PaperTradingManager:
             "cash": canonical_decimal(snapshot.cash),
             "market_value": canonical_decimal(snapshot.market_value),
             "equity": canonical_decimal(snapshot.equity),
+            "accounting_version": "PNL_BREAKDOWN_V1",
+            "corporate_action_realized_pnl": canonical_decimal(
+                snapshot.corporate_action_realized_pnl
+            ),
+            "total_pnl": canonical_decimal(snapshot.total_pnl),
             "realized_pnl": canonical_decimal(snapshot.realized_pnl),
             "unrealized_pnl": canonical_decimal(snapshot.unrealized_pnl),
             "cumulative_commission": canonical_decimal(snapshot.cumulative_commission),

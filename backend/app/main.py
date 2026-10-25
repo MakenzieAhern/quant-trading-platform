@@ -26,15 +26,15 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         "Application starting",
         extra={"environment": settings.app_env, "broker_mode": settings.broker_mode},
     )
-    interrupted = await paper_manager.recover_interrupted()
-    if interrupted:
-        logger.info("Interrupted stale paper sessions", extra={"count": interrupted})
     async with AsyncExitStack() as cleanup:
-        cleanup.push_async_callback(paper_manager.shutdown)
         cleanup.push_async_callback(experiment_manager.shutdown)
-        await experiment_manager.start()
         cleanup.push_async_callback(market_update_manager.shutdown)
+        cleanup.push_async_callback(paper_manager.shutdown)
+        await experiment_manager.start()
         await market_update_manager.start()
+        interrupted = await paper_manager.recover_interrupted()
+        if interrupted:
+            logger.info("Interrupted stale paper sessions", extra={"count": interrupted})
         yield
         logger.info("Application stopping")
 
@@ -46,13 +46,13 @@ app = FastAPI(
 )
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_origin],
+    allow_origins=list(settings.allowed_frontend_origins),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 app.include_router(api_router)
-app.add_middleware(RequestBodyLimitMiddleware, allowed_origin=settings.frontend_origin)
+app.add_middleware(RequestBodyLimitMiddleware, allowed_origins=settings.allowed_frontend_origins)
 
 
 @app.exception_handler(RequestValidationError)

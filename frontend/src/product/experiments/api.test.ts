@@ -1,10 +1,161 @@
 import { describe, expect, it, vi } from "vitest";
 import { API_BASE_URL } from "../../api/config";
+import { ApiContractError } from "../../api/contracts";
 import { jsonResponse } from "../../test/fixtures";
-import { experimentApi } from "./api";
+import {
+  experimentApi,
+  parseCapabilities,
+  parseCurrentDatasetQuality,
+  parseCurrentSourceIntegrity,
+  parseExperiment,
+  parseResult,
+} from "./api";
 import { capabilities, configuration, job, result } from "./fixtures.test-data";
 
 describe("experiment HTTP boundary", () => {
+  it("validates independent source findings without approving missing or unknown versions", () => {
+    for (const value of [
+      "SOURCE_CONTRACT_INTEGRITY_FAILED",
+      "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+      null,
+      undefined,
+    ]) {
+      const saved = { ...result, current_source_integrity: value };
+      expect(parseResult(saved)).toEqual(saved);
+      expect(parseCurrentSourceIntegrity(value)).toBe(value ?? null);
+    }
+    for (const value of [
+      "PASS",
+      "",
+      true,
+      [],
+      {},
+      "KNOWN_ECONOMIC_COVERAGE_GAP",
+    ]) {
+      expect(() => parseCurrentSourceIntegrity(value)).toThrow(
+        ApiContractError,
+      );
+      expect(() =>
+        parseResult({ ...result, current_source_integrity: value }),
+      ).toThrow(ApiContractError);
+      expect(() =>
+        parseCapabilities({
+          ...capabilities,
+          datasets: capabilities.datasets.map((item) => ({
+            ...item,
+            current_source_integrity: value,
+          })),
+        }),
+      ).toThrow(ApiContractError);
+    }
+  });
+  it("validates observed failure identity without inventing legacy context", () => {
+    const error_context = {
+      trading_date: "2024-01-04",
+      security_ids: ["CN-A:SSE:600000"],
+      security_count: 1,
+    };
+    const failed = {
+      ...job,
+      status: "FAILED",
+      error_code: "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT",
+      error_context,
+    };
+    expect(parseExperiment(job)).toEqual(job);
+    expect(
+      parseExperiment({ ...failed, error_context: null }).error_context,
+    ).toBeNull();
+    expect(parseExperiment(failed).error_context).toEqual(error_context);
+    for (const change of [
+      { trading_date: "2024-02-30" },
+      { trading_date: "2024-01-04T00:00:00Z" },
+      { security_ids: [] },
+      { security_ids: ["private/path"] },
+      {
+        security_ids: ["CN-A:SSE:600000", "CN-A:SSE:600000"],
+        security_count: 2,
+      },
+      {
+        security_ids: ["CN-A:SZSE:000001", "CN-A:SSE:600000"],
+        security_count: 2,
+      },
+      { security_count: true },
+      { security_count: 0 },
+      { security_count: 2 },
+      { traceback: "private" },
+      {
+        security_ids: Array.from(
+          { length: 101 },
+          (_, n) => `CN-A:SSE:${String(n).padStart(6, "0")}`,
+        ),
+        security_count: 101,
+      },
+    ])
+      expect(() =>
+        parseExperiment({
+          ...failed,
+          error_context: { ...error_context, ...change },
+        }),
+      ).toThrow(ApiContractError);
+    for (const change of [
+      { status: "SUCCEEDED" },
+      { error_code: "EXPERIMENT_EXECUTION_FAILED" },
+      { result_available: true },
+    ])
+      expect(() => parseExperiment({ ...failed, ...change })).toThrow(
+        ApiContractError,
+      );
+    const prefix = Array.from(
+      { length: 100 },
+      (_, n) => `CN-A:SSE:${String(n).padStart(6, "0")}`,
+    );
+    expect(
+      parseExperiment({
+        ...failed,
+        error_context: {
+          ...error_context,
+          security_ids: prefix,
+          security_count: 101,
+        },
+      }).error_context?.security_count,
+    ).toBe(101);
+  });
+  it("preserves read-time quality, accepts legacy omission and rejects unknown quality claims", () => {
+    const saved = {
+      ...result,
+      current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP",
+    };
+    const before = JSON.stringify(saved);
+    expect(parseResult(saved).current_dataset_quality).toBe(
+      "KNOWN_ECONOMIC_COVERAGE_GAP",
+    );
+    expect(parseResult(result)).toEqual(result);
+    expect(JSON.stringify(saved)).toBe(before);
+    for (const value of [
+      "PASS",
+      ["KNOWN_ECONOMIC_COVERAGE_GAP"],
+      { status: "KNOWN_ECONOMIC_COVERAGE_GAP" },
+      1,
+    ]) {
+      expect(() => parseCurrentDatasetQuality(value)).toThrow(ApiContractError);
+      expect(() =>
+        parseResult({ ...result, current_dataset_quality: value }),
+      ).toThrow(ApiContractError);
+      expect(() =>
+        parseCapabilities({
+          ...capabilities,
+          datasets: capabilities.datasets.map((item) => ({
+            ...item,
+            current_dataset_quality: value,
+          })),
+        }),
+      ).toThrow(ApiContractError);
+    }
+    expect(
+      parseCurrentDatasetQuality("HISTORICAL_DATASET_QUALITY_UNKNOWN"),
+    ).toBe("HISTORICAL_DATASET_QUALITY_UNKNOWN");
+    expect(parseCurrentDatasetQuality(null)).toBeNull();
+  });
   it("requests capabilities from the actual mounted /api route", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")
@@ -46,10 +197,34 @@ describe("experiment HTTP boundary", () => {
     ]);
   });
 
-  it("sends server-wide filters and sort with the page request", async () => {
-    const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      jsonResponse({ items: [], total: 0, limit: 20, offset: 20 }),
+  it("rejects a saved study or result returned for a different job ID", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        jsonResponse({
+          ...job,
+          job_id: "00000000-0000-0000-0000-000000000000",
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          ...result,
+          job_id: "00000000-0000-0000-0000-000000000000",
+        }),
+      );
+    await expect(experimentApi.get(job.job_id)).rejects.toBeInstanceOf(
+      ApiContractError,
     );
+    await expect(experimentApi.result(job.job_id)).rejects.toBeInstanceOf(
+      ApiContractError,
+    );
+  });
+
+  it("sends server-wide filters and sort with the page request", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(
+        jsonResponse({ items: [], total: 0, limit: 20, offset: 20 }),
+      );
     await experimentApi.list(undefined, 20, 20, "Alpha", {
       status: "SUCCEEDED",
       mode: "historical_exploration",

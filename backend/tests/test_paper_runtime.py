@@ -1,22 +1,29 @@
-from datetime import UTC, datetime, timedelta
+import asyncio
+from dataclasses import replace
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
+from unittest.mock import AsyncMock, MagicMock
+from uuid import uuid4
 
 import pytest
+from pydantic import TypeAdapter, ValidationError
 
-from app.api.schemas.paper import HistoricalASharePaperSessionRequest
+from app.api.schemas.paper import CreatePaperSessionRequest, HistoricalASharePaperSessionRequest
 from app.application.paper_trading import PaperTradingManager
 from app.backtest import BacktestConfig, BacktestEngine
 from app.data.providers import CSVDataProvider
 from app.domain.market import Bar
+from app.domain.markets.calendar import TradingCalendar
 from app.domain.risk import RiskConfig, RiskReasonCode
 from app.domain.trading import Order, OrderSide, OrderStatus, OrderType
 from app.event import EventBus
 from app.execution import FixedBasisPointSlippage, FixedCommission
 from app.paper.a_share_fixture import simulated_a_share_fixture
 from app.paper.hub import PaperEventHub
-from app.paper.models import PaperSessionStatus, require_transition
+from app.paper.models import PaperSessionConcurrencyError, PaperSessionStatus, require_transition
 from app.paper.runtime import (
     FROZEN_A_SHARE_STRATEGY_ID,
     ASharePaperTradingRuntime,
@@ -27,6 +34,7 @@ from app.paper.runtime import (
     SimulatedAShareSessionProvider,
 )
 from app.strategies import MovingAverageCrossoverStrategy, RSIMeanReversionStrategy
+from tests.test_research_execution_engine import CALENDAR, OneTargetStrategy, _session
 
 FIXTURES = Path(__file__).parents[2] / "data" / "fixtures"
 START = datetime(2024, 1, 1, tzinfo=UTC)
@@ -88,6 +96,8 @@ async def test_frozen_a_share_runtime_consumes_only_completed_simulated_sessions
     assert runtime.strategy_id == FROZEN_A_SHARE_STRATEGY_ID
     assert len(deltas) == 254
     assert sum(len(item.proposals) for item in deltas) == 1
+    assert deltas[-2].target is not None
+    assert deltas[-1].target is None
     assert sum(len(item.decisions) for item in deltas) == 1
     assert sum(len(item.fills) for item in deltas) == 1
     assert deltas[-1].fills[0].symbol.endswith(".SSE")
@@ -108,11 +118,131 @@ async def test_frozen_a_share_runtime_consumes_only_completed_simulated_sessions
         "fill.created",
         "portfolio.snapshot",
     ]
+    plan = {"plan_version": "PAPER_ACCOUNT_PLAN_V1", "as_of_trading_date": "2030-01-03"}
+    serialized = PaperTradingManager._serialize_a_share_delta(deltas[-2], plan=plan)
+    assert serialized[-1][2]["plan"] == plan
+    assert "plan" not in PaperTradingManager._serialize_a_share_delta(deltas[-2])[-1][2]
     assert runtime.cancel_pending_orders() == ()
     with pytest.raises(ReplayProviderError, match="already stopped"):
         await runtime.process_session(sessions[-1])
     with pytest.raises(ReplayProviderError, match="strictly chronological"):
         SimulatedAShareSessionProvider((sessions[0], sessions[0]))
+
+
+@pytest.mark.parametrize("expired_before_stop", [False, True])
+async def test_a_share_terminal_cleanup_only_emits_new_cancellations(
+    expired_before_stop: bool,
+) -> None:
+    calendar, sessions, commission = simulated_a_share_fixture()
+    runtime = ASharePaperTradingRuntime(
+        initial_cash=Decimal(100000000),
+        commission_model=commission,
+        calendar=calendar,
+    )
+    for item in sessions[:-1]:
+        await runtime.process_session(item)
+    if expired_before_stop:
+        missed = await runtime.process_session(replace(sessions[-1], bars=()))
+        assert len(missed.expired_order_ids) == 1
+        assert missed.orders[0].status is OrderStatus.CANCELLED
+    cancelled = runtime.cancel_pending_orders()
+    assert len(cancelled) == (0 if expired_before_stop else 1)
+    assert all(order.status is OrderStatus.CANCELLED for order in cancelled)
+    assert runtime.cancel_pending_orders() == ()
+
+
+async def test_a_share_terminal_cleanup_excludes_prior_expiry_with_new_pending_order() -> None:
+    class FixtureStrategy(OneTargetStrategy):
+        strategy_id = FROZEN_A_SHARE_STRATEGY_ID
+
+    strategy = FixtureStrategy()
+    runtime = ASharePaperTradingRuntime(
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=CALENDAR,
+        strategy=strategy,
+    )
+    first = await runtime.process_session(_session(date(2024, 1, 2), opening="10"))
+    strategy.calls = 0  # Rebalance again after the first order misses its execution session.
+    second = await runtime.process_session(_session(date(2024, 1, 3), opening="10.1"))
+    assert len(first.proposals) == len(second.expired_order_ids) == len(second.proposals) == 1
+    assert second.expired_order_ids[0] == first.proposals[0].proposal_id
+    cancelled = runtime.cancel_pending_orders()
+    assert [(item.id, item.status) for item in cancelled] == [
+        (second.proposals[0].proposal_id, OrderStatus.CANCELLED)
+    ]
+    assert runtime.cancel_pending_orders() == ()
+
+
+async def test_calendar_extension_does_not_retroactively_create_a_paper_intent() -> None:
+    class FixtureStrategy(OneTargetStrategy):
+        strategy_id = FROZEN_A_SHARE_STRATEGY_ID
+
+    calendar = TradingCalendar(market=CALENDAR.market, sessions=CALENDAR.sessions[:1])
+    runtime = ASharePaperTradingRuntime(
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=calendar,
+        strategy=FixtureStrategy(),
+    )
+    first = await runtime.process_session(_session(date(2024, 1, 2), opening="10"))
+    assert first.target is not None and first.proposals == first.orders == first.fills == ()
+    runtime.extend_calendar(CALENDAR)
+    assert runtime.next_accepted_session(date(2024, 1, 2)) == date(2024, 1, 3)
+    assert runtime.completed_sessions == 1
+    assert first.proposals == first.orders == ()
+    second = await runtime.process_session(_session(date(2024, 1, 3), opening="9.9"))
+    assert second.proposals == second.fills == ()
+    assert second.snapshot is not None and second.snapshot.cash == Decimal(10000)
+    result = runtime.finish()
+    with pytest.raises(ReplayProviderError, match="already stopped"):
+        runtime.extend_calendar(CALENDAR)
+    assert runtime.finish() == result and result.fills == ()
+
+
+@pytest.mark.parametrize("concurrent_stop", [False, True])
+async def test_terminal_transition_retry_reaches_terminal_state(
+    concurrent_stop: bool,
+) -> None:
+    runtime = PaperTradingRuntime(
+        (MovingAverageCrossoverStrategy("retry-cancel", "AAPL", 2, 3),),
+        BacktestConfig(initial_cash=Decimal(100000), default_order_quantity=Decimal(10)),
+    )
+    session = SimpleNamespace(
+        id=uuid4(),
+        status=PaperSessionStatus.STARTING,
+        provider_type="replay",
+        strategy_parameters={},
+    )
+    manager = PaperTradingManager(MagicMock(), MagicMock(), MagicMock())
+    manager.events = AsyncMock(return_value=())
+    manager.get = AsyncMock(return_value=session)
+    manager._build_runtime = lambda _session, _cursor_date: (
+        ReplayMarketDataProvider((), 0),
+        runtime,
+    )
+    attempts: list[PaperSessionStatus] = []
+
+    async def transition(_session, target, *_args, **_kwargs):
+        if target is PaperSessionStatus.STOPPED and not attempts:
+            attempts.append(target)
+            session.status = (
+                PaperSessionStatus.STOPPING if concurrent_stop else PaperSessionStatus.RUNNING
+            )
+            if concurrent_stop:
+                raise PaperSessionConcurrencyError("simulated competing stop")
+            raise RuntimeError("simulated write failure")
+        if target in {PaperSessionStatus.STOPPED, PaperSessionStatus.FAILED}:
+            attempts.append(target)
+        session.status = target
+        return session
+
+    manager._transition = transition
+    await manager._run(session)
+    assert session.status is (
+        PaperSessionStatus.STOPPED if concurrent_stop else PaperSessionStatus.FAILED
+    )
+    assert attempts == [PaperSessionStatus.STOPPED, session.status]
 
 
 async def test_historical_session_stream_is_lazy_and_source_is_not_synthetic() -> None:
@@ -135,6 +265,230 @@ async def test_historical_session_stream_is_lazy_and_source_is_not_synthetic() -
     await provider.start(collect)
     assert yielded == len(received) == 2
     assert received == sorted(received)
+
+
+async def test_async_session_provider_preserves_calendar_controls_and_completed_order() -> None:
+    items = (
+        CALENDAR,
+        _session(date(2024, 1, 2), opening="10"),
+        _session(date(2024, 1, 3), opening="9.9"),
+    )
+    received = []
+    closed = asyncio.Event()
+
+    async def source():
+        try:
+            for item in items:
+                yield item
+        finally:
+            closed.set()
+
+    provider = SimulatedAShareSessionProvider(source(), 0)
+    assert not closed.is_set()
+
+    async def collect(item):
+        received.append(item)
+
+    await provider.start(collect)
+    assert received == list(items)
+    assert closed.is_set() and not provider.running
+
+
+@pytest.mark.parametrize("command", ["stop", "cancel"])
+async def test_async_session_provider_interrupts_pending_read_and_cleans_tasks(command) -> None:
+    waiting = asyncio.Event()
+    closed = asyncio.Event()
+    received = []
+
+    async def source():
+        try:
+            waiting.set()
+            await asyncio.Event().wait()
+            yield _session(date(2024, 1, 2), opening="10")
+        finally:
+            closed.set()
+
+    async def collect(item):
+        received.append(item)
+
+    before = asyncio.all_tasks()
+    provider = SimulatedAShareSessionProvider(source(), 0)
+    task = asyncio.create_task(provider.start(collect))
+    try:
+        await asyncio.wait_for(waiting.wait(), 1)
+        assert received == [] and provider.running
+        if command == "stop":
+            await provider.stop()
+            await provider.stop()
+            await asyncio.wait_for(task, 1)
+        else:
+            task.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await task
+        assert closed.is_set() and not provider.running
+        assert received == [] and asyncio.all_tasks() == before
+    finally:
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)
+
+
+async def test_async_session_provider_stop_wins_simultaneous_ready_item() -> None:
+    received = []
+    closed = asyncio.Event()
+
+    async def source():
+        try:
+            await provider.stop()
+            yield _session(date(2024, 1, 2), opening="10")
+        finally:
+            closed.set()
+
+    async def collect(item):
+        received.append(item)
+
+    provider = SimulatedAShareSessionProvider(source(), 0)
+    await provider.start(collect)
+    assert received == [] and closed.is_set() and not provider.running
+
+
+@pytest.mark.parametrize("second_date", [date(2024, 1, 2), date(2024, 1, 1)])
+async def test_async_session_provider_rejects_duplicate_or_older_before_handler(second_date):
+    received = []
+    closed = asyncio.Event()
+    first = _session(date(2024, 1, 2), opening="10")
+
+    async def source():
+        try:
+            yield first
+            yield _session(second_date, opening="10")
+        finally:
+            closed.set()
+
+    async def collect(item):
+        received.append(item)
+
+    provider = SimulatedAShareSessionProvider(source(), 0)
+    with pytest.raises(ReplayProviderError, match="chronological"):
+        await provider.start(collect)
+    assert received == [first] and closed.is_set() and not provider.running
+
+
+@pytest.mark.parametrize("failure", ["source", "handler", "stop_in_handler"])
+async def test_async_session_provider_closes_iterator_at_yield_or_exception(failure):
+    closed = asyncio.Event()
+    received = []
+
+    async def source():
+        try:
+            if failure == "source":
+                raise RuntimeError("offline source failure")
+            yield _session(date(2024, 1, 2), opening="10")
+            pytest.fail("stop or failure must not request another item")
+        finally:
+            closed.set()
+
+    async def collect(item):
+        received.append(item)
+        if failure == "handler":
+            raise RuntimeError("offline handler failure")
+        await provider.stop()
+
+    provider = SimulatedAShareSessionProvider(source(), 0)
+    if failure == "stop_in_handler":
+        await provider.start(collect)
+    else:
+        with pytest.raises(RuntimeError, match=f"offline {failure} failure"):
+            await provider.start(collect)
+    assert closed.is_set() and not provider.running
+    assert len(received) == (0 if failure == "source" else 1)
+
+
+@pytest.mark.parametrize("has_close", [False, True])
+async def test_async_session_provider_accepts_future_awaitables_and_owns_iterator(has_close):
+    first = _session(date(2024, 1, 2), opening="10")
+    items = iter((CALENDAR, first))
+    received = []
+    closed = False
+
+    class Iterator:
+        def __aiter__(self):
+            return self
+
+        def __anext__(self):
+            pending = asyncio.get_running_loop().create_future()
+            item = next(items, None)
+            if item is None:
+                pending.set_exception(StopAsyncIteration())
+            else:
+                pending.set_result(item)
+            return pending
+
+    class ClosingIterator(Iterator):
+        async def aclose(self):
+            nonlocal closed
+            closed = True
+
+    iterator = ClosingIterator() if has_close else Iterator()
+
+    class Source:
+        def __aiter__(self):
+            return iterator
+
+        async def aclose(self):
+            pytest.fail("the factory is not the owned iterator")
+
+    async def collect(item):
+        received.append(item)
+
+    provider = SimulatedAShareSessionProvider(Source(), 0)
+    await provider.start(collect)
+    assert received == [CALENDAR, first]
+    assert closed is has_close and not provider.running
+
+
+@pytest.mark.parametrize("failure", ["cancel", "handler", "stop"])
+async def test_async_session_provider_close_failure_preserves_primary_error(failure):
+    waiting = asyncio.Event()
+    closed = False
+
+    class Source:
+        def __aiter__(self):
+            return self
+
+        async def __anext__(self):
+            if failure == "cancel":
+                waiting.set()
+                await asyncio.Event().wait()
+            return _session(date(2024, 1, 2), opening="10")
+
+        async def aclose(self):
+            nonlocal closed
+            closed = True
+            raise RuntimeError("offline close failure")
+
+    async def collect(item):
+        if failure == "handler":
+            raise ValueError("offline primary handler failure")
+        await provider.stop()
+
+    provider = SimulatedAShareSessionProvider(Source(), 0)
+    task = asyncio.create_task(provider.start(collect))
+    try:
+        if failure == "cancel":
+            await asyncio.wait_for(waiting.wait(), 1)
+            task.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await task
+        elif failure == "handler":
+            with pytest.raises(ValueError, match="primary handler"):
+                await task
+        else:
+            with pytest.raises(RuntimeError, match="close failure"):
+                await task
+        assert closed and not provider.running
+    finally:
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)
 
 
 def test_historical_paper_request_rejects_unsafe_ranges_and_risk() -> None:
@@ -164,6 +518,55 @@ def test_historical_paper_request_rejects_unsafe_ranges_and_risk() -> None:
     ):
         with pytest.raises(ValueError):
             HistoricalASharePaperSessionRequest.model_validate({**request, **change})
+
+
+@pytest.mark.parametrize("field", ["rebalance_sessions", "maximum_holdings"])
+@pytest.mark.parametrize("value", [True, 20.0, "20"])
+def test_historical_paper_counts_do_not_coerce_non_integer_json(field, value) -> None:
+    request = {
+        "provider_type": "historical_a_share",
+        "dataset_id": "cn-a-research-20100101-20251231-v1",
+        "symbol": "CN-A",
+        "strategy": {
+            "type": FROZEN_A_SHARE_STRATEGY_ID,
+            "parameters": {
+                "start_date": "2011-03-01",
+                "end_date": "2011-03-31",
+                field: value,
+            },
+        },
+    }
+    with pytest.raises(ValidationError):
+        TypeAdapter(CreatePaperSessionRequest).validate_python(request)
+
+
+@pytest.mark.parametrize("rebalance,holdings", [(1, 1), (252, 100), (20, 20)])
+def test_historical_paper_integer_boundaries_preserve_exact_configuration(
+    rebalance, holdings
+) -> None:
+    parsed = HistoricalASharePaperSessionRequest.model_validate(
+        {
+            "provider_type": "historical_a_share",
+            "dataset_id": "cn-a-research-20100101-20251231-v1",
+            "symbol": "CN-A",
+            "strategy": {
+                "type": FROZEN_A_SHARE_STRATEGY_ID,
+                "parameters": {
+                    "start_date": "2011-03-01",
+                    "end_date": "2011-03-31",
+                    "rebalance_sessions": rebalance,
+                    "maximum_holdings": holdings,
+                },
+            },
+            "initial_cash": "100000.123456789123456789",
+        }
+    )
+    assert parsed.strategy.parameters.rebalance_sessions == rebalance
+    assert parsed.strategy.parameters.maximum_holdings == holdings
+    assert parsed.initial_cash == Decimal("100000.123456789123456789")
+    assert parsed.risk.enforce_buying_power is True
+    assert parsed.risk.max_leverage == Decimal(1)
+    assert parsed.risk.max_drawdown == Decimal("-0.2")
 
 
 def test_paper_broker_is_local_next_bar_and_explicitly_rejects_limit_orders() -> None:
@@ -353,6 +756,46 @@ async def test_paper_replay_matches_backtest_financial_and_strategy_contracts() 
     assert [order.model_dump(exclude={"id"}) for order in paper.order_manager.orders] == [
         order.model_dump(exclude={"id"}) for order in backtest.orders
     ]
+
+
+async def test_gap_up_buy_is_cancelled_before_cash_can_go_negative() -> None:
+    runtime = PaperTradingRuntime(
+        (MovingAverageCrossoverStrategy("gap", "AAPL", 2, 3),),
+        BacktestConfig(
+            initial_cash=Decimal("2000"),
+            default_order_quantity=Decimal("10"),
+            risk=RiskConfig(enforce_buying_power=True),
+        ),
+    )
+    bars = CSVDataProvider(FIXTURES).get_historical_bars("AAPL")
+    for item in bars:
+        await runtime.process_bar(item)
+        if runtime.broker.pending_orders:
+            break
+
+    assert runtime.broker.pending_orders[0].side is OrderSide.BUY
+    next_bar = next(
+        item for item in bars if item.timestamp > runtime.broker.pending_orders[0].created_at
+    )
+    gap = next_bar.model_copy(
+        update={key: Decimal("1000") for key in ("open", "high", "low", "close")}
+    )
+    delta = await runtime.process_bar(gap)
+
+    assert delta.fills == runtime.broker.fills == ()
+    assert delta.orders[0].status is OrderStatus.CANCELLED
+    assert runtime.broker.pending_orders == ()
+    assert runtime.order_manager.active_reservation_count == 0
+    assert runtime.portfolio.cash == delta.snapshot.cash == Decimal("2000")
+    assert runtime.portfolio.positions == ()
+    assert any(decision.approved for decision in runtime.order_manager.decisions)
+    cancelled_payload = PaperTradingManager._order(delta.orders[0])
+    cancelled_payload["cancellation_reason_code"] = "INSUFFICIENT_BUYING_POWER"
+    assert (
+        "order.updated",
+        gap.timestamp,
+        cancelled_payload,
+    ) in PaperTradingManager._serialize_delta(delta)
 
 
 async def test_risk_rejection_never_reaches_paper_broker_or_portfolio_fill() -> None:

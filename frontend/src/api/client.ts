@@ -13,6 +13,11 @@ export class ApiError extends Error {
   }
 }
 
+export const requestOutcomeUncertain = (reason: unknown) =>
+  reason instanceof TypeError ||
+  (reason instanceof ApiError &&
+    (reason.status === 408 || reason.status >= 500));
+
 function safeError(
   status: number,
   payload: unknown,

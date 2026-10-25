@@ -1,36 +1,162 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { paperApi } from "../api/paper";
+import { paperApi, paperParsers } from "../api/paper";
+import { ApiError } from "../api/client";
 import { ErrorPanel, LoadingPanel } from "../components/AsyncPanel";
 import { Link } from "../components/Link";
+import { Pagination } from "../components/Pagination";
 import { PaperSafetyBanner } from "../components/PaperSafetyBanner";
 import { StatusBadge } from "../components/StatusBadge";
+import { ExperimentPlan } from "../product/experiments/ExperimentPlan";
+import { tradingDate } from "../product/experiments/api";
+import {
+  explainDatasetFindings,
+  explainExperimentCode,
+} from "../product/experiments/codes";
+import { executionAdmissionCode } from "../product/experiments/errors";
 import { usePaperStream } from "../hooks/usePaperStream";
+import type {
+  PaperCollection,
+  PaperCollectionPage,
+  PaperJournalEvent,
+  PaperSessionStatus,
+} from "../types/paper";
 import { formatDecimal, formatUtc, shortId } from "../utils/format";
+import { localizeRiskMessage } from "./riskMessage";
+
+type PaperAction = "start" | "pause" | "stop";
+const PAPER_TABLE_LIMIT = 100;
+
+function commandConfirmed(
+  action: PaperAction,
+  status: PaperSessionStatus | undefined,
+) {
+  if (action === "start") return status === "STARTING" || status === "RUNNING";
+  if (action === "pause") return status === "PAUSING" || status === "PAUSED";
+  return status === "STOPPING" || status === "STOPPED";
+}
 
 export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
-  const { t } = useTranslation("paper");
-  const { snapshot, connection, error } = usePaperStream(sessionId);
+  const { t, i18n } = useTranslation("paper");
+  const {
+    snapshot,
+    collectionSequence,
+    collectionsPending,
+    fillAnnouncement,
+    connection,
+    error,
+    acknowledge,
+    refresh,
+  } = usePaperStream(sessionId);
+  const [contractErrorId, setContractErrorId] = useState<string | null>(null);
   const [commandPending, setCommandPending] = useState(false);
-  const [commandError, setCommandError] = useState<string | null>(null);
+  const [commandError, setCommandError] = useState<{
+    action: PaperAction;
+    code: string | null;
+  } | null>(null);
+  const [logOpen, setLogOpen] = useState(false);
+  const commandLock = useRef(false);
+  const pendingAction = useRef<PaperAction | null>(null);
+  const pendingCommandConfirmed = useRef(false);
+  const focusedCommand = useRef<HTMLButtonElement | null>(null);
+  const statusFocus = useRef<HTMLSpanElement>(null);
 
-  const command = async (action: "start" | "pause" | "stop") => {
-    if (commandPending) return;
+  useEffect(() => {
+    const button = focusedCommand.current;
+    if (button && !button.isConnected) {
+      if (document.activeElement === document.body)
+        statusFocus.current?.focus();
+      focusedCommand.current = null;
+    }
+  }, [snapshot?.session.status]);
+
+  const status = snapshot?.session.status;
+  useEffect(() => {
+    if (
+      pendingAction.current &&
+      commandConfirmed(pendingAction.current, status)
+    )
+      pendingCommandConfirmed.current = true;
+  }, [status]);
+  const commandErrorIsStale =
+    commandError !== null && commandConfirmed(commandError.action, status);
+  if (commandErrorIsStale) setCommandError(null);
+
+  const command = async (action: PaperAction) => {
+    if (commandLock.current) return;
+    const before = snapshot?.session.status;
+    if (!before) return;
+    commandLock.current = true;
+    pendingAction.current = action;
+    pendingCommandConfirmed.current = false;
     setCommandPending(true);
     setCommandError(null);
+    let accepted = false;
     try {
-      await paperApi[action](sessionId);
-    } catch {
-      setCommandError(t(`detail.${action}Error`));
+      const response = await paperApi[action](sessionId);
+      if (response.session_id !== sessionId) {
+        setContractErrorId(sessionId);
+        return;
+      }
+      accepted = true;
+      acknowledge(before, response);
+      await refresh();
+    } catch (reason) {
+      if (!accepted && !pendingCommandConfirmed.current)
+        setCommandError({ action, code: executionAdmissionCode(reason) });
     } finally {
+      pendingAction.current = null;
+      commandLock.current = false;
       setCommandPending(false);
     }
   };
 
-  if (!snapshot && !error) return <LoadingPanel label={t("detail.loading")} />;
-  if (!snapshot && error) return <ErrorPanel message={error} />;
-  if (!snapshot) return null;
+  const liveFillStatus = (
+    <span
+      id="paper-fill-announcement"
+      className="srOnly"
+      role="status"
+      aria-atomic="true"
+    >
+      {fillAnnouncement && (
+        <span key={fillAnnouncement.sequence} lang={fillAnnouncement.language}>
+          {fillAnnouncement.text}
+        </span>
+      )}
+    </span>
+  );
+
+  if (contractErrorId === sessionId)
+    return (
+      <>
+        {liveFillStatus}
+        <div className="panelState errorPanel" role="alert">
+          <p>{t("detail.commandAccountMismatch")}</p>
+          <a className="button" href={window.location.href}>
+            {t("common:loadErrors.reload")}
+          </a>
+        </div>
+      </>
+    );
+  if (!snapshot && !error)
+    return (
+      <>
+        {liveFillStatus}
+        <LoadingPanel label={t("detail.loading")} />
+      </>
+    );
+  if (!snapshot && error)
+    return (
+      <>
+        {liveFillStatus}
+        <ErrorPanel
+          message={error}
+          notFoundReturn={{ href: "/paper", label: t("detail.back") }}
+        />
+      </>
+    );
+  if (!snapshot) return <>{liveFillStatus}</>;
   const {
     session,
     latest_bar: bar,
@@ -38,24 +164,34 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
     latest_portfolio: portfolio,
   } = snapshot;
   const active = session.status === "STARTING" || session.status === "RUNNING";
-  const riskMessage = (message: string) => {
-    const reserved = /^reserved quantity for (.+) must be finite$/.exec(
-      message,
-    );
-    if (reserved)
-      return t("detail.riskMessages.reservedQuantityFinite", {
-        symbol: reserved[1],
-      });
-    const mark = /^a positive observed mark is required for (.+)$/.exec(
-      message,
-    );
-    if (mark)
-      return t("detail.riskMessages.positiveMarkRequired", { symbol: mark[1] });
-    return t(`detail.riskMessages.${message}`, { defaultValue: message });
-  };
-
+  const forward = session.provider_type === "forward_a_share";
+  // Older saved failures contain the sanitized exception name instead of its code.
+  const failureCode =
+    session.error_message ===
+    "UnexplainedReferenceAdjustment: paper session failed"
+      ? "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT"
+      : session.error_message;
+  const sourceAccountingGap =
+    failureCode === "UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT" ||
+    failureCode === "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT";
+  const aShare =
+    session.provider_type === "simulated_a_share" ||
+    session.provider_type === "historical_a_share" ||
+    forward;
+  const moneyUnit =
+    session.provider_type === "historical_a_share" || forward
+      ? t("detail.cnySuffix")
+      : "";
+  const portfolioDate = portfolio ? tradingDate(portfolio) : null;
+  const stalePortfolio = Boolean(
+    aShare &&
+    marketSession &&
+    portfolio &&
+    portfolioDate !== marketSession.trading_date,
+  );
   return (
     <>
+      {liveFillStatus}
       <PaperSafetyBanner />
       <header className="detailHeader">
         <div>
@@ -67,49 +203,75 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           </p>
           <h1>{t(`strategies.${session.strategy_type}`)}</h1>
         </div>
-        <div className="paperControls">
-          <span className={`streamState stream-${connection}`}>
+        <div
+          className="paperControls"
+          onFocusCapture={(event) => {
+            if (event.target instanceof HTMLButtonElement)
+              focusedCommand.current = event.target;
+          }}
+          onBlurCapture={() => {
+            focusedCommand.current = null;
+          }}
+        >
+          <span className={`streamState stream-${connection}`} role="status">
             {t("detail.websocket")}: {t(`detail.connection.${connection}`)}
           </span>
-          <StatusBadge status={session.status} />
+          <span role="status" ref={statusFocus} tabIndex={-1}>
+            <StatusBadge status={session.status} />
+          </span>
           {(session.status === "CREATED" || session.status === "PAUSED") && (
             <button
               className="button buttonPrimary"
-              disabled={commandPending}
+              aria-disabled={commandPending}
               onClick={() => void command("start")}
             >
               {t(
-                session.status === "PAUSED" ? "detail.resume" : "detail.start",
+                forward
+                  ? session.status === "PAUSED"
+                    ? "detail.forwardResume"
+                    : "detail.forwardStart"
+                  : session.status === "PAUSED"
+                    ? "detail.resume"
+                    : "detail.start",
               )}
             </button>
           )}
           {active && (
             <button
               className="button"
-              disabled={commandPending}
+              aria-disabled={commandPending}
               onClick={() => void command("pause")}
             >
-              {t("detail.pause")}
+              {t(forward ? "detail.forwardPause" : "detail.pause")}
             </button>
           )}
-          {(active ||
+          {(session.status === "CREATED" ||
+            active ||
             session.status === "PAUSING" ||
             session.status === "PAUSED") && (
             <button
               className="button"
-              disabled={commandPending}
+              aria-disabled={commandPending}
               onClick={() => void command("stop")}
             >
-              {t("detail.stop")}
+              {t(forward ? "detail.forwardStop" : "detail.stop")}
             </button>
           )}
         </div>
       </header>
-      {(error || commandError) && (
-        <ErrorPanel
-          message={commandError ?? error ?? t("detail.unknownError")}
-        />
+      {connection === "reconnecting" && (
+        <p className="stateCallout" role="status">
+          {t("detail.lastVerifiedWarning")}
+        </p>
       )}
+      {commandError && !commandErrorIsStale && (
+        <p className="stateCallout" role="alert">
+          {commandError.code
+            ? explainExperimentCode(commandError.code, i18n.language)
+            : t(`detail.${commandError.action}Error`)}
+        </p>
+      )}
+      {error && <ErrorPanel message={error} />}
       <section className="runFacts" aria-label={t("detail.detailsLabel")}>
         <div>
           <span>{t("detail.provider")}</span>
@@ -135,37 +297,109 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           <strong>{formatUtc(session.stopped_at)}</strong>
         </div>
       </section>
-      {session.error_message && (
+      {forward && (
+        <section className="panel">
+          <p className="stateCallout" role="note">
+            {t("detail.forwardBoundary")}
+          </p>
+          {(
+            [
+              ["marketInput", marketSession?.input_provenance],
+              ["portfolioInput", portfolio?.input_provenance],
+            ] as const
+          ).map(
+            ([label, input]) =>
+              input && (
+                <details key={label}>
+                  <summary>
+                    {t(`detail.${label}`)} · {input.trading_date}
+                  </summary>
+                  <dl>
+                    <dt>{t("detail.inputChecksum")}</dt>
+                    <dd>
+                      <code>{input.input_sha256}</code>
+                    </dd>
+                    <dt>{t("detail.admissionChecksum")}</dt>
+                    <dd>
+                      <code>{input.admission_sha256}</code>
+                    </dd>
+                    <dt>{t("detail.closedAt")}</dt>
+                    <dd>{formatUtc(input.closed_at)}</dd>
+                    <dt>{t("detail.nextOpenAt")}</dt>
+                    <dd>{formatUtc(input.next_open_at)}</dd>
+                    <dt>{t("detail.receipts")}</dt>
+                    <dd>
+                      {t("detail.receiptCount", {
+                        shown: Math.min(input.receipts.length, 10),
+                        total: input.receipts.length,
+                      })}
+                    </dd>
+                    {input.receipts.slice(0, 10).map((receipt) => (
+                      <dd key={receipt.security_id}>
+                        {receipt.security_id} ·{" "}
+                        <code>{receipt.receipt_id}</code> ·{" "}
+                        {formatUtc(receipt.first_received_at)}
+                        <br />
+                        <code>{receipt.manifest_sha256}</code>
+                      </dd>
+                    ))}
+                  </dl>
+                </details>
+              ),
+          )}
+        </section>
+      )}
+      {(session.error_message ||
+        session.status === "FAILED" ||
+        session.status === "INTERRUPTED") && (
         <section className="stateCallout failedCallout" role="alert">
           <h2>{t("detail.failedTitle")}</h2>
           <p>
-            {t(
-              session.status === "INTERRUPTED"
-                ? "detail.interruptedHelp"
-                : "detail.failedHelp",
-            )}
+            {sourceAccountingGap
+              ? explainExperimentCode(failureCode, i18n.language)
+              : t(
+                  forward
+                    ? "detail.forwardEndedHelp"
+                    : session.status === "INTERRUPTED"
+                      ? "detail.interruptedHelp"
+                      : "detail.failedHelp",
+                )}
           </p>
-          <Link className="button" href="/paper/new">
-            {t("detail.createAgain")}
-          </Link>
-          <details>
-            <summary>{t("detail.auditError")}</summary>
-            <code>{session.error_message}</code>
-          </details>
+          {sourceAccountingGap && !forward && (
+            <Link className="button" href="/data">
+              {t("createPage.checkDataReadiness")}
+            </Link>
+          )}
+          {forward ? (
+            <p>{t("detail.forwardCopyUnavailable")}</p>
+          ) : (
+            <Link
+              className="button"
+              href={`/paper/new?from_session=${encodeURIComponent(session.session_id)}`}
+            >
+              {t(
+                sourceAccountingGap
+                  ? "detail.reviewConfiguration"
+                  : "detail.createAgain",
+              )}
+            </Link>
+          )}
+          {session.error_message && (
+            <details>
+              <summary>{t("detail.auditError")}</summary>
+              <code>{session.error_message}</code>
+            </details>
+          )}
         </section>
       )}
       <section className="panel">
         <div className="panelHeader">
           <div>
             <p className="kicker">
-              {marketSession
-                ? t("detail.latestSession")
-                : t("detail.latestBar")}
+              {aShare ? t("detail.latestSession") : t("detail.latestBar")}
             </p>
             <h2>
-              {marketSession
-                ? t("detail.marketSession")
-                : t("detail.marketData")}
+              {aShare ? t("detail.marketSession") : t("detail.marketData")}
             </h2>
           </div>
         </div>
@@ -200,51 +434,105 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
             />
           </div>
         ) : (
-          <p className="emptyState">{t("detail.noBars")}</p>
+          <p className="emptyState">
+            {t(aShare ? "detail.noSessions" : "detail.noBars")}
+          </p>
         )}
       </section>
       <section className="panel">
         <div className="panelHeader">
           <div>
-            <p className="kicker">{t("detail.portfolioKicker")}</p>
+            <p className="kicker">
+              {t(
+                connection === "reconnecting" || stalePortfolio
+                  ? "detail.lastVerifiedPortfolioKicker"
+                  : "detail.portfolioKicker",
+              )}
+            </p>
             <h2>{t("detail.portfolio")}</h2>
           </div>
         </div>
+        {session.provider_type === "historical_a_share" &&
+          (snapshot.current_dataset_quality ||
+            snapshot.current_source_integrity) && (
+            <p className="experimentNotice" role="note">
+              {explainDatasetFindings(snapshot, i18n.language)}
+            </p>
+          )}
+        {stalePortfolio && (
+          <p className="stateCallout" role="alert">
+            {t("detail.stalePortfolioWarning", {
+              portfolioDate: portfolioDate ?? t("detail.unknownDate"),
+              sessionDate: marketSession?.trading_date,
+            })}
+          </p>
+        )}
         {portfolio ? (
-          <div className="metricsGrid">
-            <Metric label={t("detail.cash")} value={portfolio.cash} />
-            <Metric
-              label={t("detail.marketValue")}
-              value={portfolio.market_value}
-            />
-            <Metric label={t("detail.equity")} value={portfolio.equity} />
-            <Metric
-              label={t("detail.realizedPnl")}
-              value={portfolio.realized_pnl}
-            />
-            <Metric
-              label={t("detail.unrealizedPnl")}
-              value={portfolio.unrealized_pnl}
-            />
-            <Metric
-              label={t("detail.commission")}
-              value={portfolio.cumulative_commission}
-            />
-          </div>
+          <>
+            <div className="metricsGrid">
+              <Metric
+                label={`${t("detail.cash")}${moneyUnit}`}
+                value={portfolio.cash}
+              />
+              <Metric
+                label={`${t("detail.marketValue")}${moneyUnit}`}
+                value={portfolio.market_value}
+              />
+              <Metric
+                label={`${t("detail.equity")}${moneyUnit}`}
+                value={portfolio.equity}
+              />
+              <Metric
+                label={`${t("detail.realizedPnl")}${moneyUnit}`}
+                value={portfolio.realized_pnl}
+              />
+              <Metric
+                label={`${t("detail.corporateActionPnl")}${moneyUnit}`}
+                value={portfolio.corporate_action_realized_pnl}
+              />
+              <Metric
+                label={`${t("detail.unrealizedPnl")}${moneyUnit}`}
+                value={portfolio.unrealized_pnl}
+              />
+              <Metric
+                label={`${t("detail.commission")}${moneyUnit}`}
+                value={portfolio.cumulative_commission}
+              />
+              <Metric
+                label={`${t("detail.totalPnl")}${moneyUnit}`}
+                value={portfolio.total_pnl}
+              />
+            </div>
+            <p className="muted">{t("detail.pnlExplanation")}</p>
+            {portfolio.accounting_version == null && (
+              <p className="stateCallout">{t("detail.legacyPnlUnavailable")}</p>
+            )}
+          </>
         ) : (
-          <p className="emptyState">{t("detail.noPortfolio")}</p>
+          <p className="emptyState">
+            {t(aShare ? "detail.noSessionPortfolio" : "detail.noPortfolio")}
+          </p>
         )}
       </section>
+      {(session.provider_type === "historical_a_share" || forward) && (
+        <ExperimentPlan
+          plan={snapshot.last_rebalance_plan ?? portfolio?.plan ?? null}
+          quality={snapshot.current_dataset_quality}
+          sourceIntegrity={snapshot.current_source_integrity}
+          account
+          forward={forward}
+        />
+      )}
       <PaperTable
         title={t("detail.positions")}
         empty={t("detail.noPositions")}
         headings={[
           t("createPage.symbol"),
           t("detail.quantity"),
-          t("detail.averagePrice"),
-          t("detail.price"),
-          t("detail.unrealizedPnlShort"),
-          t("detail.realizedPnlShort"),
+          `${t("detail.averagePrice")}${moneyUnit}`,
+          `${t("detail.price")}${moneyUnit}`,
+          `${t("detail.unrealizedPnlShort")}${moneyUnit}`,
+          `${t("detail.realizedPnlShort")}${moneyUnit}`,
         ]}
         rows={(portfolio?.positions ?? []).map((item) => [
           item.symbol,
@@ -255,7 +543,12 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           item.realized_pnl,
         ])}
       />
-      <PaperTable
+      <PaperCollectionTable
+        key={`${sessionId}:signals`}
+        sessionId={sessionId}
+        collection="signals"
+        pending={collectionsPending}
+        asOfSequence={collectionSequence ?? snapshot.last_sequence}
         title={t("detail.signals")}
         empty={t("detail.noSignals")}
         headings={[
@@ -264,16 +557,28 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           t("createPage.symbol"),
           t("detail.signal"),
         ]}
-        rows={snapshot.signals.map((item) => [
-          formatUtc(item.timestamp),
-          item.strategy_id,
-          item.symbol,
-          t(`detail.directions.${item.signal_type}`, {
-            defaultValue: item.signal_type,
-          }),
-        ])}
+        renderRows={(events) =>
+          events.map((event) => {
+            const item = paperParsers.signal(event.payload);
+            return [
+              formatUtc(item.timestamp),
+              t(`strategies.${item.strategy_id}`, {
+                defaultValue: item.strategy_id,
+              }),
+              item.symbol,
+              t(`detail.directions.${item.signal_type}`, {
+                defaultValue: item.signal_type,
+              }),
+            ];
+          })
+        }
       />
-      <PaperTable
+      <PaperCollectionTable
+        key={`${sessionId}:risk_decisions`}
+        sessionId={sessionId}
+        collection="risk_decisions"
+        pending={collectionsPending}
+        asOfSequence={collectionSequence ?? snapshot.last_sequence}
         title={t("detail.riskDecisions")}
         empty={t("detail.noRiskDecisions")}
         headings={[
@@ -282,16 +587,26 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           t("detail.reason"),
           t("detail.message"),
         ]}
-        rows={snapshot.risk_decisions.map((item) => [
-          shortId(item.proposal_id),
-          item.approved ? t("detail.approved") : t("detail.riskRejected"),
-          t(`detail.riskReasons.${item.reason_code}`, {
-            defaultValue: item.reason_code,
-          }),
-          riskMessage(item.message),
-        ])}
+        renderRows={(events) =>
+          events.map((event) => {
+            const item = paperParsers.decision(event.payload);
+            return [
+              shortId(item.proposal_id),
+              item.approved ? t("detail.approved") : t("detail.riskRejected"),
+              t(`detail.riskReasons.${item.reason_code}`, {
+                defaultValue: item.reason_code,
+              }),
+              localizeRiskMessage(item.message, t),
+            ];
+          })
+        }
       />
-      <PaperTable
+      <PaperCollectionTable
+        key={`${sessionId}:orders`}
+        sessionId={sessionId}
+        collection="orders"
+        pending={collectionsPending}
+        asOfSequence={collectionSequence ?? snapshot.last_sequence}
         title={t("detail.orders")}
         empty={t("detail.noOrders")}
         headings={[
@@ -301,37 +616,259 @@ export function PaperSessionDetailPage({ sessionId }: { sessionId: string }) {
           t("detail.status"),
           t("detail.utcTime"),
         ]}
-        rows={snapshot.orders.map((item) => [
-          shortId(item.order_id),
-          `${t(`detail.directions.${item.side}`, { defaultValue: item.side })} / ${t(`detail.orderTypes.${item.order_type}`, { defaultValue: item.order_type })}`,
-          item.quantity,
-          t(`detail.orderStatuses.${item.status}`, {
-            defaultValue: item.status,
-          }),
-          formatUtc(item.created_at),
-        ])}
+        renderRows={(events) =>
+          events.map((event) => {
+            const item = paperParsers.order(event.payload);
+            return [
+              shortId(item.order_id),
+              `${t(`detail.directions.${item.side}`, { defaultValue: item.side })} / ${t(`detail.orderTypes.${item.order_type}`, { defaultValue: item.order_type })}`,
+              item.quantity,
+              `${t(`detail.orderStatuses.${item.status}`, { defaultValue: item.status })}${item.cancellation_reason_code ? ` · ${t(`detail.fillCancellationReasons.${item.cancellation_reason_code}`, { defaultValue: item.cancellation_reason_code })}` : ""}`,
+              formatUtc(item.created_at),
+            ];
+          })
+        }
       />
-      <PaperTable
+      <PaperCollectionTable
+        key={`${sessionId}:fills`}
+        sessionId={sessionId}
+        collection="fills"
+        pending={collectionsPending}
+        asOfSequence={collectionSequence ?? snapshot.last_sequence}
         title={t("detail.fills")}
         empty={t("detail.noFills")}
         headings={[
           t("detail.order"),
           t("detail.side"),
           t("detail.quantity"),
-          t("detail.price"),
-          t("detail.commission"),
+          `${t("detail.price")}${moneyUnit}`,
+          `${t("detail.commission")}${moneyUnit}`,
           t("detail.utcTime"),
         ]}
-        rows={snapshot.fills.map((item) => [
-          shortId(item.order_id),
-          t(`detail.directions.${item.side}`, { defaultValue: item.side }),
-          item.quantity,
-          item.price,
-          item.commission,
-          formatUtc(item.timestamp),
-        ])}
+        renderRows={(events) =>
+          events.map((event) => {
+            const item = paperParsers.fill(event.payload);
+            return [
+              shortId(item.order_id),
+              t(`detail.directions.${item.side}`, { defaultValue: item.side }),
+              item.quantity,
+              item.price,
+              item.commission,
+              formatUtc(item.timestamp),
+            ];
+          })
+        }
       />
+      <section className="panel dataPanel">
+        <div className="panelHeader">
+          <h2>{t("detail.eventLog")}</h2>
+          <button
+            type="button"
+            aria-expanded={logOpen}
+            aria-controls="paper-event-log"
+            onClick={() => setLogOpen((open) => !open)}
+          >
+            {t(logOpen ? "detail.hideEventLog" : "detail.viewEventLog")}
+          </button>
+        </div>
+        <div id="paper-event-log">
+          {logOpen && (
+            <PaperEventJournal
+              key={sessionId}
+              sessionId={sessionId}
+              latestSequence={snapshot.last_sequence}
+            />
+          )}
+        </div>
+      </section>
     </>
+  );
+}
+
+function PaperEventJournal({
+  sessionId,
+  latestSequence,
+}: {
+  sessionId: string;
+  latestSequence: number;
+}) {
+  const { t } = useTranslation("paper");
+  const { t: researchT } = useTranslation("research");
+  const [cursors, setCursors] = useState<number[]>([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const pager = useRef<HTMLDivElement>(null);
+  const [result, setResult] = useState<{
+    key: string;
+    events: PaperJournalEvent[];
+    hasOlder: boolean;
+    failed: boolean;
+  } | null>(null);
+  const beforeSequence = cursors.at(-1);
+  const requestKey = `${sessionId}:${beforeSequence ?? "latest"}:${refreshKey}`;
+  const loading = result?.key !== requestKey;
+  const events = loading ? [] : result.events;
+  const failed = !loading && result.failed;
+  const hasOlder = !loading && result.hasOlder;
+  const focusPager = () => {
+    if (pager.current?.contains(document.activeElement)) pager.current.focus();
+  };
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let current = true;
+    void paperApi
+      .events(sessionId, beforeSequence, controller.signal)
+      .then((page) => {
+        if (!current) return;
+        setResult({
+          key: requestKey,
+          events: page.slice(0, 50),
+          hasOlder: page.length > 50,
+          failed: false,
+        });
+      })
+      .catch(() => {
+        if (current)
+          setResult({
+            key: requestKey,
+            events: [],
+            hasOlder: false,
+            failed: true,
+          });
+      });
+    return () => {
+      current = false;
+      controller.abort();
+    };
+  }, [sessionId, beforeSequence, requestKey]);
+
+  const description = (event: PaperJournalEvent) => {
+    const payload = event.payload;
+    if (event.type === "session.status")
+      return t(`common:statuses.${String(payload.status)}`);
+    if (event.type === "market.bar") return String(payload.symbol);
+    if (event.type === "market.session") return String(payload.trading_date);
+    if (event.type === "input.committed") {
+      const input = paperParsers.inputCommit(payload);
+      return t("detail.inputCommitSummary", {
+        date: input.trading_date,
+        first: input.journal_first_sequence,
+        last: input.journal_last_sequence,
+      });
+    }
+    if (event.type === "calendar.observed") {
+      const observation = paperParsers.calendar(payload);
+      return t(`detail.calendarSummary.${observation.kind}`, {
+        count: observation.calendar.sessions.length,
+        completed: observation.after_completed_sessions,
+      });
+    }
+    if (event.type === "signal.created")
+      return `${String(payload.symbol)} · ${t(`detail.directions.${String(payload.signal_type)}`, { defaultValue: String(payload.signal_type) })}`;
+    if (event.type === "risk.decision")
+      return `${payload.approved ? t("detail.approved") : t("detail.riskRejected")} · ${t(`detail.riskReasons.${String(payload.reason_code)}`, { defaultValue: String(payload.reason_code) })}`;
+    if (event.type === "order.updated")
+      return `${shortId(String(payload.order_id))} · ${t(`detail.orderStatuses.${String(payload.status)}`, { defaultValue: String(payload.status) })} · ${String(payload.symbol)}${payload.cancellation_reason_code ? ` · ${t(`detail.fillCancellationReasons.${String(payload.cancellation_reason_code)}`, { defaultValue: String(payload.cancellation_reason_code) })}` : ""}`;
+    if (event.type === "fill.created")
+      return `${shortId(String(payload.order_id))} · ${String(payload.quantity)} ${String(payload.symbol)} @ ${String(payload.price)}`;
+    return t("detail.eventEquity", { equity: String(payload.equity) });
+  };
+
+  return (
+    <div aria-busy={loading}>
+      <p className="stateCallout">{t("detail.eventLogSaved")}</p>
+      {loading ? (
+        <LoadingPanel label={t("detail.eventLog")} />
+      ) : failed ? (
+        <p className="stateCallout" role="alert">
+          {t("detail.eventLogError")}
+        </p>
+      ) : events.length === 0 ? (
+        <p className="emptyState">{t("detail.noEvents")}</p>
+      ) : (
+        <div
+          className="tableScroll"
+          role="region"
+          tabIndex={0}
+          aria-label={`${t("detail.eventLog")} — ${researchT("scrollTable")}`}
+        >
+          <table aria-label={t("detail.eventLog")}>
+            <thead>
+              <tr>
+                <th scope="col">{t("detail.eventSequence")}</th>
+                <th scope="col">{t("detail.utcTime")}</th>
+                <th scope="col">{t("detail.eventType")}</th>
+                <th scope="col">{t("detail.eventSummary")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {events.map((event) => (
+                <tr key={event.sequence}>
+                  <th scope="row">{event.sequence}</th>
+                  <td>{formatUtc(event.occurred_at)}</td>
+                  <td>{t(`detail.eventTypes.${event.type}`)}</td>
+                  <td>{description(event)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <div
+        ref={pager}
+        className="pagination"
+        role="group"
+        tabIndex={-1}
+        aria-label={t("detail.eventLog")}
+        aria-busy={loading}
+      >
+        <span aria-live="polite">
+          {loading
+            ? t("detail.eventLogLoading")
+            : events.length > 0
+              ? t("detail.eventLogRange", {
+                  newest: events[0]!.sequence,
+                  oldest: events.at(-1)!.sequence,
+                })
+              : ""}
+          {cursors.length === 0 &&
+            events.length > 0 &&
+            latestSequence > events[0]!.sequence &&
+            ` · ${t("detail.newEventsAvailable")}`}
+        </span>
+        <button
+          type="button"
+          disabled={loading}
+          onClick={() => {
+            focusPager();
+            setCursors([]);
+            setRefreshKey((key) => key + 1);
+          }}
+        >
+          {t("detail.refreshEvents")}
+        </button>
+        <button
+          type="button"
+          disabled={loading || cursors.length === 0}
+          onClick={() => {
+            focusPager();
+            setCursors((current) => current.slice(0, -1));
+          }}
+        >
+          {t("detail.newerEvents")}
+        </button>
+        <button
+          type="button"
+          disabled={loading || !hasOlder || events.length === 0}
+          onClick={() => {
+            focusPager();
+            setCursors((current) => [...current, events.at(-1)!.sequence]);
+          }}
+        >
+          {t("detail.olderEvents")}
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -341,14 +878,131 @@ function Metric({
   raw = false,
 }: {
   label: string;
-  value: string;
+  value: string | null | undefined;
   raw?: boolean;
 }) {
   return (
     <div className="metric">
       <span>{label}</span>
-      <strong title={value}>{raw ? value : formatDecimal(value)}</strong>
+      <strong title={value ?? undefined}>
+        {value == null ? "—" : raw ? value : formatDecimal(value)}
+      </strong>
     </div>
+  );
+}
+
+function PaperCollectionTable({
+  sessionId,
+  collection,
+  pending,
+  asOfSequence,
+  title,
+  empty,
+  headings,
+  renderRows,
+}: {
+  sessionId: string;
+  collection: PaperCollection;
+  pending: boolean;
+  asOfSequence: number;
+  title: string;
+  empty: string;
+  headings: string[];
+  renderRows: (events: PaperJournalEvent[]) => string[][];
+}) {
+  const [offset, setOffset] = useState(0);
+  const [retry, setRetry] = useState(0);
+  const [result, setResult] = useState<{
+    key: string;
+    retry: number;
+    page: PaperCollectionPage | null;
+    error: Error | null;
+  } | null>(null);
+  const requestKey = `${sessionId}:${collection}:${asOfSequence}:${offset}:${retry}`;
+  const page =
+    result?.page?.session_id === sessionId &&
+    result.page.collection === collection &&
+    result.page.offset === offset
+      ? result.page
+      : null;
+  const pageOffset =
+    page?.as_of_sequence === asOfSequence
+      ? Math.min(
+          offset,
+          Math.max(
+            0,
+            Math.floor((page.total - 1) / PAPER_TABLE_LIMIT) *
+              PAPER_TABLE_LIMIT,
+          ),
+        )
+      : offset;
+  if (pageOffset !== offset) setOffset(pageOffset);
+  const blocked =
+    result?.retry === retry &&
+    result.error instanceof ApiError &&
+    [401, 403, 404].includes(result.error.status);
+  const loading = !blocked && result?.key !== requestKey;
+  const error = loading ? null : (result?.error ?? null);
+
+  useEffect(() => {
+    if (blocked) return;
+    let active = true;
+    const controller = new AbortController();
+    void paperApi
+      .collection(
+        sessionId,
+        collection,
+        asOfSequence,
+        offset,
+        controller.signal,
+      )
+      .then((next) => {
+        if (active && !controller.signal.aborted)
+          setResult({ key: requestKey, retry, page: next, error: null });
+      })
+      .catch((reason: unknown) => {
+        if (!active || controller.signal.aborted) return;
+        const denied =
+          reason instanceof ApiError && [401, 403, 404].includes(reason.status);
+        setResult((current) => ({
+          key: requestKey,
+          retry,
+          page: denied ? null : (current?.page ?? null),
+          error:
+            reason instanceof Error
+              ? reason
+              : new Error("Unable to load saved paper records."),
+        }));
+      });
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [sessionId, collection, asOfSequence, offset, requestKey, retry, blocked]);
+
+  const visible = page?.offset === pageOffset ? page : null;
+  return (
+    <PaperTable
+      title={title}
+      empty={empty}
+      headings={headings}
+      rows={renderRows(visible?.items ?? [])}
+      paging={{
+        offset: pageOffset,
+        total: page?.total ?? null,
+        loading,
+        error,
+        stale: Boolean(
+          visible &&
+          (pending ||
+            loading ||
+            error ||
+            visible.as_of_sequence !== asOfSequence),
+        ),
+        onChange: setOffset,
+        onRetry: () => setRetry((value) => value + 1),
+      }}
+    />
   );
 }
 
@@ -357,22 +1011,81 @@ function PaperTable({
   empty,
   headings,
   rows,
+  paging,
 }: {
   title: string;
   empty: string;
   headings: string[];
   rows: string[][];
+  paging?: {
+    offset: number;
+    total: number | null;
+    loading: boolean;
+    error: Error | null;
+    stale: boolean;
+    onChange: (offset: number) => void;
+    onRetry: () => void;
+  };
 }) {
+  const { t } = useTranslation("research");
+  const { t: paperT } = useTranslation("paper");
+  const panel = useRef<HTMLElement>(null);
+  const [offset, setOffset] = useState(0);
+  const pageOffset =
+    paging?.offset ??
+    Math.min(
+      offset,
+      Math.max(
+        0,
+        Math.floor((rows.length - 1) / PAPER_TABLE_LIMIT) * PAPER_TABLE_LIMIT,
+      ),
+    );
+  if (!paging && offset !== pageOffset) setOffset(pageOffset);
+  const visibleRows = paging
+    ? rows
+    : rows.slice(pageOffset, pageOffset + PAPER_TABLE_LIMIT);
   return (
-    <section className="panel dataPanel">
+    <section
+      className="panel dataPanel"
+      ref={panel}
+      aria-busy={paging?.loading}
+    >
       <div className="panelHeader">
         <h2>{title}</h2>
       </div>
-      {rows.length === 0 ? (
-        <p className="emptyState">{empty}</p>
+      {paging?.stale && (
+        <p className="stateCallout" role="status">
+          {paperT("detail.collectionLastVerified")}
+        </p>
+      )}
+      {paging?.error && (
+        <>
+          <ErrorPanel message={paging.error} />
+          <button
+            type="button"
+            onClick={() => {
+              panel.current?.querySelector<HTMLElement>(".pagination")?.focus();
+              paging.onRetry();
+            }}
+          >
+            {paperT("detail.retryCollection", { title })}
+          </button>
+        </>
+      )}
+      {visibleRows.length === 0 && paging?.loading ? (
+        <LoadingPanel label={title} />
+      ) : visibleRows.length === 0 ? (
+        paging?.error ? null : (
+          <p className="emptyState">{empty}</p>
+        )
       ) : (
-        <div className="tableScroll">
-          <table>
+        <div
+          className="tableScroll"
+          role="region"
+          tabIndex={0}
+          aria-label={`${title} — ${t("scrollTable")}`}
+        >
+          <table aria-label={title}>
             <thead>
               <tr>
                 {headings.map((heading) => (
@@ -383,19 +1096,37 @@ function PaperTable({
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, rowIndex) => (
-                <tr key={row.join(":")}>
-                  {row.map((value, index) => (
-                    <td key={`${headings[index]}-${rowIndex}`} title={value}>
-                      {value}
-                    </td>
-                  ))}
+              {visibleRows.map((row, rowIndex) => (
+                <tr key={`${row.join(":")}:${pageOffset + rowIndex}`}>
+                  {row.map((value, index) =>
+                    index === 0 ? (
+                      <th
+                        scope="row"
+                        key={`${headings[index]}-${rowIndex}`}
+                        title={value}
+                      >
+                        {value}
+                      </th>
+                    ) : (
+                      <td key={`${headings[index]}-${rowIndex}`} title={value}>
+                        {value}
+                      </td>
+                    ),
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       )}
+      <Pagination
+        label={title}
+        offset={pageOffset}
+        limit={PAPER_TABLE_LIMIT}
+        total={paging ? paging.total : rows.length}
+        loading={paging?.loading}
+        onChange={paging?.onChange ?? setOffset}
+      />
     </section>
   );
 }

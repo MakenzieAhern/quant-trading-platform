@@ -13,6 +13,11 @@ import type {
 } from "../types/research";
 import { ApiContractError } from "./contracts";
 import { apiRequest } from "./client";
+import {
+  parseCurrentDatasetQuality,
+  parseCurrentSourceIntegrity,
+} from "../product/experiments/api";
+import type { DateRange } from "../product/experiments/types";
 
 const DECIMAL = /^-?\d+(?:\.\d+)?$/;
 
@@ -47,6 +52,8 @@ function page<T>(value: unknown, parse: (item: unknown) => T): ResearchPage<T> {
 
 function dataset(value: unknown): ResearchDataset {
   const item = record(value);
+  parseCurrentDatasetQuality(item.current_dataset_quality);
+  parseCurrentSourceIntegrity(item.current_source_integrity);
   for (const key of [
     "dataset_id",
     "provider",
@@ -90,6 +97,8 @@ function strategy(value: unknown): ResearchStrategy {
 
 function run(value: unknown): ResearchRun {
   const item = record(value);
+  parseCurrentDatasetQuality(item.current_dataset_quality);
+  parseCurrentSourceIntegrity(item.current_source_integrity);
   for (const key of [
     "run_id",
     "status",
@@ -123,6 +132,8 @@ const metric = (value: unknown): ResearchMetric => {
 
 const point = (value: unknown): ResearchPoint => {
   const item = record(value);
+  if (!Number.isSafeInteger(item.sequence) || (item.sequence as number) < 0)
+    throw new ApiContractError();
   text(item.trading_date);
   decimal(item.value);
   return item as unknown as ResearchPoint;
@@ -136,33 +147,29 @@ const rollingMetric = (value: unknown): RollingMetric => {
   return item as unknown as RollingMetric;
 };
 
-async function completePage<T>(
+function boundedPage<T>(
   path: string,
   parse: (item: unknown) => T,
+  offset: number,
   signal?: AbortSignal,
+  range: DateRange = {},
 ): Promise<ResearchPage<T>> {
-  const items: T[] = [];
-  let total: number | undefined;
-  do {
-    const result = await apiRequest(
-      `${path}?limit=200&offset=${items.length}`,
-      {},
-      signal,
-      (value) => page(value, parse),
-    );
+  if (!Number.isSafeInteger(offset) || offset < 0 || offset % 200 !== 0)
+    throw new ApiContractError();
+  const query = new URLSearchParams({ limit: "200", offset: String(offset) });
+  if (range.start_date) query.set("start_date", range.start_date);
+  if (range.end_date) query.set("end_date", range.end_date);
+  return apiRequest(`${path}?${query}`, {}, signal, (value) => {
+    const result = page(value, parse);
     if (
+      result.limit !== 200 ||
+      result.offset !== offset ||
       result.total < 0 ||
-      result.total > 100_000 ||
-      (total !== undefined && total !== result.total) ||
-      result.offset !== items.length ||
-      (result.items.length === 0 && result.total > items.length)
+      result.items.length !== Math.min(200, Math.max(0, result.total - offset))
     )
       throw new ApiContractError();
-    total = result.total;
-    items.push(...result.items);
-    if (items.length > total) throw new ApiContractError();
-  } while (items.length < total);
-  return { items, total, offset: 0, limit: items.length };
+    return result;
+  });
 }
 
 export const researchApi = {
@@ -213,12 +220,16 @@ export const researchApi = {
   points: (
     runId: string,
     kind: "equity" | "benchmark" | "drawdown",
+    offset = 0,
     signal?: AbortSignal,
+    range: DateRange = {},
   ) =>
-    completePage(
+    boundedPage(
       `/api/research/runs/${encodeURIComponent(runId)}/${kind}`,
       point,
+      offset,
       signal,
+      range,
     ),
   monthlyReturns: (runId: string, signal?: AbortSignal) =>
     apiRequest(
@@ -227,30 +238,56 @@ export const researchApi = {
       signal,
       (value) => page(value, (item) => item as MonthlyReturn),
     ),
-  rollingMetrics: (runId: string, signal?: AbortSignal) =>
-    completePage(
+  rollingMetrics: (
+    runId: string,
+    offset = 0,
+    signal?: AbortSignal,
+    range: DateRange = {},
+  ) =>
+    boundedPage(
       `/api/research/runs/${encodeURIComponent(runId)}/rolling-metrics`,
       rollingMetric,
+      offset,
       signal,
+      range,
     ),
-  holdings: (runId: string, signal?: AbortSignal) =>
-    completePage(
+  holdings: (
+    runId: string,
+    offset = 0,
+    signal?: AbortSignal,
+    range: DateRange = {},
+  ) =>
+    boundedPage(
       `/api/research/runs/${encodeURIComponent(runId)}/holdings`,
       (item) => item as ResearchHolding,
+      offset,
       signal,
+      range,
     ),
-  rebalances: (runId: string, signal?: AbortSignal) =>
-    apiRequest(
+  rebalances: (
+    runId: string,
+    offset = 0,
+    signal?: AbortSignal,
+    range: DateRange = {},
+  ) =>
+    boundedPage(
       `/api/research/runs/${encodeURIComponent(runId)}/rebalances`,
-      {},
+      (item) => item as ResearchRebalance,
+      offset,
       signal,
-      (value) => page(value, (item) => item as ResearchRebalance),
+      range,
     ),
-  trades: (runId: string, signal?: AbortSignal) =>
-    apiRequest(
+  trades: (
+    runId: string,
+    offset = 0,
+    signal?: AbortSignal,
+    range: DateRange = {},
+  ) =>
+    boundedPage(
       `/api/research/runs/${encodeURIComponent(runId)}/trades`,
-      {},
+      (item) => item as ResearchTrade,
+      offset,
       signal,
-      (value) => page(value, (item) => item as ResearchTrade),
+      range,
     ),
 };

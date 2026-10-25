@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Index, Integer, String
+from sqlalchemy import Boolean, DateTime, ForeignKey, Index, Integer, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -14,7 +14,10 @@ from app.db.base import Base
 
 class ExperimentJobModel(Base):
     __tablename__ = "product_research_jobs"
-    __table_args__ = (Index("ix_product_jobs_status_created", "status", "created_at"),)
+    __table_args__ = (
+        Index("ix_product_jobs_status_created", "status", "created_at"),
+        UniqueConstraint("retry_of", name="uq_product_research_retry_of"),
+    )
 
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
@@ -33,6 +36,7 @@ class ExperimentJobModel(Base):
     total_sessions: Mapped[int | None] = mapped_column(Integer)
     cancel_requested: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     error_code: Mapped[str | None] = mapped_column(String(64))
+    error_context: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
     retry_of: Mapped[UUID | None] = mapped_column(
         PGUUID(as_uuid=True), ForeignKey("product_research_jobs.id", ondelete="RESTRICT")
     )

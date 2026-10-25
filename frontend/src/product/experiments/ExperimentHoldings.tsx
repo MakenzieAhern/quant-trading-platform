@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
+import { ProductError } from "../ProductPages";
 import { experimentApi } from "./api";
 import { useComparisonCopy } from "./comparisonCopy";
 import { useExperimentCopy } from "./copy";
@@ -22,24 +23,50 @@ export function ExperimentHoldings({
     (signal) => experimentApi.holdings(jobId, signal, offset, range),
     [jobId, offset, range.start_date, range.end_date, revision],
   );
-  if (data.loading) return <p role="status">{c.loading}</p>;
+  const available = data.data?.availability === "AVAILABLE";
+  const pager = (
+    <Pagination
+      key="pagination"
+      label={u.holdings}
+      offset={offset}
+      limit={data.data?.limit ?? 1}
+      total={available ? data.data!.total : null}
+      loading={data.loading}
+      onChange={setOffset}
+    />
+  );
+  if (data.loading)
+    return (
+      <>
+        <p role="status">{c.loading}</p>
+        {pager}
+      </>
+    );
   if (data.error)
     return (
-      <div role="alert">
-        <p>{c.networkError}</p>
-        <button
-          className="button secondary"
-          onClick={() => setRevision((value) => value + 1)}
-        >
-          {c.retryLoad}
-        </button>
-      </div>
+      <>
+        <ProductError
+          error={data.error}
+          retry={() => setRevision((value) => value + 1)}
+        />
+        {pager}
+      </>
     );
-  if (!data.data) return null;
+  if (!data.data) return <>{pager}</>;
   if (data.data.availability === "NOT_RECORDED")
-    return <p role="status">{u.notRecorded}</p>;
+    return (
+      <>
+        <p role="status">{u.notRecorded}</p>
+        {pager}
+      </>
+    );
   if (data.data.availability === "NOT_READY")
-    return <p role="status">{u.notReadyRecords}</p>;
+    return (
+      <>
+        <p role="status">{u.notReadyRecords}</p>
+        {pager}
+      </>
+    );
   return (
     <>
       {data.data.items.length === 0 && <p>{u.filteredEmpty}</p>}
@@ -71,10 +98,11 @@ export function ExperimentHoldings({
           ) : (
             <div
               className="experimentTableScroll"
+              role="region"
               tabIndex={0}
               aria-label={u.holdings}
             >
-              <table>
+              <table aria-label={u.holdings}>
                 <thead>
                   <tr>
                     {[
@@ -108,12 +136,7 @@ export function ExperimentHoldings({
           )}
         </article>
       ))}
-      <Pagination
-        offset={data.data.offset}
-        limit={data.data.limit}
-        total={data.data.total}
-        onChange={setOffset}
-      />
+      {pager}
     </>
   );
 }

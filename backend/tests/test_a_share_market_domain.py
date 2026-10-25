@@ -67,6 +67,7 @@ def _status(**overrides: object) -> DailySecurityStatus:
         "trading_date": date(2024, 1, 2),
         "is_st": False,
         "is_suspended": False,
+        "is_tradeable": True,
         "source_version": "dataset-1",
     }
     values.update(overrides)
@@ -159,6 +160,23 @@ def test_rule_resolution_applies_ipo_then_st_status_and_suspension() -> None:
     assert st.suspended is True
     assert st.executable is False
     assert st.t_plus_one_sale is True
+
+
+def test_rule_resolution_requires_confirmed_tradeability() -> None:
+    resolver = TradingRuleResolver(TradingRuleVersion(version="test", rules=(_rule(),)))
+    for tradeable in (None, False, True):
+        resolved = resolver.resolve(
+            security_id=SECURITY_ID,
+            market=Market.CN_A,
+            exchange=Exchange.SSE,
+            board=Board.SSE_MAIN,
+            trading_date=date(2024, 1, 2),
+            side=OrderSide.BUY,
+            order_type=OrderType.MARKET,
+            security_status=_status(is_tradeable=tradeable),
+            listing_age_sessions=100,
+        )
+        assert resolved.executable is (tradeable is True)
 
 
 def test_security_specific_rule_precedes_board_rule() -> None:

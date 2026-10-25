@@ -16,6 +16,27 @@ class StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+class ExperimentFailureContext(StrictModel):
+    """Observed failure identity only; never a result, path or exception message."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+    trading_date: date
+    security_ids: tuple[Annotated[str, Field(pattern=r"^CN-A:[A-Z]+:[0-9]{6}$")], ...] = Field(
+        min_length=1, max_length=100
+    )
+    security_count: int = Field(ge=1, strict=True)
+
+    @model_validator(mode="after")
+    def validate_identities(self) -> Self:
+        if (
+            self.security_ids != tuple(sorted(set(self.security_ids)))
+            or (self.security_count < len(self.security_ids))
+            or (self.security_count > len(self.security_ids) and len(self.security_ids) != 100)
+        ):
+            raise ValueError("failure identities must be sorted, unique and counted")
+        return self
+
+
 class ExperimentStrategy(StrictModel):
     rebalance_sessions: int = Field(default=20, ge=1, le=252, strict=True)
     maximum_holdings: int = Field(default=20, ge=1, le=100, strict=True)

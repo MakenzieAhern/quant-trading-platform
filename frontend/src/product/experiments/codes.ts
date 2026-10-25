@@ -1,3 +1,18 @@
+import type { DatasetCapability } from "./types";
+
+export function explainDatasetFindings(
+  data: Pick<
+    DatasetCapability,
+    "current_dataset_quality" | "current_source_integrity"
+  >,
+  language: string,
+): string {
+  return [data.current_dataset_quality, data.current_source_integrity]
+    .filter((code) => code != null)
+    .map((code) => explainExperimentCode(code, language))
+    .join(" ");
+}
+
 const explanations: Record<string, [string, string]> = {
   EXPERIMENT_WORKER_OWNERSHIP_LOST: [
     "The worker lost ownership of this task. Restart the local service, then retry the interrupted task.",
@@ -108,6 +123,14 @@ const explanations: Record<string, [string, string]> = {
     "The next opening price is outside the chosen limit",
     "下一开盘价超出预先指定限价",
   ],
+  CORPORATE_ACTION_NON_ORDERABLE: [
+    "A pending corporate action makes this holding unavailable for a new order",
+    "待处理公司行动使该持仓暂时不能提交新订单",
+  ],
+  CORPORATE_ACTION_OPENING_UNCERTAINTY: [
+    "A corporate action or share surrender makes opening execution uncertain; no simulated fill is assumed",
+    "公司行动或股份让渡使开盘执行存在不确定性；模拟中不假定成交",
+  ],
   DAILY_PARTICIPATION_CAP: [
     "Quantity exceeds the daily volume participation cap",
     "数量超出日成交量参与上限",
@@ -188,9 +211,41 @@ const explanations: Record<string, [string, string]> = {
     "The data integrity check failed. Check the registered data source before retrying.",
     "数据完整性检查未通过。重试前请检查已注册数据来源。",
   ],
+  SOURCE_CONTRACT_INTEGRITY_FAILED: [
+    "This data version's source references failed verification. New research and historical paper execution are blocked. Cached data and saved results remain readable. Check source status in the data center; retrying the same version cannot repair it.",
+    "此数据版本的来源引用未通过验证，已阻止新的研究和历史模拟执行。仍可查看缓存数据与已保存结果。请在数据中心检查来源状态；重试相同版本不能修复问题。",
+  ],
+  SOURCE_CONTRACT_INTEGRITY_UNVERIFIED: [
+    "This historical data version's source integrity has not been verified. New research and historical paper execution are blocked. Inspect the saved data version in the data center; cached data and saved results remain readable.",
+    "此历史数据版本的来源完整性尚未验证，已阻止新的研究和历史模拟执行。请在数据中心检查保存的数据版本；仍可查看缓存数据与已保存结果。",
+  ],
+  UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT: [
+    "A held security's official price reference changed without an accepted accounting boundary that explains the change. The task stopped before using it for fills or valuation. Check the accepted corporate-action source records; unchanged retries will not repair the source gap.",
+    "持仓证券的官方参考价发生变化，但缺少能解释变化的已接受会计处理边界。任务已在使用该记录成交或估值前停止。请核对已接受的公司行动来源记录；沿用相同数据重试不能修复来源缺口。",
+  ],
+  UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT: [
+    "Cash or share distribution inputs contain duplicate legs or an unsupported combination. The affected session stopped before accounting, fills or valuation. Check the accepted corporate-action source records; unchanged retries will not repair the source gap.",
+    "现金或送转股记录含重复分派腿，或未经支持的现金／股份组合。受影响交易日已在入账、成交或估值前停止。请核对已接受的公司行动来源记录；沿用相同数据重试不能修复来源缺口。",
+  ],
+  KNOWN_ECONOMIC_COVERAGE_GAP: [
+    "A later review found an unmodeled corporate-action gap in this frozen data version. Economic completeness is not validated. Original results and plans are preserved; their individual impact has not been quantified. Do not treat their returns or quantities as financially validated. This notice does not repair the data.",
+    "后续复核发现此冻结数据版本存在尚未建模的公司行动缺口，经济完整性尚未验证。原始结果与计划保留，单份记录的影响未逐一量化。请勿将其收益或数量视为已通过财务验证。本提示不会修复数据。",
+  ],
+  HISTORICAL_DATASET_QUALITY_UNKNOWN: [
+    "The saved historical data checksum cannot be matched to a currently reviewed version. Economic completeness is unknown; this is not evidence that the version is repaired or financially validated. Original results and plans are unchanged.",
+    "保存的历史数据校验值无法匹配当前已复核版本，经济完整性未知；不能据此认定数据已修复或财务验证通过。原始结果与计划未改变。",
+  ],
   DATASET_NOT_REGISTERED: [
     "This data source is not registered. Choose one of the available sources.",
     "该数据源未注册。请选择当前可用来源。",
+  ],
+  DATASET_EXECUTION_NOT_ACCEPTED: [
+    "This data version is registered for inspection only. Its economic coverage has not been accepted for research or simulated execution. Inspect its provenance in the data center; a checksum or freeze marker alone cannot approve it.",
+    "此数据版本仅注册用于查看，其经济覆盖尚未获准用于研究或模拟执行。请在数据中心检查来源；仅有校验值或冻结标记不能构成准入。",
+  ],
+  DATASET_REGISTRATION_INVALID: [
+    "The local data-version register is invalid. Check the registered IDs and manifest checksums in the data center before retrying; no folder is automatically admitted.",
+    "本地数据版本注册记录无效。重试前请在数据中心核查注册编号和清单校验值；目录不会被自动准入。",
   ],
   DATES_OUTSIDE_DATASET: [
     "The requested dates fall outside the available data. Adjust the trading period.",
@@ -238,10 +293,15 @@ const explanations: Record<string, [string, string]> = {
   ],
 };
 
-export function explainExperimentCode(code: string, language: string): string {
+export function explainExperimentCode(
+  code: string,
+  language: string,
+  fallback?: string,
+): string {
   const chinese = language.startsWith("zh");
   return (
     explanations[code]?.[chinese ? 1 : 0] ??
+    fallback ??
     (chinese
       ? "此代码尚无已登记的通俗解释；请展开技术详情查看原始代码。"
       : "No plain-language explanation is registered for this code; expand technical details to inspect it.")

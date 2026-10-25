@@ -29,7 +29,9 @@ class WatchlistService:
 
     async def add(self, dataset_id: str, security_id: str) -> dict[str, Any]:
         security = await asyncio.to_thread(self.reader.security, dataset_id, security_id)
-        source = await asyncio.to_thread(self.reader.registry.resolve, dataset_id)
+        source = await asyncio.to_thread(
+            self.reader.registry.resolve, dataset_id, for_execution=False
+        )
         async with self.factory() as db, db.begin():
             await db.execute(
                 insert(WatchlistItemModel)
@@ -84,14 +86,23 @@ class WatchlistService:
                     .offset(offset)
                 )
             ).all()
-            items = [
-                {
-                    **self._item(row),
-                    "source_available": available.get(row.dataset_id, {}).get("available", False),
-                    "source_reason_code": available.get(row.dataset_id, {}).get(
-                        "reason_code", "DATASET_NOT_REGISTERED"
-                    ),
-                }
-                for row in rows
-            ]
+            items = []
+            for row in rows:
+                source = available.get(row.dataset_id, {})
+                source_available = bool(source.get("available")) and (
+                    source.get("sha256") == row.dataset_sha256
+                )
+                items.append(
+                    {
+                        **self._item(row),
+                        "source_available": source_available,
+                        "source_reason_code": (
+                            None
+                            if source_available
+                            else "DATASET_VERSION_CHANGED"
+                            if source.get("available")
+                            else source.get("reason_code", "DATASET_NOT_REGISTERED")
+                        ),
+                    }
+                )
             return {"items": items, "total": int(total or 0), "limit": limit, "offset": offset}

@@ -18,6 +18,7 @@ from app.db.models.market_updates import (
     MarketUpdateJobModel,
 )
 from app.db.models.paper import PaperTradingEventModel, PaperTradingSessionModel
+from app.db.models.paper_context import PaperContextCandidateModel
 from app.db.models.research import (
     BenchmarkMembershipModel,
     BoardModel,
@@ -70,6 +71,7 @@ __all__ = [
     "MarketRuleSetModel",
     "MarketRuleVersionModel",
     "MarketUpdateJobModel",
+    "PaperContextCandidateModel",
     "PaperTradingEventModel",
     "PaperTradingSessionModel",
     "ResearchBenchmarkPointModel",

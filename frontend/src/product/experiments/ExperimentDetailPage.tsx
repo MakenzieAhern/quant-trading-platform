@@ -1,17 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { requestOutcomeUncertain } from "../../api/client";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
-import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
+import {
+  formatDecimal,
+  formatPercent,
+  formatSignedPercent,
+  formatUtc,
+} from "../../utils/format";
 import { navigate } from "../../utils/navigation";
 import { usePageDataContext } from "../dataContext";
 import { experimentApi } from "./api";
-import { useExperimentCopy } from "./copy";
+import { experimentBenchmarkName, useExperimentCopy } from "./copy";
 import { useComparisonCopy } from "./comparisonCopy";
-import { explainExperimentCode } from "./codes";
+import { explainDatasetFindings, explainExperimentCode } from "./codes";
 import { experimentError } from "./errors";
 import { ExperimentCollections } from "./ExperimentCollections";
 import { ExperimentPlan } from "./ExperimentPlan";
+import { canUsePaperHandoff } from "./paperHandoff";
 import { isActiveExperiment, useExperiment } from "./useExperiment";
 import type { Experiment } from "./types";
 import "./experiments.css";
@@ -22,6 +29,7 @@ export function ExperimentDetailPage({ jobId }: { jobId: string }) {
 
 function ExperimentDetail({ jobId }: { jobId: string }) {
   const c = useExperimentCopy();
+  const u = useComparisonCopy();
   const { i18n } = useTranslation();
   const job = useExperiment(jobId);
   const [observedEnd, setObservedEnd] = useState<string | null>(null);
@@ -31,8 +39,17 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
     observedEnd ? "observed" : "requested",
   );
   const [action, setAction] = useState<"cancel" | "retry" | null>(null);
-  const [actionError, setActionError] = useState<unknown>(null);
+  const [actionError, setActionError] = useState<{
+    kind: "cancel" | "retry";
+    reason: unknown;
+  } | null>(null);
   const locked = useRef(false);
+  const focusedCommand = useRef<HTMLButtonElement | null>(null);
+  const pendingFocus = useRef(false);
+  const statusFocus = useRef<HTMLSpanElement>(null);
+  const readErrorFocus = useRef<HTMLDivElement>(null);
+  const loadingFocus = useRef<HTMLParagraphElement>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
   const activeJob = useRef<string | null>(jobId);
   useEffect(() => {
     activeJob.current = jobId;
@@ -41,8 +58,30 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
       activeJob.current = null;
     };
   }, [jobId]);
+  useEffect(() => {
+    const button = focusedCommand.current;
+    if (
+      (pendingFocus.current || (button && !button.isConnected)) &&
+      document.activeElement === document.body
+    )
+      (
+        statusFocus.current ??
+        readErrorFocus.current ??
+        loadingFocus.current
+      )?.focus();
+    if (!loadingFocus.current) {
+      pendingFocus.current = false;
+      if (!button?.isConnected) focusedCommand.current = null;
+    }
+  }, [job.data?.status, job.error]);
+  function refreshJob() {
+    pendingFocus.current = document.activeElement instanceof HTMLButtonElement;
+    setObservedEnd(null);
+    job.refresh();
+  }
   async function command(kind: "cancel" | "retry") {
-    if (locked.current) return;
+    if (locked.current || (kind === "cancel" && job.data?.cancel_requested))
+      return;
     locked.current = true;
     setAction(kind);
     setActionError(null);
@@ -55,9 +94,9 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
             await experimentApi.retry(jobId, `experiment-retry-v1:${jobId}`);
       if (activeJob.current !== jobId) return;
       if (kind === "retry") navigate(`/experiments/${updated.job_id}`);
-      else job.refresh();
+      else job.revalidate();
     } catch (reason) {
-      if (activeJob.current === jobId) setActionError(reason);
+      if (activeJob.current === jobId) setActionError({ kind, reason });
     } finally {
       if (activeJob.current === jobId) {
         locked.current = false;
@@ -68,14 +107,23 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
   const data = job.data;
   return (
     <div className="experimentWorkspace">
-      <Link className="experimentBack" href="/experiments">
+      <Link back className="experimentBack" href="/experiments">
         ← {c.backList}
       </Link>
-      {!data && !job.error && <p role="status">{c.loading}</p>}
+      {!data && !job.error && (
+        <p ref={loadingFocus} role="status" tabIndex={-1}>
+          {c.loading}
+        </p>
+      )}
       {Boolean(job.error) && (
-        <div className="experimentNotice" role="alert">
+        <div
+          ref={readErrorFocus}
+          className="experimentNotice"
+          role="alert"
+          tabIndex={-1}
+        >
           <p>{experimentError(job.error, c)}</p>
-          <button className="button secondary" onClick={job.refresh}>
+          <button className="button secondary" onClick={refreshJob}>
             {c.refresh}
           </button>
         </div>
@@ -86,24 +134,38 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
             <span className="experimentMode">
               {data.mode === "synthetic_demo" ? c.demo : c.historical}
             </span>
-            <h1>{data.name}</h1>
+            <h1 ref={heading} tabIndex={-1}>
+              {data.name}
+            </h1>
             <p>
-              {data.configuration.start_date} → {data.configuration.end_date} ·
-              Asia/Shanghai
+              {u.requestedPeriod}: {data.configuration.start_date} →{" "}
+              {data.configuration.end_date} · Asia/Shanghai
             </p>
-            <div className="experimentActions">
+            <div
+              className="experimentActions"
+              onFocusCapture={(event) => {
+                if (event.target instanceof HTMLButtonElement)
+                  focusedCommand.current = event.target;
+              }}
+              onBlurCapture={() => {
+                focusedCommand.current = null;
+              }}
+            >
               <span
+                ref={statusFocus}
+                role="status"
+                tabIndex={-1}
                 className={`experimentStatus experimentStatus--${data.status.toLowerCase()}`}
               >
                 {c.statuses[data.status]}
               </span>
-              <button className="button secondary" onClick={job.refresh}>
+              <button className="button secondary" onClick={refreshJob}>
                 {c.refresh}
               </button>
               {isActiveExperiment(data) && (
                 <button
                   className="button secondary"
-                  disabled={action !== null || data.cancel_requested}
+                  aria-disabled={action !== null || data.cancel_requested}
                   onClick={() => void command("cancel")}
                 >
                   {action === "cancel" ? c.cancelling : c.cancel}
@@ -112,7 +174,7 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
               {["FAILED", "INTERRUPTED", "CANCELLED"].includes(data.status) && (
                 <button
                   className="button"
-                  disabled={action !== null}
+                  aria-disabled={action !== null}
                   onClick={() => void command("retry")}
                 >
                   {action === "retry" ? c.retrying : c.retry}
@@ -120,11 +182,16 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
               )}
             </div>
           </header>
-          {Boolean(actionError) && (
-            <p className="experimentError" role="alert">
-              {experimentError(actionError, c)}
-            </p>
-          )}
+          {actionError &&
+            !(
+              actionError.kind === "cancel" &&
+              requestOutcomeUncertain(actionError.reason) &&
+              (data.cancel_requested || data.status === "CANCELLED")
+            ) && (
+              <p className="experimentError" role="alert">
+                {experimentError(actionError.reason, c)}
+              </p>
+            )}
           {isActiveExperiment(data) && <JobProgress job={data} />}
           {data.status === "FAILED" && (
             <p className="experimentNotice" role="alert">
@@ -143,14 +210,47 @@ function ExperimentDetail({ jobId }: { jobId: string }) {
           {data.error_code && (
             <div>
               <p>{explainExperimentCode(data.error_code, i18n.language)}</p>
+              {data.error_context ? (
+                <>
+                  <p>
+                    {c.failureDate}: {data.error_context.trading_date}
+                  </p>
+                  <p>
+                    {c.failureSecurities}: {data.error_context.security_count}
+                  </p>
+                </>
+              ) : (
+                data.error_code === "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT" && (
+                  <p className="experimentHelp">{c.failureContextMissing}</p>
+                )
+              )}
               <details className="experimentTechnical">
                 <summary>{c.technical}</summary>
                 <code>{data.error_code}</code>
+                {data.error_context && (
+                  <>
+                    {data.error_context.security_count >
+                      data.error_context.security_ids.length && (
+                      <p>{c.failureContextTruncated}</p>
+                    )}
+                    <ul aria-label={c.failureSecurities}>
+                      {data.error_context.security_ids.map((id) => (
+                        <li key={id}>
+                          <code>{id}</code>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
               </details>
             </div>
           )}
           {data.result_available ? (
-            <ExperimentResults job={data} onObservedEnd={setObservedEnd} />
+            <ExperimentResults
+              job={data}
+              onObservedEnd={setObservedEnd}
+              focusHeading={() => heading.current?.focus()}
+            />
           ) : (
             <p className="experimentHelp">{c.resultPending}</p>
           )}
@@ -237,9 +337,11 @@ function JobProgress({ job }: { job: Experiment }) {
 function ExperimentResults({
   job,
   onObservedEnd,
+  focusHeading,
 }: {
   job: Experiment;
   onObservedEnd: (value: string | null) => void;
+  focusHeading: () => void;
 }) {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
@@ -258,10 +360,13 @@ function ExperimentResults({
   if (result.error)
     return (
       <div role="alert">
-        <p>{c.serverError}</p>
+        <p>{experimentError(result.error, c)}</p>
         <button
           className="button secondary"
-          onClick={() => setRevision((value) => value + 1)}
+          onClick={(event) => {
+            if (document.activeElement === event.currentTarget) focusHeading();
+            setRevision((value) => value + 1);
+          }}
         >
           {c.retryLoad}
         </button>
@@ -269,14 +374,13 @@ function ExperimentResults({
     );
   if (!result.data) return null;
   const data = result.data;
-  const signedPercent = (value: string | null) =>
-    value !== null && !value.startsWith("-") && /[1-9]/.test(value)
-      ? `+${formatPercent(value, places)}`
-      : formatPercent(value, places);
   return (
     <>
       <section aria-label={c.resultTitle}>
         <h2>{c.resultTitle}</h2>
+        <p>
+          {u.actualPeriod}: {data.date_start} → {data.date_end} · Asia/Shanghai
+        </p>
         <label className="experimentCheck">
           <input
             type="checkbox"
@@ -288,13 +392,19 @@ function ExperimentResults({
         <p className="experimentHelp">{u.roundedSummary}</p>
         <dl className="experimentMetrics">
           {[
-            [c.return, signedPercent(data.metrics.cumulative_return)],
+            [
+              c.return,
+              formatSignedPercent(data.metrics.cumulative_return, places),
+            ],
             [
               c.drawdownMetric,
               formatPercent(data.metrics.maximum_drawdown, places),
             ],
             [c.cost, formatDecimal(data.metrics.transaction_costs, places)],
-            [c.benchmark, signedPercent(data.metrics.benchmark_return)],
+            [
+              c.benchmark,
+              formatSignedPercent(data.metrics.benchmark_return, places),
+            ],
           ].map(([label, value]) => (
             <div className="experimentPanel" key={label}>
               <dt>{label}</dt>
@@ -304,8 +414,8 @@ function ExperimentResults({
         </dl>
         <p className="experimentHelp">
           {c.capitalEnd}: {formatDecimal(data.metrics.final_equity, places)} ·{" "}
-          {c.excess}: {signedPercent(data.metrics.excess_return)} ·{" "}
-          {data.benchmark_id}
+          {c.excess}: {formatSignedPercent(data.metrics.excess_return, places)}{" "}
+          · {experimentBenchmarkName(data.benchmark_id, c)}
         </p>
       </section>
       <section className="experimentNotice" aria-label={c.limits}>
@@ -313,7 +423,18 @@ function ExperimentResults({
         <p>
           {data.mode === "synthetic_demo" ? c.warningDemo : c.warningHistorical}
         </p>
+        {job.dataset_id === "cn-a-research-20100101-20251231-v1" && (
+          <p>
+            {job.mode === "historical_exploration" &&
+            data.mode === "historical_exploration"
+              ? c.historicalExecutionIssue
+              : c.historicalExecutionUnverified}
+          </p>
+        )}
         <p>{c.noGuarantee}</p>
+        {(data.current_dataset_quality || data.current_source_integrity) && (
+          <p>{explainDatasetFindings(data, i18n.language)}</p>
+        )}
         {data.limitations.length > 0 && (
           <ul>
             {data.limitations.map((limitation) => (
@@ -332,7 +453,30 @@ function ExperimentResults({
           ))}
         </details>
       </section>
-      <ExperimentPlan plan={data.simulation_plan ?? null} />
+      <ExperimentPlan
+        plan={data.simulation_plan ?? null}
+        quality={data.current_dataset_quality}
+        sourceIntegrity={data.current_source_integrity}
+      />
+      {job.status === "SUCCEEDED" && (
+        <Link
+          className="button secondary"
+          href={`/experiments?compare_from=${encodeURIComponent(job.job_id)}`}
+        >
+          {u.select}
+        </Link>
+      )}
+      {canUsePaperHandoff(job) && (
+        <div className="experimentPanel">
+          <Link
+            className="button secondary"
+            href={`/paper/new?from_experiment=${encodeURIComponent(job.job_id)}`}
+          >
+            {c.paperHandoff}
+          </Link>
+          <p className="experimentHelp">{c.paperHandoffHelp}</p>
+        </div>
+      )}
       <ExperimentCollections jobId={job.job_id} />
       <section className="experimentPanel">
         <h2>{c.execution}</h2>
@@ -352,10 +496,11 @@ function ExperimentResults({
         </dl>
         <div
           className="experimentTableScroll"
+          role="region"
           tabIndex={0}
-          aria-label={c.tableScroll}
+          aria-label={c.execution}
         >
-          <table>
+          <table aria-label={c.execution}>
             <thead>
               <tr>
                 <th scope="col">{c.reason}</th>
@@ -369,7 +514,9 @@ function ExperimentResults({
                     <td>
                       {explainExperimentCode(reason, i18n.language)}
                       <details>
-                        <summary>{c.technical}</summary>
+                        <summary aria-label={`${c.technical}: ${reason}`}>
+                          {c.technical}
+                        </summary>
                         <code>{reason}</code>
                       </details>
                     </td>

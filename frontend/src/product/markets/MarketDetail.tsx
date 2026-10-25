@@ -1,10 +1,13 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatUtc } from "../../utils/format";
+import { ProductError } from "../ProductPages";
+import { explainDatasetFindings } from "../experiments/codes";
 import { usePreferences } from "../preferences";
 import { closingPrice, marketApi, validRange } from "./api";
-import { observationLabel, useMarketCopy } from "./copy";
+import { observationLabel, riskLabel, useMarketCopy } from "./copy";
 import type {
   MarketBar,
   MarketBars,
@@ -30,6 +33,15 @@ export function MarketDetail({
   const [applied, setApplied] = useState(range);
   const [invalid, setInvalid] = useState(!validRange(range, dataset));
   const [revision, setRevision] = useState(0);
+  const firstDate = useRef<HTMLInputElement>(null);
+  const invalidRangeId = useId();
+  useEffect(() => {
+    if (invalid) queueMicrotask(() => firstDate.current?.focus());
+  }, [invalid]);
+  function changeRange(nextRange: MarketRange) {
+    onRangeChange(nextRange);
+    if (validRange(nextRange, dataset)) setInvalid(false);
+  }
   const data = useApiResource(
     (signal) =>
       validRange(applied, dataset)
@@ -61,10 +73,12 @@ export function MarketDetail({
       <p className="marketHelp">{c.searchHelp}</p>
       <form
         className="marketControls"
+        noValidate
         onSubmit={(event) => {
           event.preventDefault();
           if (!validRange(range, dataset)) {
             setInvalid(true);
+            if (invalid) firstDate.current?.focus();
             return;
           }
           setInvalid(false);
@@ -79,12 +93,18 @@ export function MarketDetail({
               {c.first}
               <input
                 type="date"
+                ref={firstDate}
                 required
                 min={dataset.coverage_start}
                 max={dataset.coverage_end}
                 value={range.start_date}
+                aria-invalid={invalid || undefined}
+                aria-describedby={invalid ? invalidRangeId : undefined}
                 onInput={(event) =>
-                  onRangeChange({ ...range, start_date: event.currentTarget.value })
+                  changeRange({
+                    ...range,
+                    start_date: event.currentTarget.value,
+                  })
                 }
               />
             </label>
@@ -96,8 +116,13 @@ export function MarketDetail({
                 min={dataset.coverage_start}
                 max={dataset.coverage_end}
                 value={range.end_date}
+                aria-invalid={invalid || undefined}
+                aria-describedby={invalid ? invalidRangeId : undefined}
                 onInput={(event) =>
-                  onRangeChange({ ...range, end_date: event.currentTarget.value })
+                  changeRange({
+                    ...range,
+                    end_date: event.currentTarget.value,
+                  })
                 }
               />
             </label>
@@ -107,7 +132,11 @@ export function MarketDetail({
           </div>
         </fieldset>
       </form>
-      {invalid && <p role="alert">{c.invalidRange}</p>}
+      {invalid && (
+        <p id={invalidRangeId} role="alert">
+          {c.invalidRange}
+        </p>
+      )}
       <label className="marketField">
         {c.priceView}
         <select
@@ -125,15 +154,12 @@ export function MarketDetail({
       </p>
       {data.loading && <p role="status">{c.loading}</p>}
       {data.error && (
-        <div role="alert">
-          <p>{c.error}</p>
-          <button
-            className="button secondary"
-            onClick={() => setRevision((n) => n + 1)}
-          >
-            {c.retry}
-          </button>
-        </div>
+        <ProductError
+          error={data.error}
+          fallback={c.error}
+          retryLabel={c.retry}
+          retry={() => setRevision((n) => n + 1)}
+        />
       )}
       {data.data && (
         <MarketObservation
@@ -154,9 +180,15 @@ function MarketObservation({
   view: "raw" | "adjusted";
 }) {
   const c = useMarketCopy();
+  const { i18n } = useTranslation();
   const { metadata: m, security, items } = data;
   return (
     <>
+      {(m.current_dataset_quality || m.current_source_integrity) && (
+        <p className="marketNotice" role="note">
+          {explainDatasetFindings(m, i18n.language)}
+        </p>
+      )}
       <section className="marketPanel">
         <h3>{c.diagnostics}</h3>
         <dl className="marketFacts">
@@ -365,9 +397,11 @@ function PriceChart({
         </figcaption>
       </figure>
       {selectedBar && (
-        <div className="marketReadout" role="status">
-          <strong>{selectedBar.trading_date}</strong> ·{" "}
-          {observationLabel(selectedBar.status, c)}
+        <div className="marketReadout">
+          <span role="status">
+            <strong>{selectedBar.trading_date}</strong> ·{" "}
+            {observationLabel(selectedBar.status, c)}
+          </span>
           <dl className="marketFacts">
             {[
               [c.open, selectedBar[view].open],
@@ -387,10 +421,7 @@ function PriceChart({
           <p>
             {c.factorDate}:{" "}
             {selectedBar.adjustment_effective_date ?? c.notRecorded} · {c.risk}:{" "}
-            {selectedBar.risk_status === "NORMAL"
-              ? c.normal
-              : (selectedBar.risk_status ?? c.unknown)}{" "}
-            · {c.blocked}:{" "}
+            {riskLabel(selectedBar.risk_status, c)} · {c.blocked}:{" "}
             {selectedBar.execution_open_blocked === null
               ? c.unknown
               : selectedBar.execution_open_blocked
@@ -422,8 +453,13 @@ function PriceChart({
         <p className="marketHelp">
           {c.units} {c.scroll}
         </p>
-        <div className="marketTableScroll" tabIndex={0} aria-label={c.exact}>
-          <table>
+        <div
+          className="marketTableScroll"
+          tabIndex={0}
+          role="region"
+          aria-label={c.exact}
+        >
+          <table aria-label={c.exact}>
             <thead>
               <tr>
                 {[

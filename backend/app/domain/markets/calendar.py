@@ -29,6 +29,13 @@ class TradingCalendar(BaseModel):
     def is_trading_session(self, value: date) -> bool:
         return any(s.session_date == value and s.is_open for s in self.sessions)
 
+    def require_extension_of(self, previous: "TradingCalendar") -> None:
+        if (
+            self.market != previous.market
+            or self.sessions[: len(previous.sessions)] != previous.sessions
+        ):
+            raise ValueError("accepted calendar extension must be append-only")
+
     def completed_sessions(self, through: date) -> tuple[date, ...]:
         return tuple(
             s.session_date for s in self.sessions if s.is_open and s.session_date <= through

@@ -1,6 +1,7 @@
 import { ApiError, apiRequest, REQUEST_TIMEOUT_MS } from "../../api/client";
 import { API_BASE_URL } from "../../api/config";
 import { ApiContractError } from "../../api/contracts";
+import { parsePaperInput } from "../../api/paperInput";
 import type {
   Capabilities,
   Experiment,
@@ -16,7 +17,34 @@ import type {
   DateRange,
   Page,
   SimulationPlan,
+  PaperAccountPlan,
+  CurrentDatasetQuality,
+  CurrentSourceIntegrity,
 } from "./types";
+
+export function parseCurrentDatasetQuality(
+  value: unknown,
+): CurrentDatasetQuality {
+  if (value == null) return null;
+  if (
+    value !== "KNOWN_ECONOMIC_COVERAGE_GAP" &&
+    value !== "HISTORICAL_DATASET_QUALITY_UNKNOWN"
+  )
+    throw new ApiContractError();
+  return value;
+}
+
+export function parseCurrentSourceIntegrity(
+  value: unknown,
+): CurrentSourceIntegrity {
+  if (value == null) return null;
+  if (
+    value !== "SOURCE_CONTRACT_INTEGRITY_FAILED" &&
+    value !== "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED"
+  )
+    throw new ApiContractError();
+  return value;
+}
 
 function record(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value))
@@ -93,6 +121,8 @@ export function parseCapabilities(value: unknown): Capabilities {
   }
   for (const entry of item.datasets) {
     const dataset = record(entry);
+    parseCurrentDatasetQuality(dataset.current_dataset_quality);
+    parseCurrentSourceIntegrity(dataset.current_source_integrity);
     for (const key of [
       "dataset_id",
       "coverage_start",
@@ -108,6 +138,16 @@ export function parseCapabilities(value: unknown): Capabilities {
     integer(dataset.security_count);
     strings(dataset.universes);
     if (typeof dataset.available !== "boolean") throw new ApiContractError();
+    if (
+      dataset.execution_available !== undefined &&
+      typeof dataset.execution_available !== "boolean"
+    )
+      throw new ApiContractError();
+    if (
+      dataset.execution_reason_code !== undefined &&
+      dataset.execution_reason_code !== null
+    )
+      text(dataset.execution_reason_code);
     if (dataset.reason_code !== null) text(dataset.reason_code);
   }
   const defaults = record(item.defaults);
@@ -156,10 +196,42 @@ export function parseExperiment(value: unknown): Experiment {
   )
     throw new ApiContractError();
   parseConfiguration(item.configuration);
+  if (item.error_context != null) {
+    const context = record(item.error_context);
+    text(context.trading_date);
+    strings(context.security_ids);
+    integer(context.security_count);
+    const parsedDate = new Date(`${context.trading_date}T00:00:00Z`);
+    if (
+      item.status !== "FAILED" ||
+      item.error_code !== "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT" ||
+      item.result_available ||
+      Object.keys(context).some(
+        (key) =>
+          !["trading_date", "security_ids", "security_count"].includes(key),
+      ) ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(context.trading_date) ||
+      !Number.isFinite(parsedDate.getTime()) ||
+      parsedDate.toISOString().slice(0, 10) !== context.trading_date ||
+      context.security_ids.length === 0 ||
+      context.security_ids.length > 100 ||
+      context.security_ids.some(
+        (id, index, ids) =>
+          !/^CN-A:[A-Z]+:[0-9]{6}$/.test(id) ||
+          (index > 0 && id <= ids[index - 1]),
+      ) ||
+      context.security_count < context.security_ids.length ||
+      (context.security_count > context.security_ids.length &&
+        context.security_ids.length !== 100)
+    )
+      throw new ApiContractError();
+  }
   return item as unknown as Experiment;
 }
 export function parseResult(value: unknown): ExperimentResult {
   const item = record(value);
+  parseCurrentDatasetQuality(item.current_dataset_quality);
+  parseCurrentSourceIntegrity(item.current_source_integrity);
   mode(item.mode);
   strings(item.limitations);
   for (const key of ["job_id", "date_start", "date_end", "benchmark_id"])
@@ -190,17 +262,71 @@ export function parseResult(value: unknown): ExperimentResult {
 export function parseSimulationPlan(value: unknown): SimulationPlan {
   const item = record(value);
   mode(item.mode);
-  for (const key of [
-    "status", "as_of_trading_date", "dataset_sha256", "configuration_sha256",
-    "strategy_id", "strategy_version", "price_basis", "account_mode",
-    "data_snapshot_sha256",
-  ]) text(item[key]);
-  if (item.next_accepted_session !== null) text(item.next_accepted_session);
+  parsePlanFields(item);
   if (
-    item.simulation_only !== true || item.submitted_to_account !== false ||
-    item.not_today_advice !== true ||
-    !["EXPLORATORY_REPLAY", "SYNTHETIC_DEMO"].includes(String(item.account_mode))
-  ) throw new ApiContractError();
+    item.submitted_to_account !== false ||
+    item.input_provenance != null ||
+    !["EXPLORATORY_REPLAY", "SYNTHETIC_DEMO"].includes(
+      String(item.account_mode),
+    )
+  )
+    throw new ApiContractError();
+  return item as unknown as SimulationPlan;
+}
+
+export function parsePaperAccountPlan(value: unknown): PaperAccountPlan {
+  const item = record(value);
+  parsePlanFields(item);
+  text(item.paper_session_id);
+  text(item.plan_version);
+  if (item.mode === "forward_paper") {
+    const input = parsePaperInput(item.input_provenance);
+    if (
+      item.account_mode !== "FORWARD_PAPER" ||
+      item.plan_version !== "PAPER_FORWARD_PLAN_V1" ||
+      typeof item.submitted_to_account !== "boolean" ||
+      input.paper_session_id !== item.paper_session_id ||
+      input.trading_date !== item.as_of_trading_date ||
+      input.trading_date !== item.account_snapshot_trading_date ||
+      input.admission_sha256 !== item.dataset_sha256 ||
+      input.input_sha256 !== item.data_snapshot_sha256
+    )
+      throw new ApiContractError();
+    return { ...item, input_provenance: input } as unknown as PaperAccountPlan;
+  }
+  if (
+    item.mode !== "historical_exploration" ||
+    item.account_mode !== "HISTORICAL_PAPER_REPLAY" ||
+    item.input_provenance != null ||
+    ![
+      "PAPER_ACCOUNT_PLAN_V1",
+      "PAPER_ACCOUNT_PLAN_V2",
+      "PAPER_ACCOUNT_PLAN_V3",
+    ].includes(String(item.plan_version)) ||
+    typeof item.submitted_to_account !== "boolean"
+  )
+    throw new ApiContractError();
+  return item as unknown as PaperAccountPlan;
+}
+
+function parsePlanFields(item: Record<string, unknown>): void {
+  if (item.account_snapshot_trading_date != null)
+    text(item.account_snapshot_trading_date);
+  for (const key of [
+    "status",
+    "as_of_trading_date",
+    "dataset_sha256",
+    "configuration_sha256",
+    "strategy_id",
+    "strategy_version",
+    "price_basis",
+    "account_mode",
+    "data_snapshot_sha256",
+  ])
+    text(item[key]);
+  if (item.next_accepted_session !== null) text(item.next_accepted_session);
+  if (item.simulation_only !== true || item.not_today_advice !== true)
+    throw new ApiContractError();
   decimal(item.estimated_cash_required, true);
   if (item.risk_rejections !== undefined) integer(item.risk_rejections);
   if (item.account !== null) {
@@ -212,7 +338,12 @@ export function parseSimulationPlan(value: unknown): SimulationPlan {
     for (const entry of account.positions) {
       const position = record(entry);
       text(position.security_id);
-      for (const key of ["quantity", "average_price", "market_price", "market_value"])
+      for (const key of [
+        "quantity",
+        "average_price",
+        "market_price",
+        "market_value",
+      ])
         decimal(position[key]);
       decimal(position.weight, true);
     }
@@ -223,16 +354,22 @@ export function parseSimulationPlan(value: unknown): SimulationPlan {
     for (const key of ["security_id", "trigger_reason", "risk_reason_code"])
       text(candidate[key]);
     for (const key of [
-      "target_weight", "held_quantity", "target_quantity",
-      "desired_change_quantity", "proposed_quantity",
-    ]) decimal(candidate[key]);
+      "target_weight",
+      "held_quantity",
+      "target_quantity",
+      "desired_change_quantity",
+      "proposed_quantity",
+    ])
+      decimal(candidate[key]);
     decimal(candidate.reference_raw_close, true);
     if (!["BUY", "SELL", "HOLD"].includes(String(candidate.side)))
       throw new ApiContractError();
-    if (candidate.risk_approved !== null && typeof candidate.risk_approved !== "boolean")
+    if (
+      candidate.risk_approved !== null &&
+      typeof candidate.risk_approved !== "boolean"
+    )
       throw new ApiContractError();
   }
-  return item as unknown as SimulationPlan;
 }
 function page<T>(value: unknown, parse: (entry: unknown) => T): Page<T> {
   const item = record(value);
@@ -349,6 +486,11 @@ function dateQuery(range: DateRange = {}) {
   return query.size ? `&${query}` : "";
 }
 const path = (id: string) => `/api/experiments/${encodeURIComponent(id)}`;
+function matchingJobId<T extends { job_id: string }>(job: T, id: string): T {
+  if (job.job_id.toLowerCase() !== id.toLowerCase())
+    throw new ApiContractError();
+  return job;
+}
 export interface ExperimentListQuery {
   status?: ExperimentStatus;
   mode?: ExperimentMode;
@@ -357,16 +499,30 @@ export interface ExperimentListQuery {
 export const experimentApi = {
   capabilities: (signal?: AbortSignal) =>
     apiRequest("/api/workbench/capabilities", {}, signal, parseCapabilities),
-  list: (signal?: AbortSignal, limit = 20, offset = 0, q = "", filters: ExperimentListQuery = {}) => {
-    const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+  list: (
+    signal?: AbortSignal,
+    limit = 20,
+    offset = 0,
+    q = "",
+    filters: ExperimentListQuery = {},
+  ) => {
+    const params = new URLSearchParams({
+      limit: String(limit),
+      offset: String(offset),
+    });
     if (q) params.set("q", q);
     if (filters.status) params.set("status", filters.status);
     if (filters.mode) params.set("mode", filters.mode);
-    if (filters.sort && filters.sort !== "newest") params.set("sort", filters.sort);
-    return apiRequest(`/api/experiments?${params}`, {}, signal, (value) => page(value, parseExperiment));
+    if (filters.sort && filters.sort !== "newest")
+      params.set("sort", filters.sort);
+    return apiRequest(`/api/experiments?${params}`, {}, signal, (value) =>
+      page(value, parseExperiment),
+    );
   },
   get: (id: string, signal?: AbortSignal) =>
-    apiRequest(path(id), {}, signal, parseExperiment),
+    apiRequest(path(id), {}, signal, (value) =>
+      matchingJobId(parseExperiment(value), id),
+    ),
   create: (body: ExperimentConfiguration, key: string) =>
     apiRequest(
       "/api/experiments",
@@ -393,7 +549,9 @@ export const experimentApi = {
       parseExperiment,
     ),
   result: (id: string, signal?: AbortSignal) =>
-    apiRequest(`${path(id)}/result`, {}, signal, parseResult),
+    apiRequest(`${path(id)}/result`, {}, signal, (value) =>
+      matchingJobId(parseResult(value), id),
+    ),
   equity: (id: string, signal?: AbortSignal, offset = 0, range?: DateRange) =>
     apiRequest(
       `${path(id)}/equity?limit=100&offset=${offset}${dateQuery(range)}`,

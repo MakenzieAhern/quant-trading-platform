@@ -1,4 +1,12 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
+import { useTranslation } from "react-i18next";
 import { getHealth } from "../api/health";
 import { useApiResource } from "../hooks/useApiResource";
 import { usePathname } from "../utils/navigation";
@@ -7,23 +15,48 @@ import { usePreferences } from "../product/preferences";
 import { CommandPalette } from "../product/CommandPalette";
 import { experimentApi } from "../product/experiments/api";
 import { useCurrentPageData } from "../product/dataContext";
+import { formatUtc } from "../utils/format";
 import { Link } from "./Link";
 import { LanguageSelector } from "./LanguageSelector";
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({
+  children,
+  notFound,
+}: {
+  children: ReactNode;
+  notFound: boolean;
+}) {
   const copy = useProductCopy();
+  const { t } = useTranslation("common");
   const pathname = usePathname();
+  const previousPathname = useRef(pathname);
   const { preferences, update, unsaved } = usePreferences();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const sidebar = useRef<HTMLElement>(null);
+  const topbar = useRef<HTMLElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
+  const lastFocused = useRef<Element | null>(null);
+  const resizeFocus = useRef<Element | null>(null);
   const [refresh, setRefresh] = useState(0);
   const lastCheck = useRef(0);
   const pageData = useCurrentPageData();
   const closeMenu = () => {
     setMenuOpen(false);
     requestAnimationFrame(() => menuButton.current?.focus());
+  };
+  const closeCurrentSidebarLink = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (
+      menuOpen &&
+      event.button === 0 &&
+      !event.metaKey &&
+      !event.ctrlKey &&
+      !event.shiftKey &&
+      !event.altKey &&
+      !event.defaultPrevented &&
+      event.currentTarget.href === window.location.href
+    )
+      closeMenu();
   };
   const health = useApiResource(
     async (signal) => {
@@ -37,6 +70,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     (signal) => experimentApi.capabilities(signal),
     [refresh],
   );
+  const refreshing = health.loading || data.loading;
   const available =
     data.data?.datasets.find(
       (item) => item.mode === "historical_exploration" && item.available,
@@ -44,6 +78,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   const displayedData =
     pageData ??
     (available ? { mode: available.mode, asOf: available.as_of } : null);
+  const serviceStatus = health.error
+    ? copy.offline
+    : health.data
+      ? copy.online
+      : copy.connecting;
   const links = [
     { href: "/", label: copy.home, icon: "◫" },
     { href: "/markets", label: copy.markets, icon: "▥" },
@@ -55,7 +94,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   ];
   const active = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
-  const location =
+  const routeLocation =
     links.find((item) => active(item.href))?.label ??
     (pathname.startsWith("/research/new")
       ? copy.newStudy
@@ -66,29 +105,95 @@ export function AppShell({ children }: { children: ReactNode }) {
           : pathname === "/help"
             ? copy.help
             : copy.legacy);
+  const location = notFound ? t("pageNotFound") : routeLocation;
+  useEffect(() => {
+    document.title = `${location} · QUANT`;
+  }, [location]);
+  useLayoutEffect(() => {
+    const header = topbar.current;
+    if (!header) return;
+    const root = document.documentElement;
+    const previous = root.style.getPropertyValue("--app-topbar-height");
+    const measure = () =>
+      root.style.setProperty(
+        "--app-topbar-height",
+        `${Math.ceil(header.getBoundingClientRect().height)}px`,
+      );
+    measure();
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? undefined
+        : new ResizeObserver(measure);
+    observer?.observe(header);
+    return () => {
+      observer?.disconnect();
+      if (previous) root.style.setProperty("--app-topbar-height", previous);
+      else root.style.removeProperty("--app-topbar-height");
+    };
+  }, []);
   useEffect(() => {
     if (menuOpen) sidebar.current?.querySelector("a")?.focus();
   }, [menuOpen]);
+  useLayoutEffect(() => {
+    const focused = resizeFocus.current;
+    if (menuOpen || !focused) return;
+    resizeFocus.current = null;
+    if (
+      document.activeElement === focused ||
+      document.activeElement === document.body
+    )
+      document.getElementById("main-content")?.focus({ preventScroll: true });
+  }, [menuOpen]);
   useEffect(() => {
-    const desktop = window.matchMedia?.("(min-width: 801px)");
+    const mobile = window.matchMedia?.("(max-width: 800px)");
     const leaveMobile = () => {
-      if (desktop?.matches) setMenuOpen(false);
+      const focused = document.activeElement;
+      if (mobile?.matches) {
+        if (
+          sidebar.current?.contains(focused) ||
+          (focused === document.body &&
+            sidebar.current?.contains(lastFocused.current))
+        )
+          menuButton.current?.focus({ preventScroll: true });
+        return;
+      }
+      const mobileControl = focused?.matches(".mobileMenu, .sidebarBackdrop")
+        ? focused
+        : focused === document.body &&
+            lastFocused.current?.matches(".mobileMenu, .sidebarBackdrop")
+          ? lastFocused.current
+          : null;
+      const menuWasOpen = sidebar.current?.classList.contains("sidebarOpen");
+      if (mobileControl && menuWasOpen) resizeFocus.current = mobileControl;
+      setMenuOpen(false);
+      if (mobileControl && !menuWasOpen)
+        document.getElementById("main-content")?.focus({ preventScroll: true });
     };
-    desktop?.addEventListener("change", leaveMobile);
-    return () => desktop?.removeEventListener("change", leaveMobile);
+    mobile?.addEventListener("change", leaveMobile);
+    return () => mobile?.removeEventListener("change", leaveMobile);
   }, []);
   useEffect(() => {
-    const refreshOnFocus = () => {
+    const refreshOnReturn = () => {
       if (
         document.visibilityState !== "hidden" &&
         Date.now() - lastCheck.current >= 10_000
-      )
+      ) {
+        lastCheck.current = Date.now();
         setRefresh((value) => value + 1);
+      }
     };
-    window.addEventListener("focus", refreshOnFocus);
-    return () => window.removeEventListener("focus", refreshOnFocus);
+    window.addEventListener("focus", refreshOnReturn);
+    document.addEventListener("visibilitychange", refreshOnReturn);
+    const timer = window.setInterval(refreshOnReturn, 30_000);
+    return () => {
+      window.removeEventListener("focus", refreshOnReturn);
+      document.removeEventListener("visibilitychange", refreshOnReturn);
+      window.clearInterval(timer);
+    };
   }, []);
   useEffect(() => {
+    if (previousPathname.current === pathname) return;
+    previousPathname.current = pathname;
     document.getElementById("main-content")?.focus({ preventScroll: true });
   }, [pathname]);
   useEffect(() => {
@@ -139,7 +244,12 @@ export function AppShell({ children }: { children: ReactNode }) {
     };
   }, [pathname]);
   return (
-    <div className="appShell">
+    <div
+      className="appShell"
+      onFocusCapture={(event) => {
+        lastFocused.current = event.target;
+      }}
+    >
       <a className="skipLink" href="#main-content" inert={menuOpen}>
         {copy.skipContent}
       </a>
@@ -159,7 +269,12 @@ export function AppShell({ children }: { children: ReactNode }) {
             ×
           </button>
         )}
-        <Link className="brand" href="/" aria-label={`QUANT ${copy.brand}`}>
+        <Link
+          className="brand"
+          href="/"
+          aria-label={`QUANT ${copy.brand}`}
+          onClick={closeCurrentSidebarLink}
+        >
           <span className="brandMark">Q</span>
           <span>
             QUANT<span className="brandSubtitle">{copy.brand}</span>
@@ -176,6 +291,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Link
               key={item.href}
               href={item.href}
+              onClick={closeCurrentSidebarLink}
               aria-current={active(item.href) ? "page" : undefined}
             >
               <span aria-hidden="true" className="navIcon">
@@ -189,6 +305,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <nav aria-label={copy.help}>
             <Link
               href="/help"
+              onClick={closeCurrentSidebarLink}
               aria-current={pathname === "/help" ? "page" : undefined}
             >
               <span className="navIcon" aria-hidden="true">
@@ -198,6 +315,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
             <Link
               href="/settings"
+              onClick={closeCurrentSidebarLink}
               aria-current={pathname === "/settings" ? "page" : undefined}
             >
               <span className="navIcon" aria-hidden="true">
@@ -218,7 +336,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         />
       )}
       <div className="appBody" inert={menuOpen}>
-        <header className="topbar">
+        <header ref={topbar} className="topbar">
           <button
             ref={menuButton}
             className="iconButton mobileMenu"
@@ -260,29 +378,24 @@ export function AppShell({ children }: { children: ReactNode }) {
             <button
               type="button"
               className={`serviceState ${health.error ? "serviceOffline" : ""}`}
-              aria-label={copy.refreshStatus}
-              disabled={health.loading}
-              onClick={() => setRefresh((value) => value + 1)}
-              title={
-                health.data
-                  ? `${health.data.environment} · ${health.data.broker_mode}`
-                  : undefined
-              }
+              aria-label={`${serviceStatus} · ${copy.refreshStatus}`}
+              aria-describedby="service-health-status"
+              aria-disabled={refreshing}
+              onClick={() => {
+                if (!refreshing) setRefresh((value) => value + 1);
+              }}
             >
               <i aria-hidden="true" />
-              <span className="serviceText" role="status">
-                {health.error
-                  ? copy.offline
-                  : health.data
-                    ? copy.online
-                    : copy.connecting}
-              </span>
+              <span className="serviceText">{serviceStatus}</span>
               {health.data && (
                 <span className="srOnly">
-                  {copy.checkedAt}: {health.data.checkedAt} UTC
+                  {copy.checkedAt}: {formatUtc(health.data.checkedAt)}
                 </span>
               )}
             </button>
+            <span id="service-health-status" className="srOnly" role="status">
+              {serviceStatus}
+            </span>
             <LanguageSelector />
             <label className="themeControl">
               <span className="srOnly">{copy.theme}</span>

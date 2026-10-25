@@ -1,5 +1,107 @@
 # Product daily-source readiness
 
+## 2026-10-15 independent-investor decision and supported-route proof
+
+The user explicitly chose one independent simulated investor per account. Do not
+pool daily quantities across experiments or ask this scope question again.
+The former ownership question below is resolved; source qualification is not.
+Four new tests include six actual disposable SQL/API accounts with matching
+deterministic inner order IDs, paused next-day instructions and a fresh manager.
+Resuming one leaves the other five journals/statuses unchanged; completed journals
+match an uninterrupted baseline and contain no duplicate fills.176related tests
+PASS/1optional historical-archive SKIP. Evidence is synthetic-input account
+isolation and manager reconstruction, not actual current-source/forward admission.
+
+No generalized declaration ledger was added: the supported EOD route remains one
+instruction/security/day with conditional STAR100000 per-order fill checks. An
+applicable cumulative-limit policy is account/security/exchange-date scoped, but
+correct rule dates, local admission semantics and complete source facts still
+need qualification. No real verifier registration, cap relaxation, historical
+methodology change, cross-account grouping or source-rights approval follows.
+
+## 2026-10-14 clarification: reachable fills versus investor aggregate semantics
+
+[Four synthetic regression cases and independent review](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-handoff-and-star-boundary/README.md>)
+refine the earlier aggregate-gap finding. The currently supported normal
+single-account EOD path emits one effective instruction per security/day; with
+source-qualified STAR100000 per-order rules, fills in this path cannot exceed
+500000. Oversize intents can be locally ACCEPTED before next-day rules cancel
+them, so this does not certify the notice's declaration-plus-filled investor limit.
+Do not invent a cross-account aggregate ledger before simulated investor ownership
+and local ACCEPTED semantics are explicit. The production verifier still must
+qualify the correct effective-dated maximum, not trust an arbitrary frame field.
+Fresh in-memory deterministic replay is not durable restart. No2026source was
+admitted, no actual bad fill was demonstrated, and true-forward remains NOT_RUN.
+
+## 2026-10-14 STAR control reveals a separate daily-buy constraint
+
+The original [688622 implementation notice,2026--025](https://static.cninfo.com.cn/finalpage/2026-04-29/1225239101.PDF)
+is now retained and fully visually inspected. It provides April29 full-day
+suspension, April30 resumption/*ST entry, unchanged20% STAR price limits and no
+entry into the SSE risk-warning board. It also specifies a500,000-share daily
+investor buy ceiling including filled and outstanding uncancelled buys plus the
+new order; this is not the existing100,000-share STAR per-order ceiling.
+
+[Private original, receipt, page images and tested event reconciliation](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-star-st-control/README.md>)
+pin PDF SHA256`80a6e0aea9ff3f791707c3c29c167cfa3e9c2f4a949e644e6e8af54bcfbb6ed4`,
+response-completed2026-10-14T05:30:35.525376Z and event manifest
+`51ae0540def75e7f9fa060b4e71a8253d7926f2bdebd824e1f165bcaccaeaed4`.
+Exact publication time is unknown. Existing SSE entry HTML was reused unchanged.
+No subsequent exit/no-other-event completeness is inferred.
+
+Source review exposed an additional admission gap: resolved rules and execution
+currently enforce per-order quantity, not this durable investor/security/day gross
+buy aggregate. Selection-time ST filtering alone does not cover overnight status
+changes. Do not change100,000 to500,000 or sum unrelated simulated experiments by
+Windows user. Establish applicable rule dates and simulated investor scope, then
+test filled/open/new reservations, partial fills/cancel, duplicate events, restart
+and day rollover before admission. This does not imply an actual offending fill:
+2026 candidates remain conservative_no_fill and no real verifier is registered.
+Current daily coverage, permission and true after-start acceptance remain PARTIAL.
+
+## 2026-10-14 dated suspension control source recovered
+
+The earlier603400 September22 PDF-binary gap is closed through the issuer's
+official [CNINFO2026-048](https://static.cninfo.com.cn/finalpage/2026-09-22/1225573898.PDF).
+A subsequent [CNINFO2026-051](https://static.cninfo.com.cn/finalpage/2026-09-30/1225588894.PDF)
+provides the actual endpoint: this suspension began at September15open, last
+suspended dateSeptember29 inclusive, and resumptionSeptember30open. Root and
+independent reviewer checked all four pages, including the distinct table columns
+and resumption text. This corrects any indefinite extension of the earlier
+continue-suspended notice; it does not show there were no other restrictions.
+
+Original PDF SHA256 values respectively:
+`5340cd1eeeaf0384177f05a4729b301cfbd83a98e36b5b5ab38ee84b94c5ff2c` and
+`9d13172940225aa643dccd5a26278050d7b689ea5a0bb823044ab9d765f71395`.
+Actual response-completed UTC:2026-10-14T04:40:43.899916Z and04:40:45.174431Z.
+Exact publication timestamps remain unknown; document dates are not receipt times.
+[Originals, event reconciliation and eleven offline checks](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-suspension-control/README.md>)
+remain outside Git. Deterministic event manifest SHA256:
+`999988a1fa430538528748967b2fa00888ab9123d02a4794aac42ddf1694c2ce`.
+
+The retained September22 vendor candidate still says VENDOR_SUSPENDED and
+execution_eligible=false, with its existing parser-label warning. This one event
+corroborates that status, not general vendor qualification. No old receipt was
+rewritten, source promoted, session started or historical forward timestamp
+invented. Complete daily coverage across the six controls and other authority
+types remains missing; real ContextVerifier remains unregistered.
+
+## 2026-10-14 targeted correction lead rejected
+
+One exact cached 300147 lead, official CNINFO59214209 (issuer2011-021), was
+retrieved and its complete sole page visually checked. It corrects the March28
+board resolution2011-016's equity-transfer valuation reference, **not** the
+March offline-share listing table or May distribution table. This ends that
+specific hypothesis; it neither proves absence of another correction nor closes
+300147/000425 source economic integrity. Do not repeat this request or the earlier
+completed query windows without genuinely new evidence.
+
+[Private receipt and complete-page review](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-300147-correction-review/README.md>)
+pin the official URL, cached publication time, HTTP200 retrieval timestamp and
+PDF SHA256 `2241f3efb33f90eaf3874074fc05fb7cca6a51986d2dbe09fba1c0d9d07c6134`.
+No source-admission, frozen-research or original financial-data change. Continue
+independent product workflow/quality work rather than repeat exhausted source leads.
+
 Verified 2026-09-22 for U5/U7. This is a new product-source check, not a change to
 v1.1 frozen data, provider acceptance, methodology, or Official OOS.
 Machine evidence: [bounded probe report](../../.product/evidence/baostock-public-probe-20260922.json).
@@ -7,7 +109,82 @@ Machine evidence: [bounded probe report](../../.product/evidence/baostock-public
 ## Result
 
 **PARTIAL: free public single-security EOD access works; forward acceptance has
-not run.** No source permission/payment action is currently required from the user.
+not run.** Explicit data-use rights evidence is still needed before an executable
+forward feed can be accepted. No permission request, payment or credential action
+has been initiated.
+
+On 2026-09-24, the shared rule resolver was tightened to require an explicit
+`is_tradeable=True` as well as `is_suspended=False` before returning
+`executable=True`. Unknown or false tradeability now fails closed. This is a
+software guard, **not** confirmation of a 2026 status authority, licensed feed,
+or forward execution. The separate 2026 candidate rules remain
+`conservative_no_fill=True`; `RULE_AUTHORITY_2026 = PARTIAL`.
+
+### Written rights clarification needed (unsent)
+
+**2026-10-25 (Australia/Sydney): the human authorized this BaoStock inquiry only**
+with “允许仅咨询使用范围”. This authorizes asking about the use described below,
+not using the data, buying a service, signing a contract or sharing credentials.
+No inquiry has been sent. Gmail and Outlook Email were found available but not
+connected; the sending channel/account remains to be selected. Reuse this approval
+after a suitable channel is confirmed; do not ask for the same scope approval again.
+
+Prepared email (no attachments, CC or project/account data):
+
+**To:** `baostock@163.com`
+
+**Subject:** 咨询 A 股日终数据在个人本地研究与模拟交易中的使用范围
+
+> BaoStock 团队您好：
+>
+> 我正在开发一个个人使用的本地单用户研究工具，拟使用 BaoStock 提供的沪深 A 股日终数据，用于本地缓存、研究回测、生成带日期的模拟调仓计划，以及保存模拟订单和成交记录。
+>
+> 上述用途不连接真实券商、不发送真实订单，不再分发行情或提供公共数据服务。
+>
+> 请问：
+>
+> 1. BaoStock 现有条款及上游数据授权是否覆盖上述用途？
+> 2. 可依据哪些书面条款或授权说明？烦请提供链接或文件。
+> 3. 是否有署名、缓存期限、请求频率或其他使用限制？
+>
+> 本次仅咨询使用范围，不涉及购买或签约。谢谢！
+
+The official-home search result rechecked on this date lists the recipient above;
+the direct web text extraction returned only the page shell. No delivery or reply
+is inferred from preparing the message. Preserve the actual send receipt and
+provider reply when available. Source completeness and real after-start acceptance
+remain separate gates even if the provider confirms this use.
+
+The [SSE 2026 rule, §5.1.3](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/c_20260424_10816482.shtml)
+and [SZSE 2026 rule, §5.1.3](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf)
+do not themselves grant this product a feed-use license. The official
+[SSE service page](https://www.sse.com.cn/transparency/services/) lists
+`marketservice@sse.com.cn` for market-data licensing questions; the official
+[SZSE contact page](https://www.szse.cn/English/about/contactus/index.html)
+lists `infoservices@cninfo.com.cn` for market-data authorization. BaoStock's
+[official home](https://www.baostock.com/) lists `baostock@163.com` for support.
+No inquiry has been sent, no permission inferred, and no commercial purchase
+authorized. The exact question for a rights holder/provider is whether its
+2026 A-share delayed/EOD feed, including both exchanges, may be stored and
+used in a **private single-user local application** to create dated simulated
+plans and persistent paper fills, without redistribution or real orders; ask
+for the applicable written terms and any upstream exchange authorization.
+Until that is documented, candidate receipts remain non-executable.
+
+The [SZSE website legal notice](https://www.szse.cn/application/laws/)
+describes noncommercial browsing and downloading of **that website's** content.
+The [2026 SZSE Trading Rules, §5.1.3](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf)
+separately require permission to use exchange trading information. The
+website notice does not identify BaoStock's upstream feed or explicitly grant
+this application's persistent EOD-plan and simulated-fill use. This is a
+scope inference, not a legal determination; keep the rights gate unresolved
+until written terms cover the actual source and use. A bounded recheck on
+2026-09-24 found no such authorization.
+
+The historical paper-account form and guided research cost hint now explicitly
+identify user-entered broker commission as a simulation assumption, not a
+verified broker quote. This product-copy correction does not resolve current
+broker pricing or the new-market source-rights gap above.
 
 Official BaoStock 0.9.4, loaded from its checksum-verified PyPI wheel without
 installing into project dependencies, successfully logged into its documented
@@ -48,6 +225,19 @@ no EOF guard; the precise upstream cause of the bulk failure is unestablished.
   documentation supports the scoped private local-analysis trial; redistribution
   and commercial data rights have not been established. No market rows go to Git,
   a public deployment or published release attachments.
+
+The [SSE 2026 Trading Rules, §5.1.3](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/10816482/files/959da0158c65434daa8a43a6e32be7ba.docx)
+and [SZSE 2026 Trading Rules, §5.1.3](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf)
+reserve exchange trading-information use and dissemination to permitted users.
+The SZSE rule expressly says that trading information belongs to the exchange
+and may not be used or disseminated without permission. The [SZSE website
+notice](https://www.szse.cn/application/laws/) permits noncommercial browsing
+and downloading of website content, but that does not itself resolve the more
+specific trading-information permission or BaoStock's upstream rights. This is
+a source-rights gap, **not** a finding that the existing private, bounded trial
+was unlawful. Do not substitute an exchange webpage scrape for the candidate
+provider or promote BaoStock observations to executable forward authority on
+the basis of public readability, SDK licensing, or this website notice alone.
 
 The rendered site retrieves its public documentation with POST `{}` to
 `/helpdocs/api/markdown/<document>` and its disclaimer with GET
@@ -141,6 +331,169 @@ ST/status fields generally to official effective-dated authority, establish
 current universe/calendar/rules/actions, or satisfy a
 post-session-start forward receipt.
 
+### Current exchange trading-rule evidence (2026-09-23)
+
+The [SSE 2026 Trading Rules notice](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/c_20260424_10816482.shtml)
+is 上证发〔2026〕41号, published 2026-04-24 and effective **2026-07-06**;
+it repeals the 2023 revision on that date. The [SZSE 2026 Trading Rules](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf)
+(深证上〔2026〕551号, published 2026-04-24) likewise take effect
+**2026-07-06** and repeal the 2023 revision. Publication is not the
+effective trading date. [SSE's implementation explanation](https://www.sse.com.cn/aboutus/mediacenter/hotandd/c/c_20260424_10816474.shtml)
+explicitly changes Main Board risk-warning share price limits from 5% to 10%;
+SZSE rule 3.3.13 sets Main Board 10% and ChiNext 20%, with its risk-warning
+section no longer specifying a 5% exception. The [SZSE risk-warning guide](https://www.szse.cn/lawrules/service/member/t20260630_621404.html)
+also describes the Main Board limit change. SSE STAR and SZSE ChiNext remain
+20% in their respective rule text. This is source discovery, **not** accepted
+2026 execution authority.
+
+Original official attachments are stored outside Git under
+`/home/yuchen/data/product_source_evidence/2026_rules/`. Local save times
+below are UTC filesystem timestamps, not independently measured HTTP receipt
+times; SHA-256 was rechecked on 2026-09-23 at 17:48 UTC.
+
+| Official attachment | Saved UTC | SHA-256 |
+|---|---|---|
+| [SSE rules DOCX](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/10816482/files/959da0158c65434daa8a43a6e32be7ba.docx) | 2026-09-23 17:45:31 | `fc922c433438b2636cb631eab25cca405209712acbb6aaded768c45456ff8888` |
+| [SSE deferred clauses DOCX](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/10816482/files/f6bd756cdd8248f49b7795f62e73237f.docx) | 2026-09-23 17:45:31 | `f4a0d0976a01e3e95f82460170900993824b70d91183e42d09e13ba10a9958c5` |
+| [SZSE rules PDF](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf) | 2026-09-23 17:45:29 | `9b66f8b0db70f84a25ef1ccb4ee2351001724e408117552d75f6d8993483c586` |
+
+The SSE deferred-clause attachment concerns specified block-trade VWAP and
+16:00–17:00 provisions, not an extension of the old 5% Main Board limit.
+The historical `cn-a-2010-2025.6` rule version has open-ended 2023 periods
+and Main Board ST limit 5%; it is frozen historical input, **not** a valid
+2026 product-forward rule version. A read-only diagnostic in the running
+backend resolved a hypothetical 2026-09-22 SSE Main ST status to
+`cn-a-2010-2025.6:SSE_MAIN-2023-04-10`, limit `0.05`; this is proof of the
+gap, not an actual security classification or simulated order. Do not change
+its serialized content or silently resolve 2026 sessions with it. A separately
+versioned, effective-dated candidate mapping now covers the four boards from
+2026-07-06 and requires an injected cost schedule. It deliberately sets
+`conservative_no_fill=true` for every rule; it cannot authorize even a normal
+paper fill. Historical rule values and frozen files were not edited. Their
+`frozenset` order-type JSON serialization was nondeterministic across processes; the shared
+serializer now sorts order types, and four independent process checks produced
+the same historical model checksum
+`28a0123ce3d9ebf522f59f0bf69de8e24d1fb0a7cb9da0a795a8404c535a250b`.
+The exact official 2026 rule source and transition have focused tests, but
+current master/calendar/ST/suspension/actions/cost authority and executable
+status/order constraints still require audit and implementation before any
+candidate bar can be promoted. `RULE_AUTHORITY_2026 = PARTIAL`; all existing
+candidate receipts remain `execution_eligible=false`.
+
+### Current A-share cost components (2026-09-23)
+
+The [ChinaClear fee catalog](https://www.chinaclear.cn/zdjs/fbzyls/service_tlist.shtml)
+currently lists separate Shanghai and Shenzhen schedules updated on
+2026-01-01. Both official tables specify ordinary A-share transfer fees of
+**0.01‰ on each side** (`0.00001` of turnover), securities stamp duty of
+**1‰ on the seller, halved** (`0.0005`), exchange handling fees of
+**0.0341‰ on each side**, and regulatory fees of **0.02‰ on each side**.
+The [SSE investor fee guide](https://one.sse.com.cn/onething/gptz/) states
+the handling and regulatory fees are included in broker commission; adding
+them again to the existing commission model would double-count them. The
+[SZSE 2026-01 schedule](https://www.szse.cn/marketServices/deal/payFees/)
+independently lists the same handling and regulatory rates. The
+[tax authority's 2023 notice](https://shanghai.chinatax.gov.cn/zcfw/zcfgk/yhs/202308/t468451.html)
+is marked effective and confirms the halving from 2023-08-28.
+
+The two ChinaClear originals are stored outside Git under
+`/home/yuchen/data/product_source_evidence/2026_costs/`. These are local save
+times in UTC, not independent HTTP receipt timestamps. The archive was
+verified as 10-page PDF files and checksummed after download:
+
+| Official schedule | Saved UTC | SHA-256 |
+|---|---|---|
+| [Shanghai 2026 fee PDF](https://www.chinaclear.cn/zdjs/fbzyls/202512/922adc26c2ff4865930c7fb77688bb8a/files/%E4%B8%8A%E6%B5%B7%E5%B8%82%E5%9C%BA%E8%AF%81%E5%88%B8%E7%99%BB%E8%AE%B0%E7%BB%93%E7%AE%97%E4%B8%9A%E5%8A%A1%E6%94%B6%E8%B4%B9%E5%8F%8A%E4%BB%A3%E6%94%B6%E7%A8%8E%E8%B4%B9%E4%B8%80%E8%A7%88%E8%A1%A8.pdf) | 2026-09-23 18:08:30 | `84a99e563cb8e84e264c88e3bea2df5f4ac50b1e95330417ec30e2b2566d862f` |
+| [Shenzhen 2026 fee PDF](https://www.chinaclear.cn/zdjs/fbzyls/202512/a59388fbfa714c5fa546784891a42e30/files/%E6%B7%B1%E5%9C%B3%E5%B8%82%E5%9C%BA%E8%AF%81%E5%88%B8%E7%99%BB%E8%AE%B0%E7%BB%93%E7%AE%97%E4%B8%9A%E5%8A%A1%E6%94%B6%E8%B4%B9%E5%8F%8A%E4%BB%A3%E6%94%B6%E7%A8%8E%E8%B4%B9%E4%B8%80%E8%A7%88%E8%A1%A8.pdf) | 2026-09-23 18:08:22 | `dff4a06ce20e180f4a85ddae138211dcf7dd3246fb84775453cfd21cbaec6573` |
+
+This verifies the current **statutory components for ordinary A-share
+auction trades**, not a universal broker commission. The existing `0.0003`
+commission and CNY 5 minimum are configurable simulation assumptions, not
+rates certified by ChinaClear. `candidate_2026_cn_a_costs` now takes those
+assumptions explicitly and returns a separately labeled 2026 candidate cost
+schedule; exchange handling and regulatory fees are not charged again on top
+of the assumed inclusive brokerage commission. Product-facing brokerage
+assumption disclosure and full current execution authority remain `PARTIAL`;
+all candidate rules still forbid fills. This does not retroactively certify
+or edit the frozen v1.1 historical transfer-fee allowance.
+
+### Bounded current security-master sample (2026-09-23)
+
+The official [SSE stock list](https://www.sse.com.cn/assortment/stock/list/share/)
+uses its public `https://query.sse.com.cn/sseQuery/commonQuery.do` endpoint.
+Four exact-code requests used `sqlId=COMMON_SSE_CP_GPJCTPZ_GPLB_GP_L`,
+`STOCK_CODE` below, `STOCK_TYPE=1` (Main) or `8` (STAR),
+`COMPANY_STATUS=2,4,5,7,8`, pagination and the page referer. Each response
+contained exactly one matching A-share row with no delisting date. The
+[SZSE official stock-list XLSX](https://www.szse.cn/api/report/ShowReport?SHOWTYPE=xlsx&CATALOGID=1110&TABKEY=tab1)
+contained 2,902 A-share rows (1,494 Main, 1,408 ChiNext) and exactly one row
+each for `000001` and `300750`. All originals are outside Git under
+`/home/yuchen/data/product_source_evidence/2026_master/`:
+
+| Snapshot | Listed identity / board / listing date | Saved UTC | SHA-256 |
+|---|---|---|---|
+| `SSE_600000_QUERY_20260923.json` | 浦发银行 / Main / 1999-11-10 | 18:12:09 | `bd2e4c7c9255ce516ab36cf148320419977aaae00e75a207f449dd910b88ab05` |
+| `SSE_688001_QUERY_20260923.json` | 华兴源创 / STAR / 2019-07-22 | 18:13:57 | `c58d3146bec9591fd6476a8f04208396c138b9aac95dd8ce5587c55e4e0a92c3` |
+| `SSE_688622_QUERY_20260923.json` | *ST禾信 / STAR / 2021-09-13 | 18:14:12 | `11afd2ba67ddf84fc8539f2a32f717d9733d001d2aaa2b9e3519c11b334e75bd` |
+| `SSE_603400_QUERY_20260923.json` | 华之杰 / Main / 2025-06-20 | 18:14:22 | `41087920a69b34499b8f5b8adf2124030109ad8a18c15b6aae6ba1bca1202878` |
+| `SZSE_CURRENT_LIST_20260923.xlsx` | 000001 平安银行 / Main / 1991-04-03; 300750 宁德时代 / ChiNext / 2018-06-11 | 18:12:20 | `8354521bc2a166d47c0411c6f88ab733b76a90a31d4a45aef61765415cac5110` |
+| `SSE_MAIN_CURRENT_20260923.json` | Current Main list: 1,702/1,702 rows, one page | 18:16:37 | `472cb64bd91e598300904f753e1ca17f8a06e331733230256689396911b8293d` |
+| `SSE_STAR_CURRENT_20260923.json` | Current STAR list: 618/618 rows, one page | 18:16:48 | `d7057d578631766a47f9a05ea028cf41d7533d9683190c68e26ce6385a251dc1` |
+
+The two SSE current-list responses had no duplicate codes across 2,320 rows;
+the four targeted SSE identities agreed with that broader snapshot. Together
+with the SZSE XLSX, these sources expose 5,222 listed inventory rows, not 5,222
+ordinary A shares. The October 14 type reconciliation below identifies 5,221
+ordinary A shares and one CDR (`689009`) in those retained inventory rows.
+This is a **current inventory**, not a complete 2026 effective-dated universe:
+the exchange requests were separate, no historical delisting/renaming chain
+was collected, and current counts must not be projected backward.
+
+The [SSE's 2026-04-29 notice](https://www.sse.com.cn/disclosure/magin/announcement/ssereport/c/c_20260429_10817106.shtml)
+explicitly says `688622` became subject to delisting risk warning on
+**2026-04-30**. Its archived HTML SHA-256 is
+`03e75103555a6211599702c2b261d76bada0bc8655d4a3715ee8ba10dc551a54`
+(saved 2026-09-23 18:15:06 UTC). The current list's `*ST` name corroborates
+the present label, not a complete effective-dated history. Likewise, `603400`
+remains listed in the master while its separate official suspension notice and
+vendor row say it was not trading on 2026-09-22. Listing and trading status
+must not be conflated.
+
+**Sample identity 6/6 is verified at retrieval, not a complete 2026 point-in-time
+master or an as-of-2026-09-22 lifecycle proof.** Targeted changes, delistings,
+ST exits/entries and suspensions still require dated evidence for the intended
+execution interval. `CURRENT_MASTER_AUTHORITY = PARTIAL`; the raw candidates
+remain non-executable. The historical pilot master was not refetched or edited.
+
+### Current exchange calendar schedule (2026-09-23)
+
+The [SSE 2026 closure notice](https://www.sse.com.cn/disclosure/announcement/general/c/c_20251222_10802507.shtml)
+(上证公告〔2025〕45号) and [SZSE 2026 closure notice](https://www.szse.cn/disclosure/notice/t20251222_618087.html)
+(深证会〔2025〕481号), both dated 2025-12-22, independently list
+2026-09-25 through 2026-09-27 as Mid-Autumn closure and 2026-09-28 as
+reopening. As of this checkpoint, 2026-09-24 is only a **scheduled** session;
+it has not completed or produced an after-start receipt. The old accepted
+calendar ends 2025-12-31 and does not prove a complete 2026 session list.
+Later exceptional closures or exchange notices still require checking before
+the product calendar can become execution authority.
+
+The exchanges' later, dated [SSE notice of 2026-09-17](https://www.sse.com.cn/disclosure/announcement/general/c/c_20260915_10832273.shtml)
+(上证公告〔2026〕22号) and [SZSE notice of 2026-09-17](https://www.szse.cn/www/disclosure/notice/general/t20260917_622911.html)
+repeat that closure and also list the 2026-10-01 through 2026-10-07 National
+Day closure with 2026-10-08 reopening. Their original HTML was saved off Git
+at `/home/yuchen/data/product_source_evidence/2026_calendar/`: SSE SHA-256
+`779cbf7cc7ab2c4b34db17ceee29e266bc483e075860d8313b85c1d5d0f307bc`
+(2026-09-23 18:32:44 UTC); SZSE SHA-256
+`7b0c4264d27f4ba14a1904ab31cb3b2b870e4e68d6b8d8c0f6cf4254c1a045a4`
+(18:32:45 UTC). These are local save times, not live session receipts.
+
+At 2026-09-24 18:27 UTC, the official SSE notice and SZSE notice were checked
+again: both still specify 2026-09-25 through 09-27 as closed and 09-28 as
+the scheduled reopening. The next possible after-start completed-session
+receipt is therefore no earlier than the 09-28 session's data publication,
+and only if lawful source rights and all execution authorities are accepted
+first. A scheduled opening is not itself a receipt or forward acceptance.
+
 1. **DONE for the bounded raw candidate path.** A product-owned, user-triggered
    per-security EOD update job uses
    existing BaoStock integration/Decimal records and a supervised timeout. Fetch
@@ -173,3 +526,67 @@ requires unavailable credentials/payment, or no lawful workable source remains
 after the bounded alternatives. None was observed in this probe. Cross-board
 coverage, incremental durability, new-event receipt and actual forward processing
 are still engineering/elapsed-time acceptance work, not completed capabilities.
+
+## 2026-10-02 holiday and rights checkpoint
+
+The official [SSE September 17 notice](https://www.sse.com.cn/disclosure/announcement/general/c/c_20260915_10832273.shtml)
+and [SZSE annual notice](https://www.szse.cn/disclosure/notice/t20251222_618087.html)
+were rechecked on October 2 (Australia/Sydney). Both schedule the A-share
+market closed October 1–7, reopening October 8. This is a scheduled reopening,
+not an observed session or provider receipt. With no accepted, deliberately
+started forward session, a new after-start completed-session EOD receipt cannot
+be established during this closure; the next scheduled opportunity is no
+earlier than the October 8 session and its later data publication. There was
+no new provider request, authority promotion or simulated fill. The written
+source-use rights, current master/calendar/ST/actions/rules and durable
+post-start receipt gates remain unresolved.
+
+## 2026-10-14 retained master type closure — not daily execution authority
+
+The retained September 23 lists contained 5,222 identities. Reusing 572 existing
+official STAR company overviews left 46 explicit type gaps. A single bounded
+batch obtained all 46 missing overviews from the same official SSE
+`https://query.sse.com.cn/commonQuery.do` surface, query
+`COMMON_SSE_CP_GPJCTPZ_GPLB_GPGK_GSGK_C`, with the exact company code. Each response
+matched its inventory code, board and listing date; all 46 explicitly reported
+`SEC_TYPE=科创A`. There was no denial, redirect, failure or retry. The original
+body, URL, requested/completed/local-save UTC and SHA-256 remain outside Git.
+
+The reconciled inventory has **5,221 ordinary A shares, one CDR, zero unresolved
+instrument types**. `689009` is explicitly `科创CDR`, not an ordinary A share;
+its retained overview SHA-256 is
+`20dccbf30cbcb04b23f7b154f1788f946088af8d7e742375ea552a8dca3193b3`.
+This corrects the earlier inventory wording; it does not alter frozen data or
+claim all inventory members are tradeable. The 186 listings after the legacy
+Pilot cutoff (2024-07-31) also show why its master fetcher cannot be reused
+unchanged for current product acquisition.
+
+Private evidence: [type reconciliation and limitations](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-real-source-inventory/README.md>).
+Cached report SHA-256 `4feb6658e4a2cf62b0ff7dceec600655c78f8658e681049ad718c67732957423`;
+reconciliation SHA-256 `0e883464a3dbfa685fb56101da6fd5b164609f3282b4d852941347ef069f4b32`.
+Normal and optimized-Python reconstruction agree. The acquired batch used the
+preserved v1 script; independent review identified missing pre-request crash
+markers. Its successor now writes an exclusive attempt before opening a request;
+an offline RED-to-GREEN regression verifies no reopening after interruption.
+The successful batch was not restarted, and no attempt timestamp was backfilled.
+
+These September 12 / September 23 / October 14 records do **not** form a common
+as-of snapshot. Legacy pre-response retrieval labels cannot become actual receipt
+times; provider publication time remains unknown. No ST/non-ST classification is
+derived from these names, and absent events never mean no events. The ten required
+execution authorities remain separate:
+
+| Authority | Remaining evidence needed before forward admission |
+|---|---|
+| SECURITY_MASTER | Effective-dated listing/type/delisting coverage for the intended session, not this mixed-date inventory alone. |
+| SSE_ST / SZSE_ST | Accepted dated status transitions and affirmative interval completeness. |
+| SUSPENSIONS | Dated suspension/resumption facts and covered no-event intervals; listing is not tradeability. |
+| ADJUSTMENTS / CORPORATE_ACTIONS | Applicable dated actions, factors and coverage, independently reconciled with actual raw data. |
+| RAW_OHLCV | Accepted actual raw receipts and source-use rights; the prior six candidate bundles are not admission. |
+| CALENDAR | Actual completed-session coverage; a published holiday schedule alone is insufficient. |
+| MARKET_RULES / TRANSACTION_COSTS | Accepted effective-dated current rules/costs; frozen historical rules cannot silently extend forward. |
+
+This is a list of remaining obligations, not a fresh acceptance audit of the other
+authorities. Production still registers no real `ContextVerifier`.
+`CURRENT_MASTER_AUTHORITY=PARTIAL`, `SOURCE_ADMISSION=NO`,
+`REAL_FORWARD_ACCEPTANCE=NO`, `PRODUCT_GOAL_COMPLETE=false`.

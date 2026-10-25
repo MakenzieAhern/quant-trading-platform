@@ -1,3 +1,8 @@
+import type {
+  CurrentDatasetQuality,
+  CurrentSourceIntegrity,
+} from "../product/experiments/types";
+
 export type ResearchPeriod =
   | "DEVELOPMENT"
   | "VALIDATION"
@@ -14,6 +19,8 @@ export interface ResearchPage<T> {
 
 export interface ResearchDataset {
   dataset_id: string;
+  current_dataset_quality?: CurrentDatasetQuality;
+  current_source_integrity?: CurrentSourceIntegrity;
   provider: string;
   provider_version: string;
   retrieval_timestamp: string;
@@ -40,6 +47,8 @@ export interface ResearchStrategy {
 
 export interface ResearchRun {
   run_id: string;
+  current_dataset_quality?: CurrentDatasetQuality;
+  current_source_integrity?: CurrentSourceIntegrity;
   status: string;
   period_kind: ResearchPeriod;
   git_commit: string;
@@ -73,6 +82,10 @@ export interface ResearchPoint {
   trading_date: string;
   value: string;
 }
+
+export type NullableResearchPoint = Omit<ResearchPoint, "value"> & {
+  value: string | null;
+};
 
 export interface MonthlyReturn {
   month: string;

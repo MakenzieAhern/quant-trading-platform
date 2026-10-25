@@ -3,6 +3,7 @@ services:
   backend:
     environment:
       APP_ENV: production
+    command: !reset null
     volumes: !override
       - ./data:/workspace/data:ro
       - ${RESEARCH_DATA_ROOT:-./data/research}:/workspace/research:ro
@@ -11,5 +12,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.release
+    command: !reset null
     volumes: !reset []
     environment: !reset {}

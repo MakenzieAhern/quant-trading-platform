@@ -19,7 +19,11 @@ router = APIRouter(prefix="/market-updates", tags=["market-updates"])
 market_update_manager = MarketUpdateManager(
     SessionFactory,
     engine,
-    MarketReader(ExperimentDatasetRegistry(get_settings().research_data_path)),
+    MarketReader(
+        ExperimentDatasetRegistry(
+            get_settings().research_data_path, get_settings().product_data_path
+        )
+    ),
     get_settings().product_data_path / "market-candidates",
 )
 Key = Annotated[

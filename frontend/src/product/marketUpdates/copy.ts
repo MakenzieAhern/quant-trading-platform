@@ -19,22 +19,29 @@ const en = {
   submit: "Request selected raw data",
   submitting: "Submitting request…",
   confirm:
-    "I understand this starts bounded provider requests for private local analysis only; it does not approve data for research or trading.",
+    "I understand this starts bounded source-evaluation requests. Data-use rights for this app remain unverified; these observations cannot authorize research, forward simulation or trading.",
   validation:
     "Check 1–20 distinct canonical IDs and a valid 1–366-day date range inside the displayed boundary.",
   storage:
-    "Browser storage is unavailable or full. This request has not been submitted without a saved identity. Keep this page open, check storage and retry.",
+    "Browser storage is unavailable or full. A new request needs a saved identity before submission. Check task history for any confirmed submission, keep this page open, and retry after storage is available.",
   saved:
-    "One request draft and identity is shared by tabs in this browser; another tab can replace it. Submitted tasks remain on the server. Unchanged resubmissions reuse the same identity.",
+    "Tabs in this browser share one request draft. Retry an uncertain response with the same identity; after a confirmed response, a new explicit request uses a new identity. Submitted tasks remain on the server.",
   loading: "Loading saved state…",
   refresh: "Refresh",
-  loadFailed:
-    "The saved state could not be loaded. This read does not start provider requests; existing tasks may still be running. Refresh to check again.",
+  permission:
+    "The service denied this request. Check access permissions before retrying; do not bypass a source restriction.",
+  timedOut:
+    "The request timed out. Check service state and saved task history before retrying unchanged inputs.",
+  offline:
+    "The service could not be reached. Check its status and saved task history, then retry.",
   unavailable: "Acquisition unavailable",
   history: "Update task history",
   empty: "No update tasks yet.",
   open: "Open task",
   task: "Task",
+  missingTaskHelp:
+    "Choose another task from history below, or use the request form above if history is empty.",
+  backToRequests: "Back to requests and task history",
   created: "Created",
   status: "Status",
   requests: "Completed provider requests",
@@ -72,7 +79,7 @@ const en = {
   source: "Provider source and terms",
   terms: "Use terms",
   termsHelp:
-    "Private local analysis trial only. Redistribution and commercial data rights are not established; the software license does not grant a data license.",
+    "Private local-analysis trial only; exchange-data rights for this app, including forward simulation, remain unverified. Public SDK access and its software license do not grant a data license.",
   limits: "Bounded request policy",
   limitSecurities: "Maximum securities",
   limitDays: "Maximum calendar days",
@@ -84,6 +91,9 @@ const en = {
   rowCount: "Rows in receipt",
   provider: "Provider",
   parser: "Parser version",
+  legacyReadOnly: "Legacy receipt · read-only",
+  parserLabelMismatch:
+    "The server marked a parser-label mismatch on this retained receipt. Its original label and evidence remain unchanged for read-only inspection; it is not eligible for execution or forward admission. This does not establish source rights or financial acceptance.",
   sha: "Manifest SHA-256",
   rawSha: "Raw response SHA-256",
   snapshot: "Archive master snapshot (not current authority)",
@@ -147,22 +157,25 @@ const zh: typeof en = {
   submit: "请求所选原始数据",
   submitting: "正在提交请求…",
   confirm:
-    "我理解此操作将启动仅供本地私人分析的有限供应商请求，不会批准数据用于研究或交易。",
+    "我理解此操作将启动有限的来源评估请求。本应用的数据使用权仍未核实；这些观察值不能据此用于研究、前向模拟或交易。",
   validation:
     "请检查 1–20 个不重复的规范证券标识，以及显示边界内有效的 1–366 日区间。",
   storage:
-    "浏览器存储不可用或已满。未在缺少持久请求标识的情况下提交。请保留此页面，检查存储后重试。",
+    "浏览器存储不可用或已满。新请求须先保存标识才能提交。请在任务历史核对已确认的提交，保留页面，并在存储恢复后重试。",
   saved:
-    "此浏览器的标签页共享一份请求草稿与标识，其他标签页可能替换它。已提交任务保存在服务器。输入不变时重新提交会使用同一标识。",
+    "此浏览器的标签页共享一份请求草稿。结果未确认时，用同一标识重试；收到确认后，下一次明确请求会使用新标识。已提交任务保存在服务器。",
   loading: "正在读取已保存状态…",
   refresh: "刷新",
-  loadFailed:
-    "无法读取已保存状态。此读取不会启动供应商请求，但已有任务可能仍在运行。请刷新后检查。",
+  permission: "服务拒绝了此请求。请先核对访问权限；不得绕过数据来源的限制。",
+  timedOut: "请求已超时。请先检查服务状态及已保存任务历史，再用不变输入重试。",
+  offline: "无法连接服务。请先检查服务状态及已保存任务历史，然后重试。",
   unavailable: "当前无法抓取",
   history: "更新任务历史",
   empty: "尚无更新任务。",
   open: "打开任务",
   task: "任务",
+  missingTaskHelp: "请从下方历史选择其他任务；若历史为空，请使用上方请求表单。",
+  backToRequests: "返回请求与任务历史",
   created: "创建时间",
   status: "状态",
   requests: "已完成供应商请求",
@@ -197,7 +210,7 @@ const zh: typeof en = {
   source: "供应商来源及使用条款",
   terms: "使用条款",
   termsHelp:
-    "仅供本地私人分析试用，尚未确立再分发及商业数据使用权；软件许可证不等于数据许可证。",
+    "仅作本地私人分析试用；本应用使用交易所数据的权利（包括前向模拟）仍未核实。公开 SDK 可访问及其软件许可证均不构成数据授权。",
   limits: "有限请求策略",
   limitSecurities: "最多证券数",
   limitDays: "最多自然日数",
@@ -209,6 +222,9 @@ const zh: typeof en = {
   rowCount: "回执行数",
   provider: "供应商",
   parser: "解析器版本",
+  legacyReadOnly: "旧回执仅供只读",
+  parserLabelMismatch:
+    "服务器标记了保留回执的解析器标签不一致。原标签与证据保持不变，仅供只读查看；该回执不能用于执行或前向准入，也不代表来源许可或金融验收通过。",
   sha: "清单 SHA-256",
   rawSha: "原始响应 SHA-256",
   snapshot: "档案证券主表快照（非当前权威）",
@@ -285,8 +301,8 @@ const codes: Record<string, [string, string]> = {
     "请使用含首尾 1–366 个自然日的区间。",
   ],
   DATASET_NOT_MOUNTED: [
-    "The audited historical archive is not mounted. Candidate requests cannot verify the security snapshot.",
-    "尚未挂载已审计历史档案，无法验证证券快照并提交候选请求。",
+    "The frozen historical archive is not mounted. Candidate requests cannot verify the security snapshot.",
+    "尚未挂载冻结历史档案，无法验证证券快照并提交候选请求。",
   ],
   DATASET_INTEGRITY_FAILED: [
     "The archive integrity check failed. Stop and inspect the local data.",
@@ -350,9 +366,14 @@ export function explainUpdateCode(code: string, language: string) {
   );
 }
 export function updateError(reason: unknown, language: string) {
-  if (reason instanceof ApiError && reason.code)
-    return explainUpdateCode(reason.code, language);
-  if (reason instanceof ApiError && reason.status === 422)
-    return language.startsWith("zh") ? zh.validation : en.validation;
-  return language.startsWith("zh") ? zh.safeError : en.safeError;
+  const c = language.startsWith("zh") ? zh : en;
+  if (reason instanceof ApiError) {
+    if (reason.code && codes[reason.code])
+      return explainUpdateCode(reason.code, language);
+    if (reason.status === 401 || reason.status === 403) return c.permission;
+    if (reason.status === 408) return c.timedOut;
+    if (reason.status === 422) return c.validation;
+  }
+  if (reason instanceof TypeError) return c.offline;
+  return c.safeError;
 }

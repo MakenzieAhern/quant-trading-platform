@@ -32,7 +32,7 @@
   padding: 0.65rem;
   color: var(--text);
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--field-border);
   border-radius: 0.4rem;
   width: 100%;
   min-width: 0;
@@ -47,6 +47,7 @@
   display: flex;
   align-items: start;
   gap: 0.6rem;
+  min-height: 40px;
 }
 .updateCheck input {
   margin-top: 0.3rem;
@@ -98,6 +99,13 @@
 }
 .marketUpdates summary {
   cursor: pointer;
+  min-height: 40px;
+  padding-block: 0.5rem;
+}
+.marketUpdates a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
 }
 .updateTableScroll {
   max-width: 100%;

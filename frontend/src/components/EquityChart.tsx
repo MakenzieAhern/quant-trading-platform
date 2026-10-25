@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import type { EquityPoint } from "../types/backtests";
 import { formatDecimal, formatUtc } from "../utils/format";
 
@@ -6,6 +8,7 @@ const HEIGHT = 260;
 const PAD = 28;
 
 export function EquityChart({ points }: { points: EquityPoint[] }) {
+  const { t } = useTranslation("backtests");
   if (points.length === 0) return null;
   // Number conversion is confined to SVG coordinates; labels retain exact API strings.
   const values = points.map((point) => Number(point.equity));
@@ -30,17 +33,15 @@ export function EquityChart({ points }: { points: EquityPoint[] }) {
         role="img"
         aria-labelledby="equity-title equity-desc"
       >
-        <title id="equity-title">Portfolio equity curve</title>
-        <desc id="equity-desc">
-          Equity over UTC time in deterministic API order.
-        </desc>
+        <title id="equity-title">{t("detail.chartTitle")}</title>
+        <desc id="equity-desc">{t("detail.chartDescription")}</desc>
         <line x1={PAD} x2={WIDTH - PAD} y1={HEIGHT - PAD} y2={HEIGHT - PAD} />
         <line x1={PAD} x2={PAD} y1={PAD} y2={HEIGHT - PAD} />
         {finite ? (
           <polyline points={coordinates.join(" ")} />
         ) : (
           <text x="50%" y="50%" textAnchor="middle">
-            Chart geometry unavailable; exact values remain below.
+            {t("detail.chartUnavailable")}
           </text>
         )}
       </svg>
@@ -50,12 +51,14 @@ export function EquityChart({ points }: { points: EquityPoint[] }) {
         <span>{formatUtc(points.at(-1)?.timestamp ?? null)}</span>
       </figcaption>
       <details>
-        <summary>Accessible equity data ({points.length} points)</summary>
+        <summary>
+          {t("detail.accessibleEquity", { count: points.length })}
+        </summary>
         <table>
           <thead>
             <tr>
-              <th scope="col">UTC time</th>
-              <th scope="col">Equity</th>
+              <th scope="col">{t("detail.utcTime")}</th>
+              <th scope="col">{t("detail.equity")}</th>
             </tr>
           </thead>
           <tbody>

@@ -8,8 +8,8 @@ export function NotFoundPage() {
       <p className="eyebrow">{t("routeNotFound")}</p>
       <h1>{t("pageNotFound")}</h1>
       <p>{t("pageNotFoundBody")}</p>
-      <Link className="button" href="/backtests">
-        {t("returnToBacktests")}
+      <Link className="button" href="/">
+        {t("loadErrors.workbench")}
       </Link>
     </section>
   );

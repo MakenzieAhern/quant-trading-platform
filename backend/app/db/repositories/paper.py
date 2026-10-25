@@ -1,7 +1,8 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import func, select
+from sqlalchemy import cast, func, select
+from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models.paper import PaperTradingEventModel, PaperTradingSessionModel
@@ -42,6 +43,107 @@ class SQLAlchemyPaperRepository:
         if model is None:
             return None
         return self._to_domain(model), await self.list_events(session_id)
+
+    async def state_snapshot(
+        self, session_id: UUID
+    ) -> tuple[PaperSession, int, tuple[PaperEventRecord, ...]] | None:
+        # The shared writer-row lock keeps lifecycle, watermark and latest state coherent.
+        model = await self._session.scalar(
+            select(PaperTradingSessionModel)
+            .where(PaperTradingSessionModel.id == session_id)
+            .with_for_update(read=True)
+        )
+        if model is None:
+            return None
+        base = select(PaperTradingEventModel).where(PaperTradingEventModel.session_id == session_id)
+        watermark = int(
+            await self._session.scalar(
+                select(func.max(PaperTradingEventModel.sequence)).where(
+                    PaperTradingEventModel.session_id == session_id
+                )
+            )
+            or 0
+        )
+        records = {}
+        for event_type in ("market.bar", "market.session", "portfolio.snapshot"):
+            latest = await self._session.scalar(
+                base.where(PaperTradingEventModel.event_type == event_type)
+                .order_by(PaperTradingEventModel.sequence.desc())
+                .limit(1)
+            )
+            if latest is not None:
+                records[latest.sequence] = self._event_record(latest)
+        plan = PaperTradingEventModel.payload["plan"]
+        last_plan = await self._session.scalar(
+            base.where(
+                PaperTradingEventModel.event_type == "portfolio.snapshot",
+                func.jsonb_typeof(plan) == "object",
+                plan["status"].astext == "SIMULATION_PREVIEW",
+            )
+            .order_by(PaperTradingEventModel.sequence.desc())
+            .limit(1)
+        )
+        if last_plan is not None:
+            records[last_plan.sequence] = self._event_record(last_plan)
+        return self._to_domain(model), watermark, tuple(records[key] for key in sorted(records))
+
+    async def collection_page(
+        self, session_id: UUID, collection: str, as_of_sequence: int, limit: int, offset: int
+    ) -> tuple[tuple[PaperEventRecord, ...], int] | None:
+        # A validated old watermark is immutable: later append-only commits cannot alter it.
+        model = await self._session.scalar(
+            select(PaperTradingSessionModel)
+            .where(PaperTradingSessionModel.id == session_id)
+            .with_for_update(read=True)
+        )
+        if model is None:
+            return None
+        maximum = int(
+            await self._session.scalar(
+                select(func.max(PaperTradingEventModel.sequence)).where(
+                    PaperTradingEventModel.session_id == session_id
+                )
+            )
+            or 0
+        )
+        if not 0 <= as_of_sequence <= maximum:
+            raise ValueError("paper read watermark exceeds the durable journal")
+        event_type = {
+            "signals": "signal.created",
+            "risk_decisions": "risk.decision",
+            "orders": "order.updated",
+            "fills": "fill.created",
+        }[collection]
+        conditions = (
+            PaperTradingEventModel.session_id == session_id,
+            PaperTradingEventModel.event_type == event_type,
+            PaperTradingEventModel.sequence <= as_of_sequence,
+        )
+        query = select(PaperTradingEventModel).where(*conditions)
+        count = select(func.count()).select_from(PaperTradingEventModel).where(*conditions)
+        if collection == "orders":
+            # Same UUID normalization and first-insertion order as the legacy snapshot.
+            latest_orders = (
+                select(
+                    func.min(PaperTradingEventModel.sequence).label("first_sequence"),
+                    func.max(PaperTradingEventModel.sequence).label("latest_sequence"),
+                )
+                .where(*conditions)
+                .group_by(
+                    cast(PaperTradingEventModel.payload["order_id"].astext, PGUUID(as_uuid=True))
+                )
+                .subquery()
+            )
+            query = query.join(
+                latest_orders, PaperTradingEventModel.sequence == latest_orders.c.latest_sequence
+            ).order_by(latest_orders.c.first_sequence)
+            count = select(func.count()).select_from(latest_orders)
+        else:
+            query = query.order_by(PaperTradingEventModel.sequence)
+        # ponytail: SQL may scan the journal; only the selected page enters application memory.
+        total = int(await self._session.scalar(count) or 0)
+        models = (await self._session.scalars(query.limit(limit).offset(offset))).all()
+        return tuple(self._event_record(item) for item in models), total
 
     async def create(self, session: PaperSession) -> PaperSession:
         model = PaperTradingSessionModel(
@@ -101,7 +203,6 @@ class SQLAlchemyPaperRepository:
         timestamp: datetime,
         event_type: str,
         error_message: str | None = None,
-        preceding_events: tuple[tuple[str, datetime, dict[str, object]], ...] = (),
     ) -> tuple[PaperSession, tuple[PaperEventRecord, ...]]:
         require_transition(expected, target)
         model = await self._session.scalar(
@@ -123,9 +224,18 @@ class SQLAlchemyPaperRepository:
             PaperSessionStatus.INTERRUPTED,
         }:
             model.stopped_at = timestamp
+        cancellations = (
+            await self._pending_order_events(session_id, timestamp)
+            if target
+            in {
+                PaperSessionStatus.STOPPED,
+                PaperSessionStatus.FAILED,
+                PaperSessionStatus.INTERRUPTED,
+            }
+            else ()
+        )
         records = await self._append_events_locked(
-            session_id,
-            (*preceding_events, (event_type, timestamp, {"status": target.value})),
+            session_id, (*cancellations, (event_type, timestamp, {"status": target.value}))
         )
         await self._session.commit()
         return self._to_domain(model), records
@@ -136,12 +246,14 @@ class SQLAlchemyPaperRepository:
         events: tuple[tuple[str, datetime, dict[str, object]], ...],
     ) -> tuple[PaperEventRecord, ...]:
         model = await self._session.scalar(
-            select(PaperTradingSessionModel.id)
+            select(PaperTradingSessionModel)
             .where(PaperTradingSessionModel.id == session_id)
             .with_for_update()
         )
         if model is None:
             raise LookupError("paper session not found")
+        if model.status in {"STOPPED", "FAILED", "INTERRUPTED"}:
+            raise PaperSessionConcurrencyError("paper session is already terminal")
         records = await self._append_events_locked(session_id, events)
         await self._session.commit()
         return records
@@ -175,23 +287,28 @@ class SQLAlchemyPaperRepository:
         )
         return records
 
-    async def list_events(self, session_id: UUID) -> tuple[PaperEventRecord, ...]:
-        models = (
-            await self._session.scalars(
-                select(PaperTradingEventModel)
-                .where(PaperTradingEventModel.session_id == session_id)
-                .order_by(PaperTradingEventModel.sequence)
-            )
-        ).all()
-        return tuple(
-            PaperEventRecord(
-                item.session_id,
-                item.sequence,
-                item.event_type,
-                item.occurred_at,
-                dict(item.payload),
-            )
-            for item in models
+    async def list_events(
+        self, session_id: UUID, *, limit: int | None = None, before_sequence: int | None = None
+    ) -> tuple[PaperEventRecord, ...]:
+        query = select(PaperTradingEventModel).where(
+            PaperTradingEventModel.session_id == session_id
+        )
+        if before_sequence is not None:
+            query = query.where(PaperTradingEventModel.sequence < before_sequence)
+        query = query.order_by(
+            PaperTradingEventModel.sequence.desc()
+            if limit is not None
+            else PaperTradingEventModel.sequence
+        )
+        if limit is not None:
+            query = query.limit(limit)
+        models = tuple((await self._session.scalars(query)).all())
+        return tuple(self._event_record(item) for item in models)
+
+    @staticmethod
+    def _event_record(item: PaperTradingEventModel) -> PaperEventRecord:
+        return PaperEventRecord(
+            item.session_id, item.sequence, item.event_type, item.occurred_at, dict(item.payload)
         )
 
     async def interrupt_active(self, timestamp: datetime) -> int:
@@ -213,25 +330,7 @@ class SQLAlchemyPaperRepository:
             model.status = PaperSessionStatus.INTERRUPTED.value
             model.stopped_at = timestamp
             model.error_message = "Paper runtime interrupted by backend restart."
-            order_events = (
-                await self._session.scalars(
-                    select(PaperTradingEventModel)
-                    .where(
-                        PaperTradingEventModel.session_id == model.id,
-                        PaperTradingEventModel.event_type == "order.updated",
-                    )
-                    .order_by(PaperTradingEventModel.sequence)
-                )
-            ).all()
-            latest_orders: dict[str, dict[str, object]] = {}
-            for event in order_events:
-                payload = dict(event.payload)
-                latest_orders[str(payload.get("order_id"))] = payload
-            cancellations = tuple(
-                ("order.updated", timestamp, {**payload, "status": "CANCELLED"})
-                for payload in latest_orders.values()
-                if payload.get("status") == "ACCEPTED"
-            )
+            cancellations = await self._pending_order_events(model.id, timestamp)
             await self._append_events_locked(
                 model.id,
                 (
@@ -245,6 +344,29 @@ class SQLAlchemyPaperRepository:
             )
         await self._session.commit()
         return len(models)
+
+    async def _pending_order_events(
+        self, session_id: UUID, timestamp: datetime
+    ) -> tuple[tuple[str, datetime, dict[str, object]], ...]:
+        order_events = (
+            await self._session.scalars(
+                select(PaperTradingEventModel)
+                .where(
+                    PaperTradingEventModel.session_id == session_id,
+                    PaperTradingEventModel.event_type == "order.updated",
+                )
+                .order_by(PaperTradingEventModel.sequence)
+            )
+        ).all()
+        latest_orders: dict[str, dict[str, object]] = {}
+        for event in order_events:
+            payload = dict(event.payload)
+            latest_orders[str(payload.get("order_id"))] = payload
+        return tuple(
+            ("order.updated", timestamp, {**payload, "status": "CANCELLED"})
+            for payload in latest_orders.values()
+            if payload.get("status") in {"CREATED", "SUBMITTED", "ACCEPTED", "PARTIALLY_FILLED"}
+        )
 
     @staticmethod
     def _to_domain(model: PaperTradingSessionModel) -> PaperSession:

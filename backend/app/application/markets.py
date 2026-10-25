@@ -1,8 +1,7 @@
 """Bounded local market inspection. No acquisition and no writes to research archives."""
 
-import re
 from collections import Counter, defaultdict
-from datetime import date, time
+from datetime import date
 from decimal import Decimal
 from functools import lru_cache
 from importlib import import_module
@@ -14,13 +13,13 @@ from app.application.experiments.data import (
     DEMO_END,
     DEMO_ID,
     DEMO_START,
-    HISTORICAL_ID,
     ExperimentDatasetRegistry,
     ExperimentInputError,
 )
 from app.application.experiments.runner import json_value
 from app.data.catalog.checksums import sha256_file
 from app.data.catalog.models import DatasetManifest
+from app.data.suspensions import suspension_evidence
 from app.domain.markets import SecurityId
 from app.paper.a_share_fixture import simulated_a_share_fixture
 
@@ -28,62 +27,11 @@ pq: Any = import_module("pyarrow.parquet")
 MAX_DAYS = 366
 
 
-def _suspension_boundary(value: str | None) -> tuple[str | None, time | None]:
-    if value is None:
-        return None, None
-    match = re.match(r"^(\d{4})[-/](\d{2})[-/](\d{2})(?:\s+(\d{1,2}):(\d{2}))?", value)
-    if match is None:
-        raise ExperimentInputError("DATASET_INTEGRITY_FAILED")
-    year, month, day, hour, minute = match.groups()
-    return date(int(year), int(month), int(day)).isoformat(), (
-        time(int(hour), int(minute)) if hour is not None else None
-    )
-
-
 def _suspension_evidence(row: dict[str, Any], day: str) -> dict[str, Any] | None:
-    start, start_time = _suspension_boundary(row["suspended_at"])
-    end, end_time = _suspension_boundary(row["resumed_or_ended_at"])
-    assert start is not None
-    if day < start or (end is not None and day > end):
-        return None
-    recorded = {"1": True, "0": False}.get(str(row.get("execution_open_blocked")))
-    exchange = row.get("exchange") or row["security_id"].split(":")[1]
-    if day == start:
-        blocked = (
-            recorded
-            if exchange == "SSE"
-            else (start_time <= time(9, 30) if start_time is not None else None)
-        )
-        semantics = "SUSPENSION_START_DAY"
-        active = True
-    elif day == end:
-        # SSE endStopDate is not a proved resumption-at-open timestamp.
-        # SZSE supplements' blocked flag applies to the resumption boundary, not its start.
-        blocked = (
-            (
-                recorded
-                if recorded is not None
-                else end_time > time(9, 30)
-                if end_time is not None
-                else None
-            )
-            if exchange == "SZSE"
-            else None
-        )
-        semantics = (
-            "SZSE_RESUMPTION_BOUNDARY" if exchange == "SZSE" else "SSE_END_STOP_DATE_UNCERTAIN"
-        )
-        active = blocked is True
-    else:
-        blocked, active, semantics = True, True, "INSIDE_SUSPENSION_INTERVAL"
-    return {
-        **row,
-        "suspended_date": start,
-        "resumed_or_ended_date": end,
-        "boundary_semantics": semantics,
-        "day_open_blocked": blocked,
-        "suspension_confirmed_on_day": active,
-    }
+    try:
+        return suspension_evidence(row, day)
+    except ValueError as error:
+        raise ExperimentInputError("DATASET_INTEGRITY_FAILED") from error
 
 
 @lru_cache(maxsize=1)
@@ -99,13 +47,13 @@ class MarketReader:
         self._lock = Lock()
 
     def _manifest(self, dataset_id: str) -> DatasetManifest | None:
-        self.registry.resolve(dataset_id)
-        return None if dataset_id == DEMO_ID else self.registry.manifest()
+        self.registry.resolve(dataset_id, for_execution=False)
+        return None if dataset_id == DEMO_ID else self.registry.manifest(dataset_id)
 
     def _read(
         self, manifest: DatasetManifest, relative: str, *, filters: Any = None
     ) -> list[dict[str, Any]]:
-        root = self.registry.root / HISTORICAL_ID
+        root = self.registry.dataset_root(manifest.dataset_id)
         path = (root / relative).resolve()
         partition = next((p for p in manifest.partitions if p.relative_path == relative), None)
         if not path.is_relative_to(root.resolve()) or partition is None:
@@ -121,11 +69,12 @@ class MarketReader:
                 partition.sha256,
             )
             with self._lock:
+                key = f"{root}:{manifest.canonical_sha256}:{relative}"
                 # Only a touched immutable partition is hashed, once per file version.
-                if self._verified.get(relative) != stamp:
+                if self._verified.get(key) != stamp:
                     if sha256_file(path) != partition.sha256:
                         raise ExperimentInputError("DATASET_INTEGRITY_FAILED")
-                    self._verified[relative] = stamp
+                    self._verified[key] = stamp
             return cast(list[dict[str, Any]], pq.read_table(path, filters=filters).to_pylist())
         except (OSError, ValueError) as exc:
             raise ExperimentInputError("DATASET_INTEGRITY_FAILED") from exc
@@ -150,10 +99,14 @@ class MarketReader:
             ]
         # This is a small security index, not the all-market price history.
         try:
-            stamp = (self.registry.root / HISTORICAL_ID / "securities.parquet").stat()
+            root = self.registry.dataset_root(manifest.dataset_id)
+            stamp = (root / "securities.parquet").stat()
         except OSError as exc:
             raise ExperimentInputError("DATASET_INTEGRITY_FAILED") from exc
-        key = f"{manifest.canonical_sha256}:{stamp.st_mtime_ns}:{stamp.st_ctime_ns}:{stamp.st_size}"
+        key = (
+            f"{root}:{manifest.canonical_sha256}:"
+            f"{stamp.st_mtime_ns}:{stamp.st_ctime_ns}:{stamp.st_size}"
+        )
         with self._lock:
             cached = self._masters.get(key)
         if cached is None:
@@ -182,7 +135,7 @@ class MarketReader:
         }
 
     def _metadata(self, dataset_id: str, manifest: DatasetManifest | None) -> dict[str, Any]:
-        registered = self.registry.resolve(dataset_id)
+        registered = self.registry.resolve(dataset_id, for_execution=False)
         return {
             **registered,
             "provider": manifest.provider if manifest else "DETERMINISTIC_SYNTHETIC_GENERATOR",
@@ -257,7 +210,7 @@ class MarketReader:
         if end < start or (end - start).days >= MAX_DAYS:
             raise ExperimentInputError("MARKET_DATE_RANGE_MUST_BE_1_TO_366_DAYS")
         manifest = self._manifest(dataset_id)
-        registered = self.registry.resolve(dataset_id)
+        registered = self.registry.resolve(dataset_id, for_execution=False)
         if (
             not date.fromisoformat(registered["coverage_start"])
             <= start

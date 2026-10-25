@@ -15,7 +15,7 @@ from app.domain.markets.rules import (
     TradingRuleResolver,
     TransactionCostSchedule,
 )
-from app.domain.trading import Order, OrderSide, OrderType
+from app.domain.trading import Order, OrderSide, OrderStatus, OrderType
 from app.execution import FixedBasisPointSlippage, FixedCommission
 from app.research import (
     FeatureOnlyDailyObservation,
@@ -154,6 +154,112 @@ def test_research_order_uses_existing_risk_oms_broker_fill_and_portfolio_path() 
     assert result.active_reservations == ()
 
 
+class StarTargetStrategy(OneTargetStrategy):
+    """Synthetic single-account probe, not admission of any current market source."""
+
+    def __init__(self, quantity: int) -> None:
+        super().__init__()
+        self.quantity = Decimal(quantity)
+
+    def target_for_completed_session(
+        self, session: ResearchSession, available_equity: Decimal
+    ) -> PortfolioTarget | None:
+        target = super().target_for_completed_session(session, available_equity)
+        if target is None:
+            return None
+        return replace(
+            target,
+            positions=(
+                replace(
+                    target.positions[0],
+                    security_id=SecurityId(value="CN-A:SSE:688008"),
+                    quantity=self.quantity,
+                ),
+            ),
+            residual_cash=available_equity - self.quantity * Decimal(10),
+        )
+
+
+def _star_session(day: date, *, is_st: bool) -> ResearchSession:
+    session = _session(day, opening="10")
+    sid = SecurityId(value="CN-A:SSE:688008")
+    status = session.statuses[0].status.model_copy(update={"security_id": sid, "is_st": is_st})
+    rules = TradingRuleResolver(historical_cn_a_rules()).resolve(
+        security_id=sid,
+        market=Market.CN_A,
+        exchange=Exchange.SSE,
+        board=Board.SSE_STAR,
+        trading_date=day,
+        side=OrderSide.BUY,
+        order_type=OrderType.LIMIT,
+        security_status=status,
+        listing_age_sessions=100,
+    )
+    return replace(
+        session,
+        bars=(
+            session.bars[0].model_copy(update={"security_id": sid, "volume": Decimal(100000000)}),
+        ),
+        statuses=(SecurityStatusRecord(status=status),),
+        buy_lot_sizes=((sid, rules.buy_lot_size),),
+        trading_rules=(rules,),
+    )
+
+
+@pytest.mark.parametrize("quantity", [100000, 100001, 500000, 600000])
+def test_star_overnight_st_single_account_quantity_boundary_and_replay(quantity: int) -> None:
+    # A per-order rule plus one instruction/day bounds fills here, not multi-account
+    # investor declarations. ACCEPTED is local OMS state, not exchange admission.
+    strategy = StarTargetStrategy(quantity)
+    engine = ResearchExecutionEngine(
+        strategy,
+        initial_cash=Decimal(10000000),
+        commission_model=FixedCommission(),
+        calendar=CALENDAR,
+    )
+    before = _star_session(date(2024, 1, 2), is_st=False)
+    after = _star_session(date(2024, 1, 3), is_st=True)
+    assert before.statuses[0].status.is_st is False
+    assert after.statuses[0].status.is_st is True
+    assert after.trading_rules[0].maximum_limit_quantity == 100000
+    assert after.trading_rules[0].price_limit_rate == Decimal("0.20")
+    submitted = engine.process_session(before)
+    assert len(submitted.proposals) == len(submitted.orders) == 1
+    assert submitted.decisions[0].approved
+    assert submitted.orders[0].status is OrderStatus.ACCEPTED
+    assert submitted.orders[0].quantity == quantity
+    assert submitted.fills == ()
+    with pytest.raises(ValueError, match="strictly chronological"):
+        engine.process_session(before)
+    assert strategy.calls == 1
+    executed = engine.process_session(after)
+    with pytest.raises(ValueError, match="strictly chronological"):
+        engine.process_session(after)
+    assert strategy.calls == 2
+    result = engine.finish()
+    assert len(result.proposals) == len(result.orders) == 1
+    assert result.active_reservations == ()
+    if quantity == 100000:
+        assert len(executed.fills) == len(result.fills) == 1
+        assert result.fills[0].quantity == quantity
+        assert result.orders[0].status is OrderStatus.FILLED
+        assert result.execution_checks == (
+            (submitted.orders[0].id, "ELIGIBLE_SIMULATION_ASSUMPTION"),
+        )
+    else:
+        assert executed.fills == result.fills == ()
+        assert result.orders[0].status is OrderStatus.CANCELLED
+        assert result.execution_checks == ((submitted.orders[0].id, "MAXIMUM_QUANTITY"),)
+    # Fresh in-memory replay is deterministic; this is not a durable restart test.
+    restored = ResearchExecutionEngine(
+        StarTargetStrategy(quantity),
+        initial_cash=Decimal(10000000),
+        commission_model=FixedCommission(),
+        calendar=CALENDAR,
+    )
+    assert restored.run((before, after)) == result
+
+
 def test_incremental_research_execution_matches_batch_without_future_access() -> None:
     sessions = (
         _session(date(2024, 1, 2), opening="10"),
@@ -179,6 +285,80 @@ def test_incremental_research_execution_matches_batch_without_future_access() ->
         item.model_dump() for item in batch.fills
     ]
     assert incremental.snapshots == batch.snapshots
+
+
+def test_append_only_calendar_extension_preserves_precommitted_orders_and_batch_result() -> None:
+    calendar = TradingCalendar(market=Market.CN_A, sessions=CALENDAR.sessions[:2])
+    extended = TradingCalendar(
+        market=Market.CN_A,
+        sessions=(
+            *calendar.sessions,
+            TradingSession(session_date=date(2024, 1, 4), is_open=False, source_version="fixture"),
+            TradingSession(session_date=date(2024, 1, 5), is_open=True, source_version="fixture"),
+        ),
+    )
+    engine = ResearchExecutionEngine(
+        OneTargetStrategy(),
+        initial_cash=Decimal("10000.000000000000000001"),
+        commission_model=FixedCommission(Decimal(5)),
+        calendar=calendar,
+    )
+    first = engine.process_session(_session(date(2024, 1, 2), opening="10"))
+    assert first.proposals[0].intended_execution_session == date(2024, 1, 3)
+    assert engine.next_accepted_session(date(2024, 1, 3)) is None
+    engine.extend_calendar(extended)
+    engine.extend_calendar(extended)  # Identical publication is retry-safe.
+    assert engine.next_accepted_session(date(2024, 1, 3)) == date(2024, 1, 5)
+    assert first.proposals[0].intended_execution_session == date(2024, 1, 3)
+    with pytest.raises(ValueError, match="missing calendar session"):
+        engine.process_session(_session(date(2024, 1, 5), opening="9.9"))
+    with pytest.raises(ValueError, match="outside accepted calendar"):
+        engine.process_session(_session(date(2024, 1, 4), opening="9.9"))
+    second = engine.process_session(_session(date(2024, 1, 3), opening="9.9"))
+    assert len(second.fills) == 1
+    assert second.fills[0].price == Decimal("9.9")
+    engine.process_session(_session(date(2024, 1, 5), opening="9.9"))
+    incremental = engine.finish()
+    assert incremental == engine.run(
+        (
+            _session(date(2024, 1, 2), opening="10"),
+            _session(date(2024, 1, 3), opening="9.9"),
+            _session(date(2024, 1, 5), opening="9.9"),
+        )
+    )
+
+
+@pytest.mark.parametrize("change", ["shorter", "source", "open", "insert"])
+def test_calendar_extension_rejects_changed_prefix_without_mutating_orders(change: str) -> None:
+    engine = ResearchExecutionEngine(
+        OneTargetStrategy(),
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=CALENDAR,
+    )
+    first = engine.process_session(_session(date(2024, 1, 2), opening="10"))
+    sessions = CALENDAR.sessions
+    if change == "shorter":
+        sessions = sessions[:-1]
+    elif change in {"source", "open"}:
+        sessions = (
+            sessions[0],
+            sessions[1].model_copy(
+                update={"source_version": "changed"} if change == "source" else {"is_open": False}
+            ),
+            *sessions[2:],
+        )
+    else:
+        sessions = (
+            TradingSession(session_date=date(2024, 1, 1), is_open=True, source_version="fixture"),
+            *sessions,
+        )
+    with pytest.raises(ValueError, match="append-only"):
+        engine.extend_calendar(TradingCalendar(market=Market.CN_A, sessions=sessions))
+    assert engine.next_accepted_session(date(2024, 1, 3)) == date(2024, 1, 4)
+    second = engine.process_session(_session(date(2024, 1, 3), opening="9.9"))
+    assert second.orders[0].id == first.orders[0].id
+    assert len(second.fills) == 1
 
 
 def test_suspension_expires_order_in_its_intended_session() -> None:
@@ -492,3 +672,66 @@ def test_normal_sell_uses_same_oms_path_on_following_session_and_costs_once():
     assert result.fills[0].timestamp < result.fills[1].timestamp
     assert result.snapshots[-1].cumulative_commission == Decimal(10)
     assert not result.active_reservations
+
+
+@pytest.mark.parametrize("zero_volume", [False, True])
+def test_unexplained_held_reference_change_stops_before_any_session_side_effect(zero_volume):
+    strategy = OneTargetStrategy()
+    engine = ResearchExecutionEngine(
+        strategy,
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(Decimal(5)),
+        calendar=CALENDAR,
+    )
+    engine.process_session(_session(date(2024, 1, 2), opening="10"))
+    held = engine.process_session(_session(date(2024, 1, 3), opening="9.9"))
+    before = engine.finish()
+    unknown = _session(date(2024, 1, 4), opening="5")
+    unknown = replace(
+        unknown,
+        bars=(
+            unknown.bars[0].model_copy(
+                update={"volume": Decimal(0) if zero_volume else Decimal(10000)}
+            ),
+        ),
+        unexplained_reference_adjustment_ids=(SECURITY_ID,),
+    )
+    with pytest.raises(ValueError, match="UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT") as caught:
+        engine.process_session(unknown)
+    assert caught.value.trading_date == date(2024, 1, 4)
+    assert caught.value.security_ids == (str(SECURITY_ID),)
+    assert engine.finish() == before
+    assert strategy.calls == 2
+    assert engine.last_completed_session == date(2024, 1, 3)
+    assert held.snapshot.positions[0].quantity == Decimal(100)
+    # Rejected input never advances the engine or rewrites its previously saved state.
+    engine.process_session(_session(date(2024, 1, 4), opening="10"))
+    assert strategy.calls == 3
+
+
+def test_reference_marker_does_not_invent_an_entitlement_for_an_unheld_security():
+    engine = ResearchExecutionEngine(
+        OneTargetStrategy(),
+        initial_cash=Decimal(10000),
+        commission_model=FixedCommission(),
+        calendar=CALENDAR,
+    )
+    first = replace(
+        _session(date(2024, 1, 2), opening="10"),
+        unexplained_reference_adjustment_ids=(SECURITY_ID,),
+    )
+    delta = engine.process_session(first)
+    assert len(delta.proposals) == 1
+    assert delta.fills == ()
+    assert delta.snapshot.cash == Decimal(10000)
+    assert delta.snapshot.market_value == 0
+
+
+def test_reference_markers_must_have_distinct_observed_security_identity():
+    session = _session(date(2024, 1, 2), opening="10")
+    for markers in (
+        (SECURITY_ID, SECURITY_ID),
+        (SecurityId(value="CN-A:SZSE:000001"),),
+    ):
+        with pytest.raises(ValueError, match="reference adjustment identity"):
+            replace(session, unexplained_reference_adjustment_ids=markers)

@@ -8,7 +8,9 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ApiError } from "../../api/client";
 import { i18n } from "../../i18n";
+import { navigate, navigateBack } from "../../utils/navigation";
 import { writePresentationSetting } from "../../utils/presentationStorage";
 import { PREFERENCES_KEY } from "../preferences";
 import { ProductDataProvider } from "../ProductDataProvider";
@@ -38,6 +40,7 @@ beforeEach(async () => {
       configurable: true,
       value(this: HTMLDialogElement) {
         this.setAttribute("open", "");
+        this.querySelector<HTMLElement>(".iconButton")?.focus();
       },
     },
     close: {
@@ -73,6 +76,293 @@ async function openSecurity() {
 }
 
 describe("historical cache markets", () => {
+  it.each([
+    [
+      "KNOWN_ECONOMIC_COVERAGE_GAP",
+      "Economic completeness is not validated",
+      "经济完整性尚未验证",
+    ],
+    [
+      "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+      "Economic completeness is unknown",
+      "经济完整性未知",
+    ],
+  ] as const)(
+    "shows %s in both languages on the selected source and actual observations",
+    async (quality, en, zh) => {
+      vi.mocked(marketApi.datasets).mockResolvedValue([
+        {
+          ...dataset,
+          current_dataset_quality: quality,
+          current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED",
+        },
+        demo,
+      ]);
+      vi.mocked(marketApi.bars).mockResolvedValue({
+        ...bars,
+        metadata: {
+          ...metadata,
+          current_dataset_quality: quality,
+          current_source_integrity: "SOURCE_CONTRACT_INTEGRITY_FAILED",
+        },
+      });
+      render(<MarketsPage />);
+      const sourceNotice = await screen.findByRole("note");
+      expect(sourceNotice).toHaveTextContent(en);
+      expect(sourceNotice).toHaveTextContent(
+        "source references failed verification",
+      );
+      const dialog = await openSecurity();
+      const detailNotice = await within(dialog).findByRole("note");
+      expect(detailNotice).toHaveTextContent(en);
+      expect(detailNotice).toHaveTextContent(
+        "source references failed verification",
+      );
+      await userEvent.selectOptions(
+        within(dialog).getByLabelText("Inspect trading date"),
+        "2024-02-27",
+      );
+      const reads = [
+        vi.mocked(marketApi.search).mock.calls.length,
+        vi.mocked(marketApi.bars).mock.calls.length,
+      ];
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(sourceNotice).toHaveTextContent(zh);
+      expect(detailNotice).toHaveTextContent(zh);
+      expect(sourceNotice).toHaveTextContent("来源引用未通过验证");
+      expect(detailNotice).toHaveTextContent("来源引用未通过验证");
+      expect(within(dialog).getByLabelText("开始日期")).toHaveValue(
+        "2024-02-27",
+      );
+      expect(within(dialog).getByLabelText("结束日期")).toHaveValue(
+        "2024-02-29",
+      );
+      expect(within(dialog).getByLabelText("价格视图")).toHaveValue("raw");
+      expect(
+        within(dialog).getByText("10.123456789012345678", { selector: "dd" }),
+      ).toBeInTheDocument();
+      expect([
+        vi.mocked(marketApi.search).mock.calls.length,
+        vi.mocked(marketApi.bars).mock.calls.length,
+      ]).toEqual(reads);
+    },
+  );
+  it("uses actual detail quality rather than outer source selection, and clears source notice on demo switch", async () => {
+    vi.mocked(marketApi.datasets).mockResolvedValue([
+      { ...dataset, current_dataset_quality: "KNOWN_ECONOMIC_COVERAGE_GAP" },
+      demo,
+    ]);
+    vi.mocked(marketApi.bars).mockResolvedValue({
+      ...bars,
+      metadata: {
+        ...metadata,
+        current_dataset_quality: "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+      },
+    });
+    render(<MarketsPage />);
+    expect(await screen.findByRole("note")).toHaveTextContent(
+      "Economic completeness is not validated",
+    );
+    const dialog = await openSecurity();
+    expect(await within(dialog).findByRole("note")).toHaveTextContent(
+      "Economic completeness is unknown",
+    );
+    expect(within(dialog).getByRole("note")).not.toHaveTextContent(
+      "Economic completeness is not validated",
+    );
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: "Close" }),
+    );
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
+    await userEvent.selectOptions(
+      screen.getByLabelText("Data source"),
+      demo.dataset_id,
+    );
+    expect(screen.queryByRole("note")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Data source")).toHaveValue(demo.dataset_id);
+  });
+  it("does not turn missing/null quality into a passing financial audit", async () => {
+    vi.mocked(marketApi.datasets).mockResolvedValue([
+      { ...dataset, current_dataset_quality: null },
+      demo,
+    ]);
+    render(<MarketsPage />);
+    await screen.findByLabelText("Data source");
+    expect(screen.queryByRole("note")).not.toBeInTheDocument();
+    const dialog = await openSecurity();
+    await within(dialog).findByLabelText("Inspect trading date");
+    expect(within(dialog).queryByRole("note")).not.toBeInTheDocument();
+    expect(
+      within(dialog).queryByText(/financially validated/i),
+    ).not.toBeInTheDocument();
+  });
+  it("does not misreport a denied dataset catalog as a local archive problem", async () => {
+    vi.mocked(marketApi.datasets).mockRejectedValue(
+      new ApiError(403, "denied"),
+    );
+    render(<MarketsPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Access was denied. Check your access before trying again.",
+    );
+    expect(marketApi.search).not.toHaveBeenCalled();
+  });
+  it("explains a denied cache search in both languages without repeating the request", async () => {
+    vi.mocked(marketApi.search).mockRejectedValue(new ApiError(403, "denied"));
+    render(<MarketsPage />);
+    const search = await screen.findByRole("region", {
+      name: "Search securities",
+    });
+    expect(await within(search).findByRole("alert")).toHaveTextContent(
+      "Access was denied. Check your access before trying again.",
+    );
+    const reads = vi.mocked(marketApi.search).mock.calls.length;
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(
+      within(screen.getByRole("region", { name: "检索证券" })).getByRole(
+        "alert",
+      ),
+    ).toHaveTextContent("访问被拒绝。请确认访问权限后重试。");
+    expect(marketApi.search).toHaveBeenCalledTimes(reads);
+  });
+  it("keeps a watchlist timeout distinct from an empty watchlist", async () => {
+    vi.mocked(marketApi.watchlist).mockRejectedValue(
+      new ApiError(408, "timeout"),
+    );
+    render(<MarketsPage />);
+    expect(
+      await screen.findByText(
+        "The request timed out. Check the service status, then try again.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "Your watchlist is empty. Save a security from the search results.",
+      ),
+    ).not.toBeInTheDocument();
+  });
+  it("explains denied saved-price reads in security detail", async () => {
+    vi.mocked(marketApi.bars).mockRejectedValue(new ApiError(403, "denied"));
+    render(<MarketsPage />);
+    const dialog = await openSecurity();
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "Access was denied. Check your access before trying again.",
+    );
+  });
+  it("keeps an unrecognized catalogue board visible without rendering inherited object keys", async () => {
+    vi.mocked(marketApi.search).mockResolvedValue({
+      items: [{ ...security, board: "__proto__" }],
+      total: 1,
+      limit: 20,
+      offset: 0,
+      metadata,
+    });
+    render(<MarketsPage />);
+    expect(await screen.findByText("__proto__")).toBeInTheDocument();
+  });
+  it("keeps unrecognized observation counts safe without treating inherited keys as labels", async () => {
+    vi.mocked(marketApi.bars).mockResolvedValue({
+      ...bars,
+      metadata: { ...metadata, status_counts: { ["__proto__"]: 1 } },
+    });
+    render(<MarketsPage />);
+    const dialog = await openSecurity();
+    expect(
+      within(dialog).getByText("Unknown", { selector: "dt" }),
+    ).toBeInTheDocument();
+  });
+  it("names native search and exact tables with distinct translated scroll regions", async () => {
+    render(<MarketsPage />);
+    const searchTable = await screen.findByRole("table", {
+      name: "Search securities",
+    });
+    const searchScroll = screen.getByRole("region", {
+      name: "Search securities · Scrollable table; scroll horizontally to see every column.",
+    });
+    expect(searchScroll).toHaveAttribute("tabindex", "0");
+    expect(searchScroll).toContainElement(searchTable);
+    const dialog = await openSecurity();
+    await within(dialog).findByLabelText("Inspect trading date");
+    await userEvent.click(
+      within(dialog).getByText("Exact observations", { selector: "summary" }),
+    );
+    const exactScroll = within(dialog).getByRole("region", {
+      name: "Exact observations",
+    });
+    expect(exactScroll).toHaveAttribute("tabindex", "0");
+    expect(
+      within(exactScroll).getByRole("table", { name: "Exact observations" }),
+    ).toBeInTheDocument();
+    const reads = [
+      vi.mocked(marketApi.search).mock.calls.length,
+      vi.mocked(marketApi.bars).mock.calls.length,
+    ];
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(screen.getByRole("table", { name: "检索证券" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", {
+        name: "检索证券 · 可横向滚动表格以查看全部列。",
+      }),
+    ).toContainElement(screen.getByRole("table", { name: "检索证券" }));
+    expect(
+      within(dialog).getByRole("region", { name: "精确记录" }),
+    ).toContainElement(within(dialog).getByRole("table", { name: "精确记录" }));
+    expect([
+      vi.mocked(marketApi.search).mock.calls.length,
+      vi.mocked(marketApi.bars).mock.calls.length,
+    ]).toEqual(reads);
+  });
+  it("distinguishes saved-security actions across sources and languages", async () => {
+    vi.mocked(marketApi.watchlist).mockResolvedValue({
+      items: [
+        watched,
+        {
+          ...watched,
+          dataset_id: demo.dataset_id,
+          dataset_sha256: demo.sha256!,
+        },
+      ],
+      total: 2,
+      limit: 20,
+      offset: 0,
+    });
+    render(<MarketsPage />);
+    expect(
+      await screen.findByRole("button", {
+        name: `Save to watchlist: ${security.security_id}`,
+      }),
+    ).toBeInTheDocument();
+    for (const source of [dataset, demo]) {
+      expect(
+        screen.getByRole("button", {
+          name: `Inspect history: ${security.security_id} · ${source.dataset_id}`,
+        }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", {
+          name: `Remove from watchlist: ${security.security_id} · ${source.dataset_id}`,
+        }),
+      ).toBeInTheDocument();
+    }
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(
+      screen.getByRole("button", {
+        name: `加入自选: ${security.security_id}`,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: `移除自选: ${security.security_id} · ${demo.dataset_id}`,
+      }),
+    ).toBeInTheDocument();
+  });
   it("preserves explicit demo datasets and reacts to dataset query navigation without changing authority", async () => {
     window.history.replaceState(
       {},
@@ -225,6 +515,7 @@ describe("historical cache markets", () => {
 
   it("shows pending and failed detail reads with retry, and does not invent bars for an empty window", async () => {
     let reject: ((error: Error) => void) | undefined;
+    let completeRetry: ((value: typeof bars) => void) | undefined;
     vi.mocked(marketApi.bars)
       .mockImplementationOnce(
         () =>
@@ -232,12 +523,12 @@ describe("historical cache markets", () => {
             reject = fail;
           }),
       )
-      .mockResolvedValueOnce({
-        ...bars,
-        items: [],
-        total: 0,
-        metadata: { ...metadata, status_counts: {} },
-      });
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            completeRetry = resolve;
+          }),
+      );
     render(<MarketsPage />);
     const dialog = await openSecurity();
     expect(within(dialog).getByRole("status")).toHaveTextContent(
@@ -249,9 +540,19 @@ describe("historical cache markets", () => {
     expect(within(dialog).getByRole("alert")).toHaveTextContent(
       "could not be loaded",
     );
-    await userEvent.click(
-      within(dialog).getByRole("button", { name: "Retry reading cache" }),
+    within(dialog).getByRole("button", { name: "Retry reading cache" }).focus();
+    await userEvent.keyboard("{Enter}");
+    const heading = within(dialog).getByRole("heading", { level: 2 });
+    expect(heading).toHaveFocus();
+    await act(async () =>
+      completeRetry?.({
+        ...bars,
+        items: [],
+        total: 0,
+        metadata: { ...metadata, status_counts: {} },
+      }),
     );
+    expect(heading).toHaveFocus();
     expect(
       await within(dialog).findByText(/no prices have been filled in/),
     ).toBeInTheDocument();
@@ -278,6 +579,7 @@ describe("historical cache markets", () => {
       "600000",
     );
     await userEvent.selectOptions(screen.getByLabelText("Exchange"), "SSE");
+    expect(new URLSearchParams(window.location.search).get("q")).toBeNull();
     await userEvent.click(
       screen.getByRole("button", { name: "Search securities" }),
     );
@@ -305,14 +607,137 @@ describe("historical cache markets", () => {
       expect(marketApi.search).toHaveBeenLastCalledWith(
         dataset.dataset_id,
         "Observed",
+        "ALL",
+        0,
+        expect.any(AbortSignal),
+      ),
+    );
+    expect(screen.getByLabelText("Exchange")).toHaveValue("ALL");
+    expect(
+      screen.getByLabelText("Symbol, code or source-observed name"),
+    ).toHaveValue("Observed");
+  });
+
+  it("hides stale search actions until a new draft is submitted", async () => {
+    vi.mocked(marketApi.search).mockImplementation(async (_source, term) => ({
+      items: term === "000001" ? [] : [security],
+      total: term === "000001" ? 0 : 1,
+      limit: 20,
+      offset: 0,
+      metadata,
+    }));
+    render(<MarketsPage />);
+    const catalog = await screen.findByRole("region", {
+      name: "Search securities",
+    });
+    expect(
+      await within(catalog).findByRole("button", {
+        name: `Inspect history: ${security.security_id}`,
+      }),
+    ).toBeInTheDocument();
+    const reads = vi.mocked(marketApi.search).mock.calls.length;
+
+    await userEvent.type(
+      screen.getByLabelText("Symbol, code or source-observed name"),
+      "000001",
+    );
+    expect(within(catalog).queryByRole("table")).not.toBeInTheDocument();
+    expect(
+      within(catalog).queryByRole("button", {
+        name: `Save to watchlist: ${security.security_id}`,
+      }),
+    ).not.toBeInTheDocument();
+    expect(within(catalog).getByRole("status")).toHaveTextContent(
+      "Press Search securities to apply the text; previous results are hidden.",
+    );
+    await userEvent.selectOptions(screen.getByLabelText("Exchange"), "SZSE");
+    expect(marketApi.search).toHaveBeenCalledTimes(reads);
+    expect(new URLSearchParams(window.location.search).get("q")).toBeNull();
+
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(
+      within(screen.getByRole("region", { name: "检索证券" })).getByRole(
+        "status",
+      ),
+    ).toHaveTextContent("此前的检索结果已隐藏");
+    await userEvent.click(screen.getByRole("button", { name: "检索证券" }));
+    await waitFor(() =>
+      expect(marketApi.search).toHaveBeenLastCalledWith(
+        dataset.dataset_id,
+        "000001",
+        "SZSE",
+        0,
+        expect.any(AbortSignal),
+      ),
+    );
+    expect(new URLSearchParams(window.location.search).get("q")).toBe("000001");
+    expect(
+      await screen.findByText("没有符合条件的证券，请尝试其他代码或交易所。"),
+    ).toBeInTheDocument();
+  });
+
+  it("restores committed source and search filters after reload and detail Back", async () => {
+    const first = render(<MarketsPage />);
+    await screen.findByRole("button", {
+      name: `Inspect history: ${security.security_id}`,
+    });
+    await userEvent.selectOptions(
+      screen.getByLabelText("Data source"),
+      demo.dataset_id,
+    );
+    await userEvent.type(
+      screen.getByLabelText("Symbol, code or source-observed name"),
+      "600000",
+    );
+    await userEvent.selectOptions(screen.getByLabelText("Exchange"), "SSE");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Search securities" }),
+    );
+    await waitFor(() =>
+      expect(marketApi.search).toHaveBeenLastCalledWith(
+        demo.dataset_id,
+        "600000",
         "SSE",
         0,
         expect.any(AbortSignal),
       ),
     );
+    expect(new URLSearchParams(window.location.search).get("dataset")).toBe(
+      demo.dataset_id,
+    );
+    expect(new URLSearchParams(window.location.search).get("q")).toBe("600000");
+    expect(new URLSearchParams(window.location.search).get("exchange")).toBe(
+      "SSE",
+    );
+
+    first.unmount();
+    render(<MarketsPage />);
+    expect(await screen.findByLabelText("Data source")).toHaveValue(
+      demo.dataset_id,
+    );
     expect(
       screen.getByLabelText("Symbol, code or source-observed name"),
-    ).toHaveValue("Observed");
+    ).toHaveValue("600000");
+    expect(screen.getByLabelText("Exchange")).toHaveValue("SSE");
+    await waitFor(() =>
+      expect(marketApi.search).toHaveBeenLastCalledWith(
+        demo.dataset_id,
+        "600000",
+        "SSE",
+        0,
+        expect.any(AbortSignal),
+      ),
+    );
+    await userEvent.click(
+      await screen.findByRole("button", {
+        name: `Inspect history: ${security.security_id}`,
+      }),
+    );
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    act(() => window.history.back());
+    await waitFor(() => expect(window.location.hash).toBe(""));
+    expect(screen.getByLabelText("Exchange")).toHaveValue("SSE");
+    expect(new URLSearchParams(window.location.search).get("q")).toBe("600000");
   });
 
   it("closes and reopens a paged security detail with browser history without resetting filters", async () => {
@@ -331,10 +756,9 @@ describe("historical cache markets", () => {
     });
     await userEvent.selectOptions(screen.getByLabelText("Exchange"), "SSE");
     await userEvent.click(
-      within(screen.getByRole("region", { name: "Search securities" })).getByRole(
-        "button",
-        { name: "Next" },
-      ),
+      within(
+        screen.getByRole("region", { name: "Search securities" }),
+      ).getByRole("button", { name: "Next" }),
     );
     await waitFor(() =>
       expect(vi.mocked(marketApi.search).mock.calls.at(-1)?.[3]).toBe(20),
@@ -345,9 +769,9 @@ describe("historical cache markets", () => {
     });
     await userEvent.click(trigger);
     expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(new URLSearchParams(window.location.hash.slice(1)).get("security")).toBe(
-      security.security_id,
-    );
+    expect(
+      new URLSearchParams(window.location.hash.slice(1)).get("security"),
+    ).toBe(security.security_id);
     act(() => window.history.back());
     await waitFor(() => expect(window.location.hash).toBe(""));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -390,6 +814,50 @@ describe("historical cache markets", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  it("explains denied detail-link reads and retries only when requested", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      `/markets?dataset=${demo.dataset_id}#${new URLSearchParams({ dataset: dataset.dataset_id, security: security.security_id })}`,
+    );
+    let detailReads = 0;
+    vi.mocked(marketApi.search).mockImplementation(async (source) => {
+      if (source === dataset.dataset_id && ++detailReads === 1)
+        throw new ApiError(403, "denied");
+      return { items: [security], total: 1, limit: 20, offset: 0, metadata };
+    });
+    render(<MarketsPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Access was denied. Check your access before trying again.",
+    );
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "访问被拒绝。请确认访问权限后重试。",
+    );
+    expect(detailReads).toBe(1);
+    await userEvent.click(screen.getByRole("button", { name: "重试读取缓存" }));
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    expect(detailReads).toBe(2);
+  });
+
+  it("keeps managed return history after closing a search-linked detail", async () => {
+    window.history.replaceState({}, "", "/strategies");
+    navigate(
+      `/markets?${new URLSearchParams({ dataset: dataset.dataset_id, q: security.security_id })}#${new URLSearchParams({ dataset: dataset.dataset_id, security: security.security_id })}`,
+    );
+    render(<MarketsPage />);
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Close" }));
+    expect(window.location.hash).toBe("");
+    expect(window.history.state.quantNavigationUrl).toBe(window.location.href);
+    const go = vi.spyOn(window.history, "go").mockImplementation(() => {});
+    navigateBack("/strategies");
+    expect(go).toHaveBeenCalledWith(-1);
+    go.mockRestore();
+  });
+
   it("saves once while pending and reopens the database-backed watchlist, then removes it", async () => {
     let stored: WatchlistItem[] = [];
     vi.mocked(marketApi.watchlist).mockImplementation(async () => ({
@@ -411,21 +879,31 @@ describe("historical cache markets", () => {
         stored = [];
       });
     const first = render(<MarketsPage />);
-    await userEvent.dblClick(
-      await screen.findByRole("button", { name: "Save to watchlist" }),
-    );
+    const save = await screen.findByRole("button", {
+      name: `Save to watchlist: ${security.security_id}`,
+    });
+    save.focus();
+    await userEvent.keyboard("{Enter}{Enter}");
     expect(add).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("button", { name: "Saving…" })).toBeDisabled();
+    const saving = screen.getByRole("button", {
+      name: `Saving…: ${security.security_id}`,
+    });
+    expect(saving).toHaveAttribute("aria-disabled", "true");
+    expect(saving).not.toBeDisabled();
+    expect(saving).toHaveFocus();
     await act(async () => {
       stored = [watched];
       resolve?.(watched);
     });
     await screen.findByText("Saved to your watchlist.");
+    expect(save).toHaveFocus();
     first.unmount();
     render(<MarketsPage />);
-    await userEvent.click(
-      await screen.findByRole("button", { name: "Remove from watchlist" }),
-    );
+    const removeButton = await screen.findByRole("button", {
+      name: `Remove from watchlist: ${security.security_id} · ${dataset.dataset_id}`,
+    });
+    removeButton.focus();
+    await userEvent.keyboard("{Enter}");
     expect(remove).toHaveBeenCalledWith(
       dataset.dataset_id,
       security.security_id,
@@ -435,6 +913,46 @@ describe("historical cache markets", () => {
         "Your watchlist is empty. Save a security from the search results.",
       ),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "Your watchlist" }),
+    ).toHaveFocus();
+  });
+
+  it("does not steal focus after a watchlist removal when the user moves away", async () => {
+    let stored = [watched];
+    vi.mocked(marketApi.watchlist).mockImplementation(async () => ({
+      items: stored,
+      total: stored.length,
+      limit: 20,
+      offset: 0,
+    }));
+    let finish!: () => void;
+    vi.spyOn(marketApi, "remove").mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          finish = () => {
+            stored = [];
+            resolve();
+          };
+        }),
+    );
+    render(<MarketsPage />);
+    const remove = await screen.findByRole("button", {
+      name: `Remove from watchlist: ${security.security_id} · ${dataset.dataset_id}`,
+    });
+    remove.focus();
+    await userEvent.keyboard("{Enter}");
+    expect(remove).toHaveAttribute("aria-disabled", "true");
+    expect(remove).toHaveFocus();
+    const inspect = screen.getByRole("button", {
+      name: `Inspect history: ${security.security_id}`,
+    });
+    inspect.focus();
+    await act(async () => finish());
+    await screen.findByText(
+      "Your watchlist is empty. Save a security from the search results.",
+    );
+    expect(inspect).toHaveFocus();
   });
 
   it("uses the stored price-view default while preserving exact strings, gaps and dates across locale changes", async () => {
@@ -478,13 +996,75 @@ describe("historical cache markets", () => {
     expect(
       within(dialog).getByText(/not complete, executable OHLCV bars/),
     ).toBeInTheDocument();
+    expect(within(dialog).getByText(/Recorded risk status/)).toHaveTextContent(
+      "ST — risk-warning designation",
+    );
     await act(async () => {
       await i18n.changeLanguage("zh-CN");
     });
+    expect(within(dialog).getByText(/已记录风险状态/)).toHaveTextContent(
+      "ST（风险警示标记）",
+    );
     expect(within(dialog).getByLabelText("开始日期")).toHaveValue("2024-02-27");
     expect(within(dialog).getByLabelText("结束日期")).toHaveValue("2024-02-29");
     expect(within(dialog).getByLabelText("价格视图")).toHaveValue("raw");
     expect(marketApi.bars).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    ["STAR_ST", "*ST — delisting-risk warning", "*ST（退市风险警示）"],
+    ["DELISTING_PERIOD", "Delisting period", "退市整理期"],
+    [
+      "__proto__",
+      "Unrecognized risk code: __proto__",
+      "未识别的风险代码: __proto__",
+    ],
+    [
+      "FUTURE_RISK",
+      "Unrecognized risk code: FUTURE_RISK",
+      "未识别的风险代码: FUTURE_RISK",
+    ],
+    [null, "Unknown", "未知"],
+  ])(
+    "keeps %s risk status explicit in both languages",
+    async (risk, en, zh) => {
+      vi.mocked(marketApi.bars).mockResolvedValue({
+        ...bars,
+        items: bars.items.map((bar) =>
+          bar.trading_date === "2024-02-29"
+            ? { ...bar, risk_status: risk }
+            : bar,
+        ),
+      });
+      render(<MarketsPage />);
+      const dialog = await openSecurity();
+      expect(
+        within(dialog).getByText(/Recorded risk status/),
+      ).toHaveTextContent(en);
+      await act(async () => {
+        await i18n.changeLanguage("zh-CN");
+      });
+      expect(within(dialog).getByText(/已记录风险状态/)).toHaveTextContent(zh);
+      expect(marketApi.bars).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it("announces only the selected date and status, leaving exact prices readable on demand", async () => {
+    render(<MarketsPage />);
+    const dialog = await openSecurity();
+    const picker = await within(dialog).findByLabelText("Inspect trading date");
+    const status = within(dialog).getByRole("status");
+    expect(status.textContent?.trim()).toBe("2024-02-29 · Feature-only close");
+    expect(
+      within(dialog).getByText("Effective adjustment factor", {
+        selector: "dt",
+      }),
+    ).toBeInTheDocument();
+    await userEvent.selectOptions(picker, "2024-02-27");
+    expect(status.textContent?.trim()).toBe("2024-02-27 · Observed OHLCV");
+    expect(
+      within(dialog).getByText("10.123456789012345678", { selector: "dd" }),
+    ).toBeInTheDocument();
   });
 
   it("rejects an overlong date window without silently clipping it and restores trigger focus", async () => {
@@ -501,19 +1081,61 @@ describe("historical cache markets", () => {
     await userEvent.click(
       within(dialog).getByRole("button", { name: "Read this date window" }),
     );
-    expect(within(dialog).getByRole("alert")).toHaveTextContent(
-      "Dates have not been changed",
-    );
-    expect(within(dialog).getByLabelText("First date")).toHaveValue(
-      "2023-01-01",
-    );
+    const rangeError = within(dialog).getByRole("alert");
+    expect(rangeError).toHaveTextContent("Dates have not been changed");
+    const firstDate = within(dialog).getByLabelText("First date");
+    const lastDate = within(dialog).getByLabelText("Last date");
+    expect(firstDate).toHaveValue("2023-01-01");
+    expect(firstDate).toHaveFocus();
+    for (const input of [firstDate, lastDate]) {
+      expect(input).toHaveAttribute("aria-invalid", "true");
+      expect(input).toHaveAttribute("aria-describedby", rangeError.id);
+    }
     expect(marketApi.bars).toHaveBeenCalledTimes(1);
     await userEvent.click(
       within(dialog).getByRole("button", { name: "Close" }),
     );
     expect(trigger).toHaveFocus();
     await userEvent.click(trigger);
-    expect(screen.getByLabelText("First date")).toHaveValue("2023-01-01");
+    const restoredFirst = screen.getByLabelText("First date");
+    expect(restoredFirst).toHaveValue("2023-01-01");
+    await waitFor(() => expect(restoredFirst).toHaveFocus());
+    fireEvent.input(restoredFirst, { target: { value: "2024-02-27" } });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(restoredFirst).not.toHaveAttribute("aria-invalid");
+    expect(restoredFirst).not.toHaveAttribute("aria-describedby");
+    expect(screen.getByLabelText("Last date")).not.toHaveAttribute(
+      "aria-invalid",
+    );
+    expect(screen.getByLabelText("Last date")).not.toHaveAttribute(
+      "aria-describedby",
+    );
+    expect(marketApi.bars).toHaveBeenCalledTimes(1);
+  });
+
+  it("links an empty date to its translated error instead of relying on browser-only validation", async () => {
+    render(<MarketsPage />);
+    const dialog = await openSecurity();
+    await within(dialog).findByLabelText("Inspect trading date");
+    const firstDate = within(dialog).getByLabelText("First date");
+    fireEvent.input(firstDate, { target: { value: "" } });
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: "Read this date window" }),
+    );
+    const error = within(dialog).getByRole("alert");
+    expect(error).toHaveTextContent("Dates have not been changed");
+    expect(firstDate).toHaveFocus();
+    expect(firstDate).toHaveAttribute("aria-invalid", "true");
+    expect(firstDate).toHaveAttribute("aria-describedby", error.id);
+    expect(marketApi.bars).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(within(dialog).getByRole("alert")).toHaveTextContent(
+      "日期未被自动修改",
+    );
+    expect(within(dialog).getByLabelText("开始日期")).toHaveValue("");
+    expect(marketApi.bars).toHaveBeenCalledTimes(1);
   });
 
   it("keeps unavailable historical records removable while clearly labeling the demo", async () => {
@@ -547,10 +1169,14 @@ describe("historical cache markets", () => {
       ),
     ).toBeInTheDocument();
     expect(
-      await screen.findByRole("button", { name: "Inspect history" }),
+      await screen.findByRole("button", {
+        name: `Inspect history: ${security.security_id} · ${dataset.dataset_id}`,
+      }),
     ).toBeDisabled();
     await userEvent.click(
-      screen.getByRole("button", { name: "Remove from watchlist" }),
+      screen.getByRole("button", {
+        name: `Remove from watchlist: ${security.security_id} · ${dataset.dataset_id}`,
+      }),
     );
     expect(remove).toHaveBeenCalledWith(
       dataset.dataset_id,
@@ -566,8 +1192,47 @@ describe("historical cache markets", () => {
       ),
     ).toBeInTheDocument();
     expect(
+      screen.getByText(/Historical data are not available to the service/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("DATASET_NOT_MOUNTED").closest("details"),
+    ).not.toHaveAttribute("open");
+    expect(
       screen.getByRole("button", { name: "Search securities" }),
     ).toBeDisabled();
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    expect(screen.getByText(/服务无法读取历史数据/)).toBeInTheDocument();
+  });
+
+  it("does not open a saved watchlist snapshot against a different current dataset SHA", async () => {
+    vi.mocked(marketApi.watchlist).mockResolvedValue({
+      items: [{ ...watched, dataset_sha256: "0".repeat(64) }],
+      total: 1,
+      limit: 20,
+      offset: 0,
+    });
+    render(<MarketsPage />);
+    expect(
+      await screen.findByRole("button", {
+        name: `Inspect history: ${security.security_id} · ${dataset.dataset_id}`,
+      }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("button", {
+        name: `Remove from watchlist: ${security.security_id} · ${dataset.dataset_id}`,
+      }),
+    ).toBeEnabled();
+    expect(
+      screen.getByText(
+        "The saved source is unavailable or has changed. You can still remove this entry.",
+      ),
+    ).toBeInTheDocument();
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    expect(
+      screen.getByText("该记录的数据来源不可用或已变更，但仍可移除自选。"),
+    ).toBeInTheDocument();
   });
 
   it("shows honest empty and failed cache reads and provides retry", async () => {

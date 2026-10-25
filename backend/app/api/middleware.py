@@ -6,11 +6,14 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 class RequestBodyLimitMiddleware:
     def __init__(
-        self, app: ASGIApp, max_bytes: int = 65536, allowed_origin: str = "http://localhost:5173"
+        self,
+        app: ASGIApp,
+        max_bytes: int = 65536,
+        allowed_origins: tuple[str, ...] = ("http://localhost:5173",),
     ) -> None:
         self.app = app
         self.max_bytes = max_bytes
-        self.allowed_origin = allowed_origin
+        self.allowed_origins = allowed_origins
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":
@@ -20,7 +23,7 @@ class RequestBodyLimitMiddleware:
         if (
             scope["method"] not in {"GET", "HEAD", "OPTIONS"}
             and origin is not None
-            and origin.decode("latin-1") != self.allowed_origin
+            and origin.decode("latin-1") not in self.allowed_origins
         ):
             await JSONResponse({"detail": "origin not allowed"}, status_code=403)(
                 scope, receive, send

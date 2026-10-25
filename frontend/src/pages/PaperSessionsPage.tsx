@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { paperApi } from "../api/paper";
@@ -15,10 +15,34 @@ const LIMIT = 20;
 export function PaperSessionsPage() {
   const { t } = useTranslation(["paper", "common", "research"]);
   const [offset, setOffset] = useState(0);
+  const [revision, setRevision] = useState(0);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const focusedList = useRef(false);
   const sessions = useApiResource(
     (signal) => paperApi.list(LIMIT, offset, signal),
-    [offset],
+    [offset, revision],
+    {
+      intervalMs: 5000,
+      while: (page) =>
+        page.items.some(
+          (item) =>
+            item.status === "STARTING" ||
+            item.status === "RUNNING" ||
+            item.status === "PAUSING" ||
+            item.status === "STOPPING",
+        ),
+    },
   );
+  useEffect(() => {
+    if (
+      (sessions.data || sessions.error) &&
+      focusedList.current &&
+      document.activeElement === document.body
+    ) {
+      heading.current?.focus();
+      focusedList.current = false;
+    }
+  }, [sessions.data, sessions.error]);
   return (
     <>
       <PaperSafetyBanner />
@@ -34,19 +58,35 @@ export function PaperSessionsPage() {
       </header>
       <section className="panel" aria-labelledby="paper-sessions-title">
         <div className="panelHeader">
-          <h2 id="paper-sessions-title">{t("paper:persisted")}</h2>
+          <h2 ref={heading} id="paper-sessions-title" tabIndex={-1}>
+            {t("paper:persisted")}
+          </h2>
+          <button
+            className="button secondary"
+            type="button"
+            onClick={() => setRevision((value) => value + 1)}
+          >
+            {t("paper:refresh")}
+          </button>
         </div>
         {sessions.loading && <LoadingPanel label={t("paper:loading")} />}
-        {sessions.error && <ErrorPanel message={t("paper:requestError")} />}
+        {sessions.error && <ErrorPanel message={sessions.error} />}
         {sessions.data?.items.length === 0 && (
           <EmptyState>{t("paper:empty")}</EmptyState>
         )}
         {sessions.data && sessions.data.items.length > 0 && (
-          <div className="tableScroll">
+          <div
+            className="tableScroll"
+            role="region"
+            tabIndex={0}
+            aria-label={t("research:scrollTable")}
+            onFocusCapture={() => (focusedList.current = true)}
+            onBlurCapture={() => (focusedList.current = false)}
+          >
             <table>
               <thead>
                 <tr>
-                  <th scope="col">{t("common:run")}</th>
+                  <th scope="col">{t("paper:sessionColumn")}</th>
                   <th scope="col">{t("common:strategy")}</th>
                   <th scope="col">{t("research:provider")}</th>
                   <th scope="col">{t("common:status")}</th>
@@ -60,15 +100,23 @@ export function PaperSessionsPage() {
                       <Link
                         className="monoLink"
                         href={`/paper/${item.session_id}`}
-                        title={item.session_id}
+                        aria-label={`${t("paper:openSession")}: ${t(`paper:strategies.${item.strategy_type}`)} · ${t(`paper:providers.${item.provider_type}`)} · ${t(`common:statuses.${item.status}`)} · ${formatUtc(item.created_at)} · ${shortId(item.session_id)}`}
                       >
-                        {shortId(item.session_id)}
+                        {t("paper:openSession")}
                       </Link>
+                      <small className="paperSessionMode" aria-hidden="true">
+                        {t(`paper:providers.${item.provider_type}`)}
+                      </small>
                     </td>
                     <td>{t(`paper:strategies.${item.strategy_type}`)}</td>
                     <td>{t(`paper:providers.${item.provider_type}`)}</td>
                     <td>
-                      <StatusBadge status={item.status} />
+                      <span
+                        role="status"
+                        aria-label={`${t(`paper:strategies.${item.strategy_type}`)}: ${t(`common:statuses.${item.status}`)} · ${formatUtc(item.created_at)} · ${shortId(item.session_id)}`}
+                      >
+                        <StatusBadge status={item.status} />
+                      </span>
                     </td>
                     <td>{formatUtc(item.created_at)}</td>
                   </tr>
@@ -77,14 +125,13 @@ export function PaperSessionsPage() {
             </table>
           </div>
         )}
-        {sessions.data && (
-          <Pagination
-            offset={offset}
-            limit={LIMIT}
-            total={sessions.data.total}
-            onChange={setOffset}
-          />
-        )}
+        <Pagination
+          offset={offset}
+          limit={LIMIT}
+          total={sessions.data?.total ?? null}
+          loading={sessions.loading}
+          onChange={setOffset}
+        />
       </section>
     </>
   );

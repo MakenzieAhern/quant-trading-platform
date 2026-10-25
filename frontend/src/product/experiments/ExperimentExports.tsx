@@ -14,6 +14,10 @@ export function ExperimentExports({
 }) {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
+  const describeRange = (dates: DateRange) =>
+    dates.start_date || dates.end_date
+      ? `${dates.start_date ?? u.noStartLimit} → ${dates.end_date ?? u.noEndLimit}`
+      : u.fullSavedInterval;
   const [collection, setCollection] = useState<ExperimentCollection>("trades");
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
     "idle",
@@ -43,7 +47,6 @@ export function ExperimentExports({
     pending.current = true;
     setStatus("loading");
     setMissingHoldings(false);
-    setPrepared(null);
     try {
       const blob = await experimentApi.export(jobId, format, collection, range);
       if (!mounted.current) return;
@@ -73,13 +76,12 @@ export function ExperimentExports({
       <h2>{u.reports}</h2>
       <p className="experimentHelp">{u.exportHelp}</p>
       <p>
-        {u.filterTitle}: {range.start_date ?? "…"} → {range.end_date ?? "…"}{" "}
-        (Asia/Shanghai)
+        {u.filterTitle}: {describeRange(range)} (Asia/Shanghai)
       </p>
       <div className="experimentActions">
         <button
           className="button secondary"
-          disabled={status === "loading"}
+          aria-disabled={status === "loading"}
           onClick={() => void download("json")}
         >
           {u.exportJson}
@@ -101,7 +103,7 @@ export function ExperimentExports({
         </label>
         <button
           className="button secondary"
-          disabled={status === "loading"}
+          aria-disabled={status === "loading"}
           onClick={() => void download("csv")}
         >
           {u.exportCsv}
@@ -115,13 +117,13 @@ export function ExperimentExports({
             className="button secondary"
             href={prepared.url}
             download={prepared.filename}
+            aria-label={`${u.savePrepared}: ${prepared.filename} · ${u.filterTitle}: ${describeRange(prepared.range)} (Asia/Shanghai)`}
           >
             {u.savePrepared}
           </a>
           <p className="experimentHelp">
             {prepared.filename} · {u.filterTitle}:{" "}
-            {prepared.range.start_date ?? "…"} →{" "}
-            {prepared.range.end_date ?? "…"} (Asia/Shanghai)
+            {describeRange(prepared.range)} (Asia/Shanghai)
           </p>
         </div>
       )}

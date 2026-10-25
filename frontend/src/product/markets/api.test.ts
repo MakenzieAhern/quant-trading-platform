@@ -11,6 +11,97 @@ import {
 } from "./fixtures.test-data";
 
 describe("market HTTP boundary", () => {
+  it("rejects source PASS claims in catalog, search and bars", async () => {
+    const invalid = { ...metadata, current_source_integrity: "PASS" };
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        jsonResponse([{ ...dataset, current_source_integrity: "PASS" }]),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          items: [],
+          total: 0,
+          limit: 20,
+          offset: 0,
+          metadata: invalid,
+        }),
+      );
+    await expect(marketApi.datasets()).rejects.toThrow();
+    await expect(
+      marketApi.search(dataset.dataset_id, "", "ALL"),
+    ).rejects.toThrow();
+    expect(() => parseBars({ ...bars, metadata: invalid })).toThrow();
+    for (const value of [
+      "SOURCE_CONTRACT_INTEGRITY_FAILED",
+      "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+      null,
+      undefined,
+    ]) {
+      const input = {
+        ...bars,
+        metadata: { ...metadata, current_source_integrity: value },
+      };
+      expect(parseBars(input)).toEqual(input);
+    }
+  });
+  it.each(["PASS", true, 0, {}, [], "__proto__"])(
+    "rejects unrecognized current quality %j in catalog, search and bars",
+    async (quality) => {
+      vi.spyOn(globalThis, "fetch")
+        .mockResolvedValueOnce(
+          jsonResponse([{ ...dataset, current_dataset_quality: quality }]),
+        )
+        .mockResolvedValueOnce(
+          jsonResponse({
+            items: [],
+            total: 0,
+            limit: 20,
+            offset: 0,
+            metadata: { ...metadata, current_dataset_quality: quality },
+          }),
+        )
+        .mockResolvedValueOnce(
+          jsonResponse({
+            ...bars,
+            metadata: { ...metadata, current_dataset_quality: quality },
+          }),
+        );
+      await expect(marketApi.datasets()).rejects.toThrow();
+      await expect(
+        marketApi.search(dataset.dataset_id, "", "ALL"),
+      ).rejects.toThrow();
+      await expect(
+        marketApi.bars(dataset.dataset_id, security.security_id, {
+          start_date: "2024-02-27",
+          end_date: "2024-02-29",
+        }),
+      ).rejects.toThrow();
+    },
+  );
+  it.each([
+    "KNOWN_ECONOMIC_COVERAGE_GAP",
+    "HISTORICAL_DATASET_QUALITY_UNKNOWN",
+    null,
+    undefined,
+  ])(
+    "preserves current quality %j without changing market bytes or prices",
+    async (quality) => {
+      vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+        jsonResponse([{ ...dataset, current_dataset_quality: quality }]),
+      );
+      expect((await marketApi.datasets())[0].current_dataset_quality).toBe(
+        quality,
+      );
+      const input = {
+        ...bars,
+        metadata: { ...metadata, current_dataset_quality: quality },
+      };
+      const before = JSON.stringify(input);
+      expect(parseBars(input).metadata.current_dataset_quality).toBe(quality);
+      expect(JSON.stringify(input)).toBe(before);
+      expect(parseBars(input).items[0].raw.close).toBe("10.123456789012345678");
+    },
+  );
   it("uses /api routes, encoded identities, explicit dates and bounded pages", async () => {
     const fetch = vi
       .spyOn(globalThis, "fetch")

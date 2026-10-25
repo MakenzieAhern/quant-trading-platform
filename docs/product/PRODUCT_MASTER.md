@@ -122,3 +122,15 @@ Final delivery must link usable app/start/recovery, before/after screenshots and
 recordings, per-flow evidence/tests/CI, actual mode/data freshness/limitations,
 branch/PR/release/rollback and Chinese/English nontechnical manuals. Only all U1–U8
 verified means PRODUCT_GOAL_COMPLETE; otherwise report PARTIAL/BLOCKED explicitly.
+
+Independent physical backup media, an unattended Windows-login launch, a real
+novice satisfaction study and per-commit rerecording are additional assurance,
+not extra mandatory gates in the accepted objective. Retain their actual
+limitations without substituting them for the required restore, terminal-free
+operation, independent review, accessibility and user-flow evidence. Historical
+scoped native-zoom/performance passes remain evidence; later failed observations
+do not erase them or establish current broad acceptance.
+
+Draft user instructions (key paths agent-walked in Chrome; real novice
+testing is not claimed): [中文指南](USER_GUIDE.zh-CN.md) and
+[English guide](USER_GUIDE.en-US.md). These are not v1.2.0 release evidence.

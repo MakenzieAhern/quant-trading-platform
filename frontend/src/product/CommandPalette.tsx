@@ -1,16 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "../components/Link";
 import { Pagination } from "../components/Pagination";
 import { useApiResource } from "../hooks/useApiResource";
 import { experimentApi } from "./experiments/api";
-import { marketApi, securityName } from "./markets/api";
-import { useProductCopy } from "./copy";
+import { canReadWatchlistItem, marketApi, securityName } from "./markets/api";
+import { productHelpTopics, useProductCopy } from "./copy";
 import { Dialog } from "./Dialog";
+import { ProductError } from "./ProductPages";
+
+function availableOffset(
+  offset: number,
+  page: { total: number; items: readonly unknown[] } | null,
+) {
+  if (!page) return offset;
+  const next = Math.min(
+    offset,
+    Math.max(0, Math.ceil(page.total / 20) - 1) * 20,
+  );
+  // Count and rows can observe different moments. One empty-page fallback, never a scan.
+  return next === offset && offset > 0 && page.items.length === 0 ? 0 : next;
+}
 
 export function CommandPalette({ onClose }: { onClose: () => void }) {
   const copy = useProductCopy();
   const { i18n } = useTranslation();
+  const searchInput = useRef<HTMLInputElement>(null);
+  useEffect(() => searchInput.current?.focus(), []);
   const [query, setQuery] = useState("");
   const [search, setSearch] = useState({
     q: "",
@@ -39,10 +55,23 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
     (signal) => marketApi.watchlist(search.watchOffset, signal, search.q),
     [search.q, search.watchOffset, revision],
   );
+  const jobsOffset = waiting
+    ? search.jobsOffset
+    : availableOffset(search.jobsOffset, jobs.data);
+  const watchOffset = waiting
+    ? search.watchOffset
+    : availableOffset(search.watchOffset, watches.data);
+  if (jobsOffset !== search.jobsOffset || watchOffset !== search.watchOffset) {
+    // Correct before commit: a shrinking result set must not expose an invalid range.
+    setSearch({ ...search, jobsOffset, watchOffset });
+  }
+  const searchError = capabilities.error ?? jobs.error ?? watches.error;
   const commands = [
     { label: copy.home, href: "/" },
     { label: copy.markets, href: "/markets" },
-    { label: copy.start, href: "/research/new" },
+    ...(window.location.pathname === "/research/new"
+      ? []
+      : [{ label: copy.start, href: "/research/new?new=1" }]),
     { label: copy.strategies, href: "/strategies" },
     { label: copy.research, href: "/experiments" },
     { label: copy.tasks, href: "/tasks" },
@@ -51,6 +80,10 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
     { label: copy.data, href: "/data" },
     { label: copy.help, href: "/help" },
     { label: copy.settings, href: "/settings" },
+    ...productHelpTopics(copy).map((topic) => ({
+      label: topic.question,
+      href: `/help#help-${topic.id}`,
+    })),
     ...(capabilities.data?.strategies ?? []).map((item) => ({
       label: i18n.language.startsWith("zh") ? item.name_zh : item.name_en,
       href: `/strategies/${encodeURIComponent(item.strategy_id)}`,
@@ -63,6 +96,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
       <label>
         <span className="srOnly">{copy.search}</span>
         <input
+          ref={searchInput}
           type="search"
           maxLength={80}
           value={query}
@@ -78,17 +112,16 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
         />
       </label>
       <p>{copy.searchScope}</p>
-      {(capabilities.error || jobs.error || watches.error) && (
-        <div role="alert">
-          <p>{copy.searchFailed}</p>
-          <button
-            type="button"
-            className="button secondary"
-            onClick={() => setRevision((value) => value + 1)}
-          >
-            {copy.retry}
-          </button>
-        </div>
+      {searchError && (
+        <ProductError
+          error={searchError}
+          fallback={copy.searchFailed}
+          retryLabel={copy.retry}
+          retry={() => {
+            searchInput.current?.focus();
+            setRevision((value) => value + 1);
+          }}
+        />
       )}
       <nav className="commandResults" aria-label={copy.searchCommands}>
         {commands.map((item) => (
@@ -122,17 +155,19 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                 ))}
               </nav>
               {jobs.data.total > 20 && <p>{copy.searchMore}</p>}
-              <Pagination
-                offset={search.jobsOffset}
-                limit={20}
-                total={jobs.data.total}
-                onChange={(offset) =>
-                  setSearch((value) => ({ ...value, jobsOffset: offset }))
-                }
-              />
             </>
           )
         )}
+        <Pagination
+          label={copy.searchStudies}
+          offset={search.jobsOffset}
+          limit={20}
+          total={waiting ? null : (jobs.data?.total ?? null)}
+          loading={waiting || jobs.loading}
+          onChange={(offset) =>
+            setSearch((value) => ({ ...value, jobsOffset: offset }))
+          }
+        />
       </section>
       <section aria-label={copy.searchWatchlist}>
         <h3>{copy.searchWatchlist}</h3>
@@ -146,40 +181,58 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
               </p>
               {watches.data.total === 0 && <p>{copy.searchNoWatchlist}</p>}
               <nav className="commandResults" aria-label={copy.searchWatchlist}>
-                {watches.data.items.map((item) => (
-                  <Link
-                    key={`${item.dataset_id}:${item.security_id}`}
-                    href={`/markets?${new URLSearchParams({ dataset: item.dataset_id, q: item.security_id })}`}
-                    onClick={onClose}
-                  >
-                    <span>
-                      {securityName(item.security)} · {item.security_id}
-                      {!item.security.name &&
-                        item.security.source_observed_name && (
-                          <small> · {copy.searchObservedName}</small>
-                        )}
-                    </span>
-                    <small>
-                      {item.dataset_id}
-                      {!item.source_available
-                        ? ` · ${copy.searchSourceUnavailable}`
-                        : ""}
-                    </small>
-                  </Link>
-                ))}
+                {watches.data.items.map((item) => {
+                  const canRead = canReadWatchlistItem(
+                    item,
+                    capabilities.data?.datasets.find(
+                      (source) => source.dataset_id === item.dataset_id,
+                    ),
+                  );
+                  const content = (
+                    <>
+                      <span>
+                        {securityName(item.security)} · {item.security_id}
+                        {!item.security.name &&
+                          item.security.source_observed_name && (
+                            <small> · {copy.searchObservedName}</small>
+                          )}
+                      </span>
+                      <small>
+                        {item.dataset_id}
+                        {!canRead ? ` · ${copy.searchSourceUnavailable}` : ""}
+                      </small>
+                    </>
+                  );
+                  const key = `${item.dataset_id}:${item.security_id}`;
+                  return canRead ? (
+                    <Link
+                      key={key}
+                      href={`/markets?${new URLSearchParams({ dataset: item.dataset_id, q: item.security_id })}#${new URLSearchParams({ dataset: item.dataset_id, security: item.security_id })}`}
+                      onClick={onClose}
+                    >
+                      {content}
+                    </Link>
+                  ) : (
+                    <button key={key} type="button" disabled>
+                      {content}
+                    </button>
+                  );
+                })}
               </nav>
               {watches.data.total > 20 && <p>{copy.searchMore}</p>}
-              <Pagination
-                offset={search.watchOffset}
-                limit={20}
-                total={watches.data.total}
-                onChange={(offset) =>
-                  setSearch((value) => ({ ...value, watchOffset: offset }))
-                }
-              />
             </>
           )
         )}
+        <Pagination
+          label={copy.searchWatchlist}
+          offset={search.watchOffset}
+          limit={20}
+          total={waiting ? null : (watches.data?.total ?? null)}
+          loading={waiting || watches.loading}
+          onChange={(offset) =>
+            setSearch((value) => ({ ...value, watchOffset: offset }))
+          }
+        />
       </section>
     </Dialog>
   );

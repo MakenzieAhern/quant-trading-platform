@@ -14,7 +14,12 @@ from app.api.schemas.experiments import (
     ExperimentPage,
     ExperimentResponse,
 )
-from app.application.experiments.data import ExperimentDatasetRegistry, ExperimentInputError
+from app.application.experiments.data import (
+    ExperimentDatasetRegistry,
+    ExperimentInputError,
+    current_dataset_quality,
+    current_source_integrity,
+)
 from app.application.experiments.export import export_csv, export_json
 from app.application.experiments.service import (
     ExperimentConflictError,
@@ -29,7 +34,7 @@ from app.db.session import SessionFactory, engine
 router = APIRouter(tags=["experiments"])
 experiment_manager = ExperimentManager(
     SessionFactory,
-    ExperimentDatasetRegistry(get_settings().research_data_path),
+    ExperimentDatasetRegistry(get_settings().research_data_path, get_settings().product_data_path),
     engine,
 )
 Key = Annotated[
@@ -59,6 +64,7 @@ def _response(row: ExperimentJobModel) -> ExperimentResponse:
             "total_sessions": row.total_sessions,
             "cancel_requested": row.cancel_requested,
             "error_code": row.error_code,
+            "error_context": row.error_context,
             "retry_of": row.retry_of,
             "attempt": row.attempt,
             "result_available": row.summary is not None,
@@ -149,7 +155,17 @@ async def experiment_result(job_id: UUID, request: Request) -> dict[str, Any] | 
         row = await experiment_manager.get(job_id)
         if row.summary is None:
             raise ExperimentConflictError("RESULT_NOT_READY")
-        return row.summary
+        quality = current_dataset_quality(row.dataset_id, row.dataset_sha256)
+        integrity = current_source_integrity(row.dataset_id, row.dataset_sha256)
+        return (
+            {
+                **row.summary,
+                "current_dataset_quality": quality,
+                "current_source_integrity": integrity,
+            }
+            if quality or integrity
+            else row.summary
+        )
     except (LookupError, ExperimentConflictError) as exc:
         return _error(request, exc)
 

@@ -1,5 +1,5 @@
 import asyncio
-from collections.abc import Awaitable, Callable, Iterable, Sequence
+from collections.abc import AsyncIterable, AsyncIterator, Awaitable, Callable, Iterable, Sequence
 from contextlib import suppress
 from dataclasses import dataclass
 from datetime import date, datetime
@@ -28,7 +28,7 @@ from app.risk import RiskEngine
 from app.strategies import BaseStrategy, StrategyEngine
 
 BarHandler = Callable[[Bar], Awaitable[None]]
-AShareSessionHandler = Callable[[ResearchSession], Awaitable[None]]
+AShareSessionHandler = Callable[[ResearchSession | TradingCalendar], Awaitable[None]]
 FROZEN_A_SHARE_STRATEGY_ID = "cn_a_cross_sectional_momentum_low_vol_v1"
 
 
@@ -85,11 +85,12 @@ class ReplayMarketDataProvider:
 
 
 class SimulatedAShareSessionProvider:
-    """Replay completed cross-sectional sessions, including lazy frozen archives."""
+    """Consume completed sessions; async sources can wait without preventing stop."""
 
     def __init__(
         self,
-        sessions: Iterable[ResearchSession],
+        sessions: Iterable[ResearchSession | TradingCalendar]
+        | AsyncIterable[ResearchSession | TradingCalendar],
         interval_seconds: float = 0.5,
         *,
         pace_from_date: date | None = None,
@@ -97,13 +98,15 @@ class SimulatedAShareSessionProvider:
         if interval_seconds < 0:
             raise ValueError("interval_seconds must be non-negative")
         self._streaming = not isinstance(sessions, Sequence)
-        self._sessions = sessions if self._streaming else tuple(sessions)
+        self._sessions = tuple(sessions) if isinstance(sessions, Sequence) else sessions
         self._interval_seconds = interval_seconds
         self._pace_from_date = pace_from_date
         self._running = False
         self._stop = asyncio.Event()
         previous: date | None = None
-        for session in () if self._streaming else self._sessions:
+        for session in self._sessions if isinstance(self._sessions, Sequence) else ():
+            if isinstance(session, TradingCalendar):
+                continue
             if previous is not None and session.trading_date <= previous:
                 raise ReplayProviderError("A-share sessions must be strictly chronological")
             previous = session.trading_date
@@ -115,32 +118,73 @@ class SimulatedAShareSessionProvider:
     async def start(self, handler: AShareSessionHandler) -> None:
         if self._running:
             raise ReplayProviderError("A-share session provider is already running")
+        iterator = (
+            aiter(self._sessions)
+            if isinstance(self._sessions, AsyncIterable)
+            else iter(self._sessions)
+        )
         self._running = True
         self._stop.clear()
+        primary_error = False
         try:
-            iterator = iter(self._sessions)
             previous: date | None = None
             while not self._stop.is_set():
                 session = (
-                    await asyncio.to_thread(next, iterator, None)
+                    await self._next_async(iterator)
+                    if isinstance(iterator, AsyncIterator)
+                    else await asyncio.to_thread(next, iterator, None)
                     if self._streaming
                     else next(iterator, None)
                 )
                 if session is None:
                     break
-                if previous is not None and session.trading_date <= previous:
+                if (
+                    isinstance(session, ResearchSession)
+                    and previous is not None
+                    and session.trading_date <= previous
+                ):
                     raise ReplayProviderError("A-share sessions must be strictly chronological")
-                previous = session.trading_date
+                if isinstance(session, ResearchSession):
+                    previous = session.trading_date
                 if self._stop.is_set():
                     break
                 await handler(session)
                 if self._interval_seconds and (
-                    self._pace_from_date is None or session.trading_date >= self._pace_from_date
+                    isinstance(session, ResearchSession)
+                    and (
+                        self._pace_from_date is None or session.trading_date >= self._pace_from_date
+                    )
                 ):
                     with suppress(TimeoutError):
                         await asyncio.wait_for(self._stop.wait(), timeout=self._interval_seconds)
+        except BaseException:
+            primary_error = True
+            raise
         finally:
-            self._running = False
+            try:
+                close = getattr(iterator, "aclose", None)
+                if close is not None:
+                    await close()
+            except Exception:
+                if not primary_error:
+                    raise  # Cleanup must not replace the original failure or shutdown cancellation.
+            finally:
+                self._running = False
+
+    async def _next_async(
+        self, iterator: AsyncIterator[ResearchSession | TradingCalendar]
+    ) -> ResearchSession | TradingCalendar | None:
+        pending = asyncio.ensure_future(anext(iterator, None))
+        stopped = asyncio.create_task(self._stop.wait())
+        try:
+            await asyncio.wait((pending, stopped), return_when=asyncio.FIRST_COMPLETED)
+            if self._stop.is_set():
+                return None  # Stop wins even when an unread item becomes ready in the same turn.
+            return pending.result()
+        finally:
+            pending.cancel()
+            stopped.cancel()
+            await asyncio.gather(pending, stopped, return_exceptions=True)
 
     async def stop(self) -> None:
         self._stop.set()
@@ -175,7 +219,17 @@ class PaperTradingRuntime:
         self._strategy_engine = StrategyEngine(self._event_bus)
         for strategy in strategies:
             self._strategy_engine.register(strategy)
-        self._broker = PaperBroker(self._event_bus, config.commission_model, config.slippage_model)
+        self._broker = PaperBroker(
+            self._event_bus,
+            config.commission_model,
+            config.slippage_model,
+            fill_eligible=(
+                lambda fill: fill.side is not OrderSide.BUY
+                or fill.quantity * fill.price + fill.commission <= self._portfolio.cash
+            )
+            if config.risk.enforce_buying_power
+            else None,
+        )
         self._order_manager = OrderManager(
             self._event_bus,
             self._broker,
@@ -206,6 +260,7 @@ class PaperTradingRuntime:
         decision_count = len(self._order_manager.decisions)
         proposal_count = len(self._order_manager.proposals)
         fill_count = len(self._broker.fills)
+        previous_orders = {order.id: order.status for order in self._order_manager.orders}
         self._broker.execute_pending(bar)
         self._event_bus.publish(Event(EventType.MARKET_DATA, bar, occurred_at=bar.timestamp))
         self._last_bar_time = bar.timestamp
@@ -215,7 +270,11 @@ class PaperTradingRuntime:
         new_fills = self._broker.fills[fill_count:]
         new_order_ids = {
             proposal.proposal_id for proposal in self._order_manager.proposals[proposal_count:]
-        } | {fill.order_id for fill in new_fills}
+        } | {
+            order.id
+            for order in self._order_manager.orders
+            if order.id in previous_orders and order.status is not previous_orders[order.id]
+        }
         return PaperRuntimeDelta(
             bar=bar,
             signals=tuple(self._signals[signal_count:]),
@@ -293,16 +352,39 @@ class ASharePaperTradingRuntime:
             risk_config=risk_config,
         )
         self._engine.reset()
+        self._completed_sessions = 0
         self._result: ResearchExecutionResult | None = None
 
     @property
     def strategy_id(self) -> str:
         return FROZEN_A_SHARE_STRATEGY_ID
 
+    @property
+    def completed_sessions(self) -> int:
+        return self._completed_sessions
+
+    def next_accepted_session(self, trading_date: date) -> date | None:
+        return self._engine.next_accepted_session(trading_date)
+
+    @property
+    def calendar(self) -> TradingCalendar:
+        return self._engine.calendar
+
+    @property
+    def last_completed_session(self) -> date | None:
+        return self._engine.last_completed_session
+
+    def extend_calendar(self, calendar: TradingCalendar) -> None:
+        if self._result is not None:
+            raise ReplayProviderError("A-share paper runtime is already stopped")
+        self._engine.extend_calendar(calendar)
+
     async def process_session(self, session: ResearchSession) -> ResearchExecutionDelta:
         if self._result is not None:
             raise ReplayProviderError("A-share paper runtime is already stopped")
-        return self._engine.process_session(session)
+        delta = self._engine.process_session(session)
+        self._completed_sessions += 1
+        return delta
 
     def finish(self) -> ResearchExecutionResult:
         if self._result is None:
@@ -310,6 +392,7 @@ class ASharePaperTradingRuntime:
         return self._result
 
     def cancel_pending_orders(self) -> tuple[Order, ...]:
+        expired_before = len(self._engine._expired_order_ids)
         result = self.finish()
-        expired = set(result.expired_order_ids)
+        expired = set(result.expired_order_ids[expired_before:])
         return tuple(item for item in result.orders if item.id in expired)

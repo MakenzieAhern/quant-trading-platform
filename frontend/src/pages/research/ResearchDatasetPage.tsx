@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { explainDatasetFindings } from "../../product/experiments/codes";
 
 import { researchApi } from "../../api/research";
 import { ErrorPanel, LoadingPanel } from "../../components/AsyncPanel";
@@ -7,7 +8,7 @@ import { useApiResource } from "../../hooks/useApiResource";
 import { formatUtc } from "../../utils/format";
 
 export function ResearchDatasetPage({ datasetId }: { datasetId: string }) {
-  const { t } = useTranslation(["research", "common", "validation"]);
+  const { t, i18n } = useTranslation(["research", "common", "validation"]);
   const dataset = useApiResource(
     (signal) => researchApi.dataset(datasetId, signal),
     [datasetId],
@@ -27,6 +28,12 @@ export function ResearchDatasetPage({ datasetId }: { datasetId: string }) {
           <h1>{dataset.data.dataset_id}</h1>
         </div>
       </header>
+      {(dataset.data.current_dataset_quality ||
+        dataset.data.current_source_integrity) && (
+        <p className="oosGuard" role="note">
+          {explainDatasetFindings(dataset.data, i18n.language)}
+        </p>
+      )}
       <section className="runFacts" aria-label={t("research:lineage")}>
         <div>
           <span>{t("research:provider")}</span>
@@ -63,7 +70,10 @@ export function ResearchDatasetPage({ datasetId }: { datasetId: string }) {
         <div>
           <span>{t("common:status")}</span>
           <strong>
-            {dataset.data.readiness_status} ·{" "}
+            {t(`research:readiness.${dataset.data.readiness_status}`, {
+              defaultValue: t("research:readiness.unknown"),
+            })}{" "}
+            ·{" "}
             {dataset.data.frozen
               ? t("validation:frozen")
               : t("validation:notFrozen")}

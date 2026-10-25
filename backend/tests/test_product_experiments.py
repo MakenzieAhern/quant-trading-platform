@@ -1,6 +1,13 @@
-from datetime import date
-from decimal import Decimal
+import csv
+import io
+import json
+from dataclasses import replace
+from datetime import UTC, date, datetime
+from decimal import ROUND_DOWN, ROUND_HALF_EVEN, ROUND_UP, Context, Decimal, Inexact, localcontext
 from threading import Event
+from types import SimpleNamespace
+from unittest.mock import AsyncMock
+from uuid import uuid4
 
 import pytest
 from pydantic import ValidationError
@@ -10,12 +17,24 @@ from app.application.experiments.data import (
     DEMO_ID,
     DEMO_SHA,
     DEMO_START,
+    HISTORICAL_ECONOMIC_GAP_SHA,
+    HISTORICAL_ID,
     ExperimentDatasetRegistry,
+    ExperimentInputError,
     SyntheticExperimentDataset,
+    current_dataset_quality,
+    current_source_integrity,
 )
 from app.application.experiments.models import CreateExperimentRequest
-from app.application.experiments.runner import ExperimentCancelled, json_value, run_experiment
+from app.application.experiments.runner import (
+    ExperimentCancelled,
+    build_plan_preview,
+    json_value,
+    run_experiment,
+)
 from app.data.catalog.checksums import canonical_sha256
+from app.data.catalog.freeze import MARKER
+from app.domain.markets.corporate_actions import OrdinaryDistributionInputError
 
 
 def demo_request(**changes):
@@ -28,6 +47,146 @@ def demo_request(**changes):
             **changes,
         }
     )
+
+
+@pytest.mark.parametrize(
+    ("dataset_id", "sha", "expected"),
+    [
+        (HISTORICAL_ID, HISTORICAL_ECONOMIC_GAP_SHA, "KNOWN_ECONOMIC_COVERAGE_GAP"),
+        (HISTORICAL_ID, "a" * 64, "HISTORICAL_DATASET_QUALITY_UNKNOWN"),
+        (HISTORICAL_ID, None, "HISTORICAL_DATASET_QUALITY_UNKNOWN"),
+        (HISTORICAL_ID, [HISTORICAL_ECONOMIC_GAP_SHA], "HISTORICAL_DATASET_QUALITY_UNKNOWN"),
+        (DEMO_ID, HISTORICAL_ECONOMIC_GAP_SHA, None),
+        ("cn-a-pilot-akshare-20230101-20240731-v1", HISTORICAL_ECONOMIC_GAP_SHA, None),
+    ],
+)
+def test_later_dataset_quality_uses_saved_exact_identity_not_mode_or_mounted_sha(
+    dataset_id, sha, expected
+):
+    assert current_dataset_quality(dataset_id, sha) == expected
+    assert (
+        current_source_integrity(dataset_id, sha)
+        == {
+            "KNOWN_ECONOMIC_COVERAGE_GAP": "SOURCE_CONTRACT_INTEGRITY_FAILED",
+            "HISTORICAL_DATASET_QUALITY_UNKNOWN": "SOURCE_CONTRACT_INTEGRITY_UNVERIFIED",
+            None: None,
+        }[expected]
+    )
+
+
+@pytest.mark.parametrize("sha", [HISTORICAL_ECONOMIC_GAP_SHA, "b" * 64])
+async def test_read_and_export_quality_do_not_rewrite_original_summary_or_plan(monkeypatch, sha):
+    from app.api.routes import experiments
+    from app.application.experiments.export import export_csv, export_json
+
+    summary = {
+        "metrics": {"cumulative_return": "-0.123456789123456789"},
+        "limitations": [],
+        "simulation_plan": {"dataset_sha256": sha, "account": {"cash": "123.000000000000001"}},
+    }
+    configuration = json_value(demo_request().model_dump())
+    row = SimpleNamespace(
+        id=uuid4(),
+        name="Saved result",
+        status="SUCCEEDED",
+        mode="historical_exploration",
+        dataset_id=HISTORICAL_ID,
+        dataset_sha256=sha,
+        summary=summary,
+        configuration=configuration,
+        configuration_sha256="c" * 64,
+        created_at=datetime(2026, 1, 1, tzinfo=UTC),
+        completed_at=None,
+    )
+    manager = SimpleNamespace(
+        get=AsyncMock(return_value=row), collection=AsyncMock(return_value=([], 0))
+    )
+    monkeypatch.setattr(experiments, "experiment_manager", manager)
+    before = json.dumps([summary, configuration], sort_keys=True)
+    read = await experiments.experiment_result(row.id, None)
+    quality = current_dataset_quality(HISTORICAL_ID, sha)
+    assert read is not summary and read["current_dataset_quality"] == quality
+    integrity = current_source_integrity(HISTORICAL_ID, sha)
+    assert read["current_source_integrity"] == integrity
+    assert {
+        k: v
+        for k, v in read.items()
+        if k not in {"current_dataset_quality", "current_source_integrity"}
+    } == summary
+    exported = json.loads("".join([part async for part in export_json(manager, row, None, None)]))
+    assert exported["metadata"]["current_dataset_quality"] == quality
+    assert exported["metadata"]["current_source_integrity"] == integrity
+    assert exported["full_period_summary"] == summary
+    csv_text = "".join([part async for part in export_csv(manager, row, "trades", None, None)])
+    metadata = {item["field"]: item["value"] for item in csv.DictReader(io.StringIO(csv_text))}
+    assert metadata["current_dataset_quality"] == quality
+    assert metadata["current_source_integrity"] == integrity
+    assert json.loads(metadata["full_period_summary"]) == summary
+    assert json.dumps([summary, configuration], sort_keys=True) == before
+
+
+@pytest.mark.parametrize(
+    "dataset_id,sha",
+    [
+        (HISTORICAL_ID, HISTORICAL_ECONOMIC_GAP_SHA),
+        (HISTORICAL_ID, "b" * 64),
+        (DEMO_ID, HISTORICAL_ECONOMIC_GAP_SHA),
+        ("cn-a-pilot-akshare-20230101-20240731-v1", HISTORICAL_ECONOMIC_GAP_SHA),
+    ],
+)
+def test_formal_quality_projection_keeps_saved_lineage_manifest_and_diagnostics(dataset_id, sha):
+    from app.api.routes.research import _dataset, _run
+
+    now = datetime(2026, 1, 1, tzinfo=UTC)
+    dataset = SimpleNamespace(
+        dataset_id=dataset_id,
+        provider="audited",
+        provider_version="1",
+        retrieval_timestamp=now,
+        coverage_start=date(2010, 1, 1),
+        coverage_end=date(2025, 12, 31),
+        security_count=1,
+        canonical_sha256=sha,
+        rule_version="1",
+        adjustment_method="separate",
+        readiness_status="READY",
+        frozen=True,
+        manifest={"checksum": "original"},
+    )
+    run = SimpleNamespace(
+        id=uuid4(),
+        dataset_id=dataset_id,
+        dataset_checksum=sha,
+        status="SUCCEEDED",
+        period_kind="VALIDATION",
+        git_commit="a" * 40,
+        provider="audited",
+        provider_version="1",
+        market_rule_version="1",
+        strategy_id="saved",
+        strategy_config_hash="a" * 64,
+        transaction_cost_config={"rate": "0.000300000000000001"},
+        benchmark_id="CSI300",
+        benchmark_version="1",
+        temporal_split_hash="b" * 64,
+        random_seed=0,
+        created_at=now,
+        started_at=None,
+        completed_at=None,
+        failure_code=None,
+        diagnostics={"candidate": "S0"},
+    )
+    before = canonical_sha256(json_value([vars(dataset), vars(run)]))
+    expected = current_dataset_quality(dataset_id, sha)
+    assert _dataset(dataset, detail=True).current_dataset_quality == expected
+    integrity = current_source_integrity(dataset_id, sha)
+    assert _dataset(dataset, detail=True).current_source_integrity == integrity
+    result = _run(run)
+    assert result.current_dataset_quality == expected and result.dataset_checksum == sha
+    assert result.current_source_integrity == integrity
+    assert result.diagnostics == run.diagnostics
+    assert _dataset(dataset, detail=True).manifest == dataset.manifest
+    assert canonical_sha256(json_value([vars(dataset), vars(run)])) == before
 
 
 def test_experiment_validation_rejects_numbers_invalid_dates_and_unsupported_parameters():
@@ -58,6 +217,25 @@ def test_clean_install_capability_is_explicit_synthetic_demo(tmp_path):
     source = SyntheticExperimentDataset(DEMO_END)
     assert len(source.calendar_days) == 340
     assert source.calendar_days[-1] == date.fromisoformat(demo["coverage_end"])
+
+
+def test_non_object_historical_freeze_marker_does_not_block_demo(tmp_path, monkeypatch):
+    archive = tmp_path / HISTORICAL_ID
+    archive.mkdir()
+    (archive / "manifest.json").write_text("{}")
+    (archive / MARKER).write_text("null")
+    monkeypatch.setattr(
+        "app.application.experiments.data.load_manifest",
+        lambda _: SimpleNamespace(dataset_id=HISTORICAL_ID, canonical_sha256="sha", partitions=()),
+    )
+
+    registry = ExperimentDatasetRegistry(tmp_path)
+    historical, demo = registry.capabilities()["datasets"]
+    assert historical["available"] is False
+    assert historical["reason_code"] == "DATASET_INTEGRITY_FAILED"
+    assert demo["available"] is True
+    with pytest.raises(ExperimentInputError, match="DATASET_INTEGRITY_FAILED"):
+        registry.resolve(HISTORICAL_ID)
 
 
 def test_real_engine_demo_has_exact_money_costs_progress_and_repeatable_results(tmp_path):
@@ -118,6 +296,96 @@ def test_real_engine_demo_has_exact_money_costs_progress_and_repeatable_results(
             )
 
 
+@pytest.mark.parametrize("specific", (True, False))
+def test_distribution_input_failure_keeps_safe_code_without_promoting_other_value_errors(
+    tmp_path, monkeypatch, specific
+):
+    failure = (
+        OrdinaryDistributionInputError("private source diagnostics")
+        if specific
+        else ValueError("private source diagnostics")
+    )
+
+    def fail(*args):
+        raise failure
+
+    monkeypatch.setattr("app.research.engine.ResearchExecutionEngine.process_session", fail)
+    phases = []
+    with pytest.raises(ExperimentInputError if specific else ValueError) as caught:
+        run_experiment(
+            ExperimentDatasetRegistry(tmp_path),
+            demo_request(),
+            DEMO_SHA,
+            Event(),
+            lambda *p: phases.append(p),
+        )
+    if specific:
+        assert caught.value.code == OrdinaryDistributionInputError.code
+        assert "private" not in str(caught.value)
+        assert caught.value.context is None
+    else:
+        assert caught.value is failure
+    assert phases == [("VERIFYING_DATA", 0, None), ("EXECUTING", 0, 340)]
+
+
+def test_reference_failure_preserves_observed_context_without_advancing_progress(
+    tmp_path, monkeypatch
+):
+    from app.research.engine import UnexplainedReferenceAdjustment
+
+    def fail(_engine, session):
+        raise UnexplainedReferenceAdjustment(
+            session.trading_date, ("CN-A:SSE:600000", "CN-A:SZSE:000001")
+        )
+
+    monkeypatch.setattr("app.research.engine.ResearchExecutionEngine.process_session", fail)
+    phases = []
+    with pytest.raises(ExperimentInputError) as caught:
+        run_experiment(
+            ExperimentDatasetRegistry(tmp_path),
+            demo_request(),
+            DEMO_SHA,
+            Event(),
+            lambda *p: phases.append(p),
+        )
+    assert caught.value.code == UnexplainedReferenceAdjustment.code
+    assert caught.value.context.model_dump(mode="json") == {
+        "trading_date": DEMO_START.isoformat(),
+        "security_ids": ["CN-A:SSE:600000", "CN-A:SZSE:000001"],
+        "security_count": 2,
+    }
+    assert str(caught.value) == UnexplainedReferenceAdjustment.code
+    assert phases == [("VERIFYING_DATA", 0, None), ("EXECUTING", 0, 340)]
+
+
+def test_failure_context_rejects_invalid_or_unbounded_untrusted_diagnostics():
+    from app.application.experiments.models import ExperimentFailureContext
+
+    valid = {"trading_date": "2024-01-04", "security_ids": ["CN-A:SSE:600000"], "security_count": 1}
+    assert ExperimentFailureContext.model_validate(valid).model_dump(mode="json") == valid
+    for change in (
+        {"trading_date": "2024-02-30"},
+        {"security_ids": []},
+        {"security_ids": ["private/path"]},
+        {"security_count": True},
+        {"security_count": 0},
+        {"security_count": 2},
+        {"traceback": "private"},
+        {"security_ids": ["CN-A:SZSE:000001", "CN-A:SSE:600000"], "security_count": 2},
+        {"security_ids": ["CN-A:SSE:600000"] * 2, "security_count": 2},
+        {"security_ids": [f"CN-A:SSE:{i:06d}" for i in range(101)], "security_count": 101},
+    ):
+        with pytest.raises(ValidationError):
+            ExperimentFailureContext.model_validate({**valid, **change})
+    prefix = [f"CN-A:SSE:{i:06d}" for i in range(100)]
+    assert (
+        ExperimentFailureContext.model_validate(
+            {**valid, "security_ids": prefix, "security_count": 101}
+        ).security_count
+        == 101
+    )
+
+
 def test_cancellation_interrupts_at_completed_session_boundary(tmp_path):
     cancelled = Event()
 
@@ -174,6 +442,7 @@ def test_final_session_plan_uses_replayed_account_oms_and_only_known_calendar(tm
     plan = output.summary["simulation_plan"]
     assert plan["status"] == "SIMULATION_PREVIEW"
     assert plan["as_of_trading_date"] == as_of.isoformat()
+    assert plan["account_snapshot_trading_date"] == as_of.isoformat()
     assert plan["next_accepted_session"] == next_day.isoformat()
     assert plan["configuration_sha256"] == canonical_sha256(json_value(request.model_dump()))
     assert plan["data_snapshot_sha256"] != plan["account"]["snapshot_sha256"]
@@ -204,6 +473,208 @@ def test_final_session_plan_uses_replayed_account_oms_and_only_known_calendar(tm
     assert early["status"] == "INSUFFICIENT_WARMUP"
     assert early["candidates"] == []
     assert early["estimated_cash_required"] is None
+
+
+def test_plan_does_not_relabel_prior_account_snapshot_as_current():
+    from app.execution import FixedCommission
+    from app.research import ResearchExecutionEngine, ResearchSession
+    from tests.test_research_execution_engine import CALENDAR, OneTargetStrategy, _session
+
+    engine = ResearchExecutionEngine(
+        OneTargetStrategy(),
+        initial_cash=Decimal("10000.000000000000000001"),
+        commission_model=FixedCommission(Decimal(5)),
+        calendar=CALENDAR,
+    )
+    first = engine.process_session(_session(date(2024, 1, 2), opening="10"))
+    missing = engine.process_session(
+        ResearchSession(trading_date=date(2024, 1, 3), bars=(), statuses=(), buy_lot_sizes=())
+    )
+    assert missing.snapshot is first.snapshot
+    assert missing.snapshot is not None
+    original = missing.snapshot.model_dump()
+    plan = build_plan_preview(
+        demo_request(start_date="2024-01-02", end_date="2024-01-03"),
+        DEMO_SHA,
+        "synthetic_demo",
+        missing,
+        missing.target,
+        date(2024, 1, 4),
+        253,
+    )
+    assert plan["as_of_trading_date"] == "2024-01-03"
+    assert plan["status"] == "ACCOUNT_SNAPSHOT_UNAVAILABLE"
+    assert plan["account"] is None
+    assert plan["account_snapshot_trading_date"] is None
+    assert plan["candidates"] == []
+    assert plan["estimated_cash_required"] is None
+    assert missing.snapshot.model_dump() == original
+
+    # A UTC date one day earlier can still belong to this exchange trading date.
+    current = replace(
+        missing,
+        snapshot=missing.snapshot.model_copy(
+            update={"timestamp": datetime(2024, 1, 2, 16, tzinfo=UTC)}
+        ),
+    )
+    same_day = build_plan_preview(
+        demo_request(start_date="2024-01-02", end_date="2024-01-03"),
+        DEMO_SHA,
+        "synthetic_demo",
+        current,
+        current.target,
+        date(2024, 1, 4),
+        253,
+    )
+    assert same_day["status"] == "NOT_REBALANCE_SESSION"
+    assert same_day["account_snapshot_trading_date"] == "2024-01-03"
+    assert same_day["account"]["cash"] == "10000.000000000000000001"
+
+
+@pytest.mark.parametrize("precision", [6, 28, 50])
+@pytest.mark.parametrize("rounding", [ROUND_DOWN, ROUND_HALF_EVEN, ROUND_UP])
+def test_plan_projection_is_independent_of_callers_decimal_context(precision, rounding):
+    from app.application.experiments.runner import _holdings_row
+    from app.execution import FixedCommission
+    from app.research import ResearchExecutionEngine
+    from tests.test_research_execution_engine import CALENDAR, OneTargetStrategy, _session
+
+    request = demo_request(start_date="2024-01-02", end_date="2024-01-03")
+    with localcontext(Context(prec=28, rounding=ROUND_HALF_EVEN)):
+        engine = ResearchExecutionEngine(
+            OneTargetStrategy(),
+            initial_cash=Decimal("10000"),
+            commission_model=FixedCommission(Decimal("5.123456789123456789")),
+            calendar=CALENDAR,
+        )
+        buy = engine.process_session(_session(date(2024, 1, 2), opening="10"))
+        held = engine.process_session(_session(date(2024, 1, 3), opening="9.9"))
+
+        def projection():
+            return (
+                build_plan_preview(
+                    request,
+                    DEMO_SHA,
+                    "synthetic_demo",
+                    buy,
+                    buy.target,
+                    date(2024, 1, 3),
+                    253,
+                ),
+                build_plan_preview(
+                    request,
+                    DEMO_SHA,
+                    "synthetic_demo",
+                    held,
+                    held.target,
+                    date(2024, 1, 4),
+                    254,
+                ),
+                _holdings_row(0, held.snapshot),
+            )
+
+        expected = projection()
+    assert expected[0]["estimated_cash_required"] == "1005.123456789123456789"
+    assert expected[1]["account"]["positions"][0]["weight"] == ("0.09905074822284500934353395374")
+    snapshots = (buy.snapshot.model_dump(), held.snapshot.model_dump())
+    with localcontext(Context(prec=precision, rounding=rounding)) as context:
+        before_flags = context.flags.copy()
+        assert projection() == expected
+        assert context.flags == before_flags
+        assert context.prec == precision and context.rounding == rounding
+        context.traps[Inexact] = True
+        assert projection() == expected
+    assert (buy.snapshot.model_dump(), held.snapshot.model_dump()) == snapshots
+
+
+@pytest.mark.parametrize("precision", [6, 28, 50])
+@pytest.mark.parametrize("rounding", [ROUND_DOWN, ROUND_HALF_EVEN, ROUND_UP])
+@pytest.mark.parametrize("equity,quantity", [("9999.999", "0"), ("10000.001", "100")])
+def test_exploratory_lot_sizing_owns_decimal_context(
+    monkeypatch, precision, rounding, equity, quantity
+):
+    from app.application.experiments.runner import ExploratoryStrategy
+    from app.research.models import PortfolioTarget, TargetPosition
+    from app.research.strategy import ChinaAMomentumLowVolResearchStrategy
+    from tests.test_research_execution_engine import SECURITY_ID, _session
+
+    request = demo_request(start_date="2024-01-02", end_date="2024-01-03")
+    session = _session(date(2024, 1, 2), opening="10")
+    parent_target = PortfolioTarget(
+        positions=(
+            TargetPosition(
+                security_id=SECURITY_ID,
+                target_weight=Decimal("0.1"),
+                quantity=Decimal(0),
+                reference_price=Decimal(10),
+            ),
+        ),
+        residual_cash=Decimal(equity),
+    )
+    monkeypatch.setattr(
+        ChinaAMomentumLowVolResearchStrategy,
+        "target_for_completed_session",
+        lambda *args: parent_target,
+    )
+    with localcontext(Context(prec=28, rounding=ROUND_HALF_EVEN)):
+        expected = ExploratoryStrategy(request).target_for_completed_session(
+            session, Decimal(equity)
+        )
+    assert expected.positions[0].quantity == Decimal(quantity)
+    with localcontext(Context(prec=precision, rounding=rounding)) as context:
+        before_flags = context.flags.copy()
+        context.traps[Inexact] = True
+        actual = ExploratoryStrategy(request).target_for_completed_session(session, Decimal(equity))
+        assert actual == expected
+        assert context.prec == precision and context.rounding == rounding
+        assert context.flags == before_flags
+    assert parent_target.positions[0].quantity == 0
+
+
+@pytest.mark.parametrize("precision", [6, 28, 50])
+@pytest.mark.parametrize("rounding", [ROUND_DOWN, ROUND_HALF_EVEN, ROUND_UP])
+def test_experiment_aggregate_output_owns_decimal_context(monkeypatch, precision, rounding):
+    from app.application.experiments import runner
+    from tests.test_research_execution_engine import CALENDAR, OneTargetStrategy, _session
+
+    request = demo_request(start_date="2024-01-02", end_date="2024-01-04", initial_cash="10000")
+    sessions = tuple(
+        _session(date(2024, 1, day), opening=price)
+        for day, price in ((2, "10"), (3, "9.9"), (4, "9.99"))
+    )
+    days = tuple(session.trading_date for session in sessions)
+    data = SimpleNamespace(
+        calendar_days=days,
+        calendar=CALENDAR,
+        next_session=None,
+        sessions=lambda: iter(sessions),
+        cost_model=SimpleNamespace(schedules=(sessions[0].trading_rules[0].cost_schedule,)),
+        benchmark=dict(
+            zip(
+                (day.isoformat() for day in days),
+                (Decimal("100"), Decimal("101.123456789"), Decimal("102.234567891")),
+                strict=True,
+            )
+        ),
+    )
+    registry = SimpleNamespace(
+        resolve=lambda _: {
+            "sha256": DEMO_SHA,
+            "mode": "synthetic_demo",
+            "benchmark_id": "synthetic",
+        }
+    )
+    monkeypatch.setattr(runner, "load_experiment_dataset", lambda *args: data)
+    monkeypatch.setattr(runner, "_implementation_checksum", lambda: "b" * 64)
+    monkeypatch.setattr(runner, "ExploratoryStrategy", lambda *args: OneTargetStrategy())
+    with localcontext(Context(prec=28, rounding=ROUND_HALF_EVEN)):
+        expected = run_experiment(registry, request, DEMO_SHA, Event(), lambda *args: None)
+    assert expected.rows["equity"][-1]["benchmark"] == "10223.4567891"
+    assert expected.summary["metrics"]["turnover"] == "0.09900336545440301333976679647"
+    with localcontext(Context(prec=precision, rounding=rounding)) as context:
+        actual = run_experiment(registry, request, DEMO_SHA, Event(), lambda *args: None)
+        assert actual == expected
+        assert context.prec == precision and context.rounding == rounding
 
 
 @pytest.mark.parametrize(

@@ -11,8 +11,11 @@ from app.domain.market import Bar
 from app.domain.markets.calendar import TradingCalendar
 from app.domain.markets.consolidations import CONSOLIDATION_POLICY
 from app.domain.markets.corporate_actions import (
+    CorporateActionType,
+    OrdinaryDistributionInputError,
     corporate_action_sort_key,
     require_supported_corporate_action,
+    require_unambiguous_ordinary_distributions,
 )
 from app.domain.markets.mergers import MERGER_POLICY, ZERO_WHOLE_SHARE_POLICY
 from app.domain.markets.pass_through import PASS_THROUGH_POLICY
@@ -34,6 +37,15 @@ from app.risk import RiskEngine
 ZERO = Decimal(0)
 
 
+class UnexplainedReferenceAdjustment(ValueError):
+    code = "UNEXPLAINED_HELD_REFERENCE_ADJUSTMENT"
+
+    def __init__(self, trading_date: date, security_ids: tuple[str, ...]) -> None:
+        super().__init__(self.code)
+        self.trading_date = trading_date
+        self.security_ids = security_ids
+
+
 class ResearchStrategy(Protocol):
     strategy_id: str
 
@@ -42,6 +54,94 @@ class ResearchStrategy(Protocol):
     ) -> PortfolioTarget | None: ...
 
     def reset(self) -> None: ...
+
+
+def require_supported_session_actions(
+    session: ResearchSession, *, next_accepted_session: date | None
+) -> None:
+    """Validate without accounting; None means no accepted calendar successor is known."""
+    require_unambiguous_ordinary_distributions(session.corporate_actions)
+    actions = sorted(session.corporate_actions, key=corporate_action_sort_key)
+    demergers = sorted(session.demergers, key=lambda e: str(e.parent_security))
+    mergers = sorted(session.mergers, key=lambda e: str(e.parent_security))
+    surrenders = sorted(session.partial_surrenders, key=lambda e: str(e.security_id))
+    pass_through = sorted(session.pass_through_events, key=lambda e: str(e.security_id))
+    consolidations = sorted(session.consolidations, key=lambda e: str(e.security_id))
+    parents = [str(e.parent_security) for e in demergers] + [
+        str(e.parent_security) for e in mergers
+    ]
+    if len(parents) != len(set(parents)):
+        raise ValueError("duplicate session mandatory conversion")
+    structural_ids = (
+        parents
+        + [str(e.security_id) for e in surrenders]
+        + [str(e.security_id) for e in pass_through]
+        + [str(e.security_id) for e in consolidations]
+    )
+    if len(structural_ids) != len(set(structural_ids)) or any(
+        str(a.security_id) in set(structural_ids) for a in actions
+    ):
+        raise ValueError("partial surrender concurrent action ordering unsupported")
+    for consolidation in consolidations:
+        consolidation.require_supported()
+        if consolidation.effective_date != session.trading_date:
+            raise ValueError("consolidation session mismatch")
+        if session.consolidation_holder_class != consolidation.affected_holder_class:
+            raise ValueError("CONSOLIDATION_HOLDER_APPLICABILITY_UNVERIFIED")
+    for pass_event in pass_through:
+        pass_event.require_supported()
+        if pass_event.effective_date != session.trading_date:
+            raise ValueError("pass-through session mismatch")
+        if any(b.security_id == pass_event.security_id for b in session.bars):
+            raise ValueError("PASS_THROUGH_TRADING_OBSERVATION_CONFLICT")
+    for surrender in surrenders:
+        surrender.require_supported()
+        if surrender.application_date != session.trading_date:
+            raise ValueError("partial surrender session mismatch")
+        if surrender.research_effective_date is not None:
+            status = next(
+                (
+                    s.status
+                    for s in session.statuses
+                    if s.status.security_id == surrender.security_id
+                ),
+                None,
+            )
+            if (
+                not any(b.security_id == surrender.security_id for b in session.bars)
+                or status is None
+                or status.is_tradeable is not True
+                or status.is_suspended is not False
+            ):
+                raise ValueError("SURRENDER_FIRST_TRADABLE_BOUNDARY_REQUIRED")
+        holder_class = dict(session.surrender_holder_classes).get(
+            surrender.security_id, session.surrender_holder_class
+        )
+        if holder_class != surrender.affected_holder_class:
+            raise ValueError("PARTIAL_SURRENDER_HOLDER_APPLICABILITY_UNVERIFIED")
+    for merger in mergers:
+        merger.require_supported()
+        if merger.effective_date != session.trading_date:
+            raise ValueError("merger session mismatch")
+    if len({str(e.parent_security) for e in demergers}) != len(demergers):
+        raise ValueError("duplicate session demerger")
+    for event in demergers:
+        event.require_supported()
+        if event.application_date != session.trading_date:
+            raise ValueError("demerger session mismatch")
+    for action in actions:
+        if action.ex_date != session.trading_date:
+            raise ValueError("corporate action must belong to the research session")
+        require_supported_corporate_action(action)
+    for action in actions:
+        if (
+            action.action_type
+            in {CorporateActionType.STOCK_DIVIDEND, CorporateActionType.BONUS_SHARE}
+            and action.listing_date is not None
+            and action.listing_date not in (session.trading_date, next_accepted_session)
+        ):
+            # Ex-day fills are blocked; later listing would need separately locked shares.
+            raise OrdinaryDistributionInputError("ORDINARY_DISTRIBUTION_LISTING_DATE_UNSUPPORTED")
 
 
 @dataclass(frozen=True, slots=True)
@@ -67,6 +167,7 @@ class ResearchExecutionResult:
 @dataclass(frozen=True, slots=True)
 class ResearchExecutionDelta:
     session: ResearchSession
+    target: PortfolioTarget | None
     proposals: tuple[OrderProposal, ...]
     decisions: tuple[RiskDecision, ...]
     orders: tuple[Order, ...]
@@ -90,6 +191,7 @@ class ResearchExecutionEngine:
         risk_config: RiskConfig | None = None,
     ) -> None:
         self._strategy = strategy
+        self._calendar = calendar
         dates = tuple(item.session_date for item in calendar.sessions if item.is_open)
         self._next_session = dict(pairwise(dates))
         self._calendar_dates = frozenset(dates)
@@ -119,6 +221,31 @@ class ResearchExecutionEngine:
         )
         self._expired_order_ids: list[UUID] = []
 
+    def next_accepted_session(self, trading_date: date) -> date | None:
+        return self._next_session.get(trading_date)
+
+    @property
+    def calendar(self) -> TradingCalendar:
+        return self._calendar
+
+    @property
+    def last_completed_session(self) -> date | None:
+        return self._previous_date
+
+    def extend_calendar(self, calendar: TradingCalendar) -> None:
+        """Append already accepted dates; never reroute past targets or pending orders.
+
+        Acceptance/provenance belongs to the application boundary. A future durable
+        forward adapter must journal when each extension was applied and replay that
+        timeline, not reconstruct old intents using the final expanded calendar.
+        """
+        calendar.require_extension_of(self._calendar)
+        dates = tuple(item.session_date for item in calendar.sessions if item.is_open)
+        next_session = dict(pairwise(dates))
+        self._calendar = calendar
+        self._next_session = next_session
+        self._calendar_dates = frozenset(dates)
+
     def run(self, sessions: Iterable[ResearchSession]) -> ResearchExecutionResult:
         self.reset()
         for session in sessions:
@@ -137,12 +264,26 @@ class ResearchExecutionEngine:
             and self._next_session.get(self._previous_date) != session.trading_date
         ):
             raise ValueError("missing calendar session must be represented explicitly")
+        require_unambiguous_ordinary_distributions(session.corporate_actions)
+        held_symbols = {
+            position.symbol for position in self._portfolio.positions if position.quantity != ZERO
+        }
+        unexplained_ids = tuple(
+            sorted(
+                str(identity)
+                for identity in session.unexplained_reference_adjustment_ids
+                if _domain_symbol(identity) in held_symbols
+            )
+        )
+        if unexplained_ids:
+            # Fail before today's accounting, fills, marks, strategy calls or progress.
+            raise UnexplainedReferenceAdjustment(session.trading_date, unexplained_ids)
         proposal_count = len(self._oms.proposals)
         decision_count = len(self._oms.decisions)
         fill_count = len(self._broker.fills)
         expired_count = len(self._expired_order_ids)
         check_count = len(self._execution_checks)
-        self._process_session(session)
+        target = self._process_session(session)
         self._previous_date = session.trading_date
         proposals = self._oms.proposals[proposal_count:]
         fills = self._broker.fills[fill_count:]
@@ -153,6 +294,7 @@ class ResearchExecutionEngine:
         )
         return ResearchExecutionDelta(
             session=session,
+            target=target,
             proposals=proposals,
             decisions=self._oms.decisions[decision_count:],
             orders=tuple(item for item in self._oms.orders if item.id in order_ids),
@@ -187,7 +329,10 @@ class ResearchExecutionEngine:
         self._active_session = None
         self._previous_date = None
 
-    def _process_session(self, session: ResearchSession) -> None:
+    def _process_session(self, session: ResearchSession) -> PortfolioTarget | None:
+        require_supported_session_actions(
+            session, next_accepted_session=self._next_session.get(session.trading_date)
+        )
         self._active_session = session
         timestamp = datetime.combine(
             session.trading_date, time(15, 0, 0, 1), tzinfo=ZoneInfo("Asia/Shanghai")
@@ -200,72 +345,7 @@ class ResearchExecutionEngine:
         mergers = sorted(session.mergers, key=lambda e: str(e.parent_security))
         surrenders = sorted(session.partial_surrenders, key=lambda e: str(e.security_id))
         pass_through = sorted(session.pass_through_events, key=lambda e: str(e.security_id))
-        pass_ids = [str(e.security_id) for e in pass_through]
         consolidations = sorted(session.consolidations, key=lambda e: str(e.security_id))
-        consolidation_ids = [str(e.security_id) for e in consolidations]
-        parents = [str(e.parent_security) for e in demergers] + [
-            str(e.parent_security) for e in mergers
-        ]
-        if len(parents) != len(set(parents)):
-            raise ValueError("duplicate session mandatory conversion")
-        structural_ids = (
-            parents + [str(e.security_id) for e in surrenders] + pass_ids + consolidation_ids
-        )
-        if len(structural_ids) != len(set(structural_ids)) or any(
-            str(a.security_id) in set(structural_ids) for a in actions
-        ):
-            raise ValueError("partial surrender concurrent action ordering unsupported")
-        for consolidation in consolidations:
-            consolidation.require_supported()
-            if consolidation.effective_date != session.trading_date:
-                raise ValueError("consolidation session mismatch")
-            if session.consolidation_holder_class != consolidation.affected_holder_class:
-                raise ValueError("CONSOLIDATION_HOLDER_APPLICABILITY_UNVERIFIED")
-        for pass_event in pass_through:
-            pass_event.require_supported()
-            if pass_event.effective_date != session.trading_date:
-                raise ValueError("pass-through session mismatch")
-            if any(b.security_id == pass_event.security_id for b in session.bars):
-                raise ValueError("PASS_THROUGH_TRADING_OBSERVATION_CONFLICT")
-        for surrender in surrenders:
-            surrender.require_supported()
-            if surrender.application_date != session.trading_date:
-                raise ValueError("partial surrender session mismatch")
-            if surrender.research_effective_date is not None:
-                status = next(
-                    (
-                        s.status
-                        for s in session.statuses
-                        if s.status.security_id == surrender.security_id
-                    ),
-                    None,
-                )
-                if (
-                    not any(b.security_id == surrender.security_id for b in session.bars)
-                    or status is None
-                    or status.is_tradeable is not True
-                    or status.is_suspended is not False
-                ):
-                    raise ValueError("SURRENDER_FIRST_TRADABLE_BOUNDARY_REQUIRED")
-            holder_class = dict(session.surrender_holder_classes).get(
-                surrender.security_id, session.surrender_holder_class
-            )
-            if holder_class != surrender.affected_holder_class:
-                raise ValueError("PARTIAL_SURRENDER_HOLDER_APPLICABILITY_UNVERIFIED")
-        for merger in mergers:
-            merger.require_supported()
-            if merger.effective_date != session.trading_date:
-                raise ValueError("merger session mismatch")
-        if len({str(e.parent_security) for e in demergers}) != len(demergers):
-            raise ValueError("duplicate session demerger")
-        for event in demergers:
-            event.require_supported()
-            if event.application_date != session.trading_date:
-                raise ValueError("demerger session mismatch")
-        for action in actions:
-            if action.ex_date != session.trading_date:
-                raise ValueError("corporate action must belong to the research session")
-            require_supported_corporate_action(action)
         for action in actions:
             self._portfolio.apply_corporate_action(
                 _domain_symbol(action.security_id), action, opening
@@ -316,7 +396,7 @@ class ResearchExecutionEngine:
 
         snapshot = self._portfolio.latest_snapshot
         if snapshot is None:
-            return
+            return None
         # Accounting evidence (including later allocation sources) is never a factor input.
         target = self._strategy.target_for_completed_session(
             replace(
@@ -329,15 +409,17 @@ class ResearchExecutionEngine:
                 pass_through_events=(),
                 consolidations=(),
                 consolidation_holder_class=None,
+                unexplained_reference_adjustment_ids=(),
             ),
             snapshot.equity,
         )
         if target is None:
             self._portfolio.compact_closed_positions()
-            return
+            return None
         self._expire_pending()
         self._route_target(target, timestamp)
         self._portfolio.compact_closed_positions()
+        return target
 
     def _fill_eligible(self, order: Order, bar: Bar) -> bool:
         session = self._active_session

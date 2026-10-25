@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type Ref } from "react";
 import { useTranslation } from "react-i18next";
+import { ApiError, requestOutcomeUncertain } from "../../api/client";
 import { formatUtc } from "../../utils/format";
 import { marketUpdateApi } from "./api";
 import { explainUpdateCode, updateError, useUpdateCopy } from "./copy";
@@ -10,18 +11,39 @@ const activeStatus = (job: UpdateJob) =>
 export function UpdateTaskDetail({
   jobId,
   onOpen,
+  onReturn,
+  focusRef,
 }: {
   jobId: string;
-  onOpen: (id: string) => void;
+  onOpen: (id: string, shouldFocus: boolean) => void;
+  onReturn: () => void;
+  focusRef: Ref<HTMLElement>;
 }) {
   const c = useUpdateCopy();
   const { i18n } = useTranslation();
   const [revision, setRevision] = useState(0);
   const [job, setJob] = useState<UpdateJob | null>(null);
   const [error, setError] = useState<unknown>(null);
+  const [actionError, setActionError] = useState<{
+    kind: "cancel" | "retry";
+    reason: unknown;
+  } | null>(null);
   const [action, setAction] = useState(false);
   const active = useRef(true);
   const locked = useRef(false);
+  const focusedCommand = useRef<HTMLButtonElement | null>(null);
+  const statusFocus = useRef<HTMLHeadingElement>(null);
+  const errorFocus = useRef<HTMLParagraphElement>(null);
+  const confirmedCancelError =
+    actionError?.kind === "cancel" &&
+    requestOutcomeUncertain(actionError.reason) &&
+    (job?.cancel_requested || job?.status === "CANCELLED");
+  const displayedError =
+    error !== null
+      ? error
+      : job && !confirmedCancelError
+        ? (actionError?.reason ?? null)
+        : null;
   useEffect(() => {
     active.current = true;
     return () => {
@@ -41,7 +63,10 @@ export function UpdateTaskDetail({
         if (activeStatus(data))
           timer = window.setTimeout(() => void load(), 2500);
       } catch (reason) {
-        if (alive) setError(reason);
+        if (alive) {
+          setJob(null);
+          setError(reason);
+        }
       }
     }
     void load();
@@ -51,24 +76,39 @@ export function UpdateTaskDetail({
       window.clearTimeout(timer);
     };
   }, [jobId, revision]);
+  useLayoutEffect(() => {
+    const button = focusedCommand.current;
+    if (button && !button.isConnected) {
+      if (document.activeElement === document.body)
+        (statusFocus.current ?? errorFocus.current)?.focus();
+      focusedCommand.current = null;
+    }
+  }, [job?.status, displayedError]);
   async function command(kind: "cancel" | "retry") {
-    if (locked.current) return;
+    if (locked.current || (kind === "cancel" && job?.cancel_requested)) return;
+    const trigger = document.activeElement;
     locked.current = true;
     setAction(true);
     setError(null);
+    setActionError(null);
     try {
       const result =
         kind === "cancel"
           ? await marketUpdateApi.cancel(jobId)
           : await marketUpdateApi.retry(jobId);
       if (!active.current) return;
-      if (kind === "retry") onOpen(result.job_id);
+      if (kind === "retry")
+        onOpen(
+          result.job_id,
+          trigger instanceof HTMLButtonElement &&
+            document.activeElement === trigger,
+        );
       else {
         setJob(result);
         setRevision((value) => value + 1);
       }
     } catch (reason) {
-      if (active.current) setError(reason);
+      if (active.current) setActionError({ kind, reason });
     } finally {
       if (active.current) {
         locked.current = false;
@@ -77,23 +117,62 @@ export function UpdateTaskDetail({
     }
   }
   return (
-    <section className="updateDetail" aria-label={`${c.task}: ${jobId}`}>
+    <section
+      className="updateDetail"
+      aria-label={`${c.task}: ${jobId}`}
+      tabIndex={-1}
+      ref={focusRef}
+      onFocusCapture={(event) => {
+        if (event.target instanceof HTMLButtonElement)
+          focusedCommand.current = event.target;
+      }}
+      onBlurCapture={() => {
+        focusedCommand.current = null;
+      }}
+    >
       <h3>{c.task}</h3>
       <code>{jobId}</code>
       <button
         className="button secondary"
         type="button"
-        onClick={() => setRevision((value) => value + 1)}
+        onClick={() => {
+          setJob(null);
+          setError(null);
+          setRevision((value) => value + 1);
+        }}
       >
         {c.refresh}
       </button>
-      {!job && !error && <p role="status">{c.loading}</p>}
-      {error !== null && (
-        <p role="alert">{updateError(error, i18n.language)}</p>
+      {!job && displayedError === null && <p role="status">{c.loading}</p>}
+      {displayedError !== null && (
+        <p ref={errorFocus} role="alert" tabIndex={-1}>
+          {updateError(displayedError, i18n.language)}
+        </p>
       )}
+      {error !== null &&
+        actionError !== null &&
+        updateError(error, i18n.language) !==
+          updateError(actionError.reason, i18n.language) && (
+          <p role="alert">{updateError(actionError.reason, i18n.language)}</p>
+        )}
+      {displayedError instanceof ApiError &&
+        displayedError.code === "MARKET_UPDATE_NOT_FOUND" && (
+          <>
+            <p>{c.missingTaskHelp}</p>
+            <button
+              type="button"
+              className="button secondary"
+              onClick={onReturn}
+            >
+              {c.backToRequests}
+            </button>
+          </>
+        )}
       {job && (
         <>
-          <h4>{c.statuses[job.status]}</h4>
+          <h4 ref={statusFocus} tabIndex={-1}>
+            {c.statuses[job.status]}
+          </h4>
           <p>
             {job.configuration.start_date} → {job.configuration.end_date} ·
             Asia/Shanghai
@@ -126,7 +205,7 @@ export function UpdateTaskDetail({
             <button
               type="button"
               className="button secondary"
-              disabled={action || job.cancel_requested}
+              aria-disabled={action || job.cancel_requested}
               onClick={() => void command("cancel")}
             >
               {action ? c.working : c.cancel}
@@ -139,13 +218,11 @@ export function UpdateTaskDetail({
               <button
                 type="button"
                 className="button secondary"
-                disabled={
-                  action ||
-                  [
-                    "SOURCE_ACCESS_DENIED",
-                    "RECEIPT_PERSISTENCE_BLOCKED",
-                  ].includes(job.error_code ?? "")
-                }
+                disabled={[
+                  "SOURCE_ACCESS_DENIED",
+                  "RECEIPT_PERSISTENCE_BLOCKED",
+                ].includes(job.error_code ?? "")}
+                aria-disabled={action}
                 onClick={() => void command("retry")}
               >
                 {action ? c.working : c.retry}

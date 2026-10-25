@@ -15,7 +15,9 @@ from app.core.config import get_settings
 from app.db.session import SessionFactory
 
 router = APIRouter(prefix="/markets", tags=["markets"])
-market_reader = MarketReader(ExperimentDatasetRegistry(get_settings().research_data_path))
+market_reader = MarketReader(
+    ExperimentDatasetRegistry(get_settings().research_data_path, get_settings().product_data_path)
+)
 watchlist_service = WatchlistService(SessionFactory, market_reader)
 Security = Annotated[str, Path(pattern=r"^CN-A:(SSE|SZSE):[0-9]{6}$")]
 Dataset = Annotated[str, Query(min_length=3, max_length=128, pattern=r"^[a-z0-9][a-z0-9._-]+$")]

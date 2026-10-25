@@ -25,7 +25,7 @@ down:
 
 test:
 	$(CHECK) build
-	@trap '$(CHECK) down --volumes' EXIT INT TERM; \
+	@trap '$(CHECK) stop' EXIT INT TERM; \
 	$(CHECK) run --rm backend sh -c 'alembic upgrade head && pytest tests' && \
 	$(CHECK) run --rm --no-deps frontend npm test -- --run
 

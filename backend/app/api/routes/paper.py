@@ -4,18 +4,32 @@ from contextlib import suppress
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Header, HTTPException, Query, WebSocket, WebSocketDisconnect, status
+from fastapi import (
+    APIRouter,
+    Header,
+    HTTPException,
+    Query,
+    Response,
+    WebSocket,
+    WebSocketDisconnect,
+    status,
+)
 from sqlalchemy.exc import IntegrityError
 
+from app.api.routes.market_updates import market_update_manager
 from app.api.schemas.paper import (
     CreatePaperSessionRequest,
     MarketBarPayload,
     MarketSessionPayload,
+    PaperCapabilitiesResponse,
+    PaperCollectionKind,
+    PaperCollectionPage,
     PaperEventResponse,
     PaperOrderResponse,
     PaperSessionPage,
     PaperSessionResponse,
     PaperSnapshotResponse,
+    PaperStateResponse,
     PortfolioPayload,
 )
 from app.application.backtests import DatasetRegistry, StrategyRegistry
@@ -25,11 +39,26 @@ from app.application.backtests.registry import (
     UnknownDatasetError,
     UnknownStrategyError,
 )
-from app.application.experiments.data import ExperimentDatasetRegistry
+from app.application.experiments.data import (
+    ExperimentDatasetRegistry,
+    ExperimentInputError,
+    current_dataset_quality,
+    current_source_integrity,
+)
 from app.application.paper_trading import (
     PaperSessionConflictError,
     PaperSessionStateError,
     PaperTradingManager,
+)
+from app.application.paper_trading.context_store import DailyContextStore
+from app.application.paper_trading.qualified_context import QualifiedContextReader
+from app.application.paper_trading.receipt_source import (
+    CanonicalReceiptReader,
+    ReceiptSessionFactory,
+)
+from app.application.paper_trading.source_admission import (
+    ForwardAdmissionRegistry,
+    ForwardSourceError,
 )
 from app.core.config import get_settings
 from app.db.session import SessionFactory
@@ -42,7 +71,24 @@ paper_manager = PaperTradingManager(
     SessionFactory,
     DatasetRegistry.phase7(settings.backtest_fixture_path),
     StrategyRegistry(),
-    historical_datasets=ExperimentDatasetRegistry(settings.research_data_path),
+    historical_datasets=ExperimentDatasetRegistry(
+        settings.research_data_path, settings.product_data_path
+    ),
+    forward_sources=ReceiptSessionFactory(
+        ForwardAdmissionRegistry(
+            settings.paper_forward_contract_path, settings.paper_forward_contract_sha256
+        ),
+        CanonicalReceiptReader(SessionFactory, market_update_manager),
+        QualifiedContextReader(
+            DailyContextStore(
+                SessionFactory,
+                settings.product_data_path / "paper-context",
+                settings.research_data_path,
+            ),
+            # Only reviewed real source parsers may be registered here; none are qualified yet.
+            {},
+        ),
+    ),
 )
 
 router = APIRouter(prefix="/paper-trading/sessions", tags=["paper-trading"])
@@ -118,6 +164,29 @@ async def list_paper_sessions(
     )
 
 
+@router.get("/receipt", response_model=PaperSessionResponse)
+async def get_paper_create_receipt(
+    response: Response,
+    idempotency_key: Annotated[str, Header(max_length=255)],
+) -> PaperSessionResponse:
+    response.headers["Cache-Control"] = "no-store"
+    session = await paper_manager.get_by_client_request_id(idempotency_key)
+    if session is None:
+        # A missing committed row does not prove that an earlier POST cannot still arrive.
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            "no committed paper session currently found for this request key",
+            headers={"Cache-Control": "no-store"},
+        )
+    return _session_response(session)
+
+
+@router.get("/capabilities", response_model=PaperCapabilitiesResponse)
+async def get_paper_capabilities(response: Response) -> PaperCapabilitiesResponse:
+    response.headers["Cache-Control"] = "no-store"
+    return PaperCapabilitiesResponse.model_validate(await paper_manager.capabilities())
+
+
 @router.get("/{session_id}", response_model=PaperSessionResponse)
 async def get_paper_session(session_id: UUID) -> PaperSessionResponse:
     return _session_response(await _require_session(session_id))
@@ -131,6 +200,10 @@ async def start_paper_session(session_id: UUID) -> PaperSessionResponse:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "paper session not found") from exc
     except PaperSessionStateError as exc:
         raise HTTPException(status.HTTP_409_CONFLICT, str(exc)) from exc
+    except ExperimentInputError as exc:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, exc.code) from exc
+    except ForwardSourceError as exc:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(exc)) from exc
 
 
 @router.post("/{session_id}/stop", response_model=PaperSessionResponse)
@@ -154,9 +227,20 @@ async def pause_paper_session(session_id: UUID) -> PaperSessionResponse:
 
 
 @router.get("/{session_id}/events", response_model=list[PaperEventResponse])
-async def get_paper_events(session_id: UUID) -> list[PaperEventResponse]:
+async def get_paper_events(
+    session_id: UUID,
+    limit: Annotated[int | None, Query(ge=1, le=200)] = None,
+    before_sequence: Annotated[int | None, Query(ge=1, le=2147483647)] = None,
+) -> list[PaperEventResponse]:
     await _require_session(session_id)
-    return [_event_response(item) for item in await paper_manager.events(session_id)]
+    if before_sequence is not None and limit is None:
+        limit = 200
+    return [
+        _event_response(item)
+        for item in await paper_manager.events(
+            session_id, limit=limit, before_sequence=before_sequence
+        )
+    ]
 
 
 @router.get("/{session_id}/snapshot", response_model=PaperSnapshotResponse)
@@ -165,9 +249,57 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
     if snapshot is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "paper session not found")
     session, events = snapshot
+    return _snapshot_response(session, events, events[-1].sequence if events else 0)
+
+
+@router.get("/{session_id}/state", response_model=PaperStateResponse)
+async def get_paper_state(session_id: UUID) -> PaperStateResponse:
+    state = await paper_manager.state_snapshot(session_id)
+    if state is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "paper session not found")
+    session, watermark, events = state
+    return PaperStateResponse.model_validate(
+        _snapshot_response(session, events, watermark).model_dump(
+            exclude={"signals", "risk_decisions", "orders", "fills"}
+        )
+    )
+
+
+@router.get("/{session_id}/collections/{collection}", response_model=PaperCollectionPage)
+async def get_paper_collection(
+    session_id: UUID,
+    collection: PaperCollectionKind,
+    as_of_sequence: Annotated[int, Query(ge=0, le=2147483647)],
+    limit: Annotated[int, Query(ge=1, le=100)] = 100,
+    offset: Annotated[int, Query(ge=0, le=2147483647)] = 0,
+) -> PaperCollectionPage:
+    try:
+        page = await paper_manager.collection_page(
+            session_id, collection, as_of_sequence, limit, offset
+        )
+    except ValueError as exc:
+        raise HTTPException(status.HTTP_409_CONFLICT, str(exc)) from exc
+    if page is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "paper session not found")
+    items, total = page
+    return PaperCollectionPage(
+        session_id=session_id,
+        collection=collection,
+        as_of_sequence=as_of_sequence,
+        limit=limit,
+        offset=offset,
+        total=total,
+        items=[_event_response(item) for item in items],
+    )
+
+
+def _snapshot_response(
+    session: PaperSession, events: tuple[PaperEventRecord, ...], last_sequence: int
+) -> PaperSnapshotResponse:
     latest_bar: MarketBarPayload | None = None
     latest_session: MarketSessionPayload | None = None
     latest_portfolio: PortfolioPayload | None = None
+    last_rebalance_plan: dict[str, object] | None = None
     signals = []
     decisions = []
     fills = []
@@ -195,9 +327,18 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
             fills.append(FillResponse.model_validate(payload))
         elif event.event_type == "portfolio.snapshot":
             latest_portfolio = PortfolioPayload.model_validate(payload)
+            plan = payload.get("plan")
+            if isinstance(plan, dict) and plan.get("status") == "SIMULATION_PREVIEW":
+                last_rebalance_plan = plan
     return PaperSnapshotResponse(
         session=_session_response(session),
-        last_sequence=events[-1].sequence if events else 0,
+        current_dataset_quality=current_dataset_quality(
+            session.dataset_id, session.strategy_parameters.get("dataset_sha256")
+        ),
+        current_source_integrity=current_source_integrity(
+            session.dataset_id, session.strategy_parameters.get("dataset_sha256")
+        ),
+        last_sequence=last_sequence,
         latest_bar=latest_bar,
         latest_session=latest_session,
         signals=signals,
@@ -205,13 +346,14 @@ async def get_paper_snapshot(session_id: UUID) -> PaperSnapshotResponse:
         orders=list(orders.values()),
         fills=fills,
         latest_portfolio=latest_portfolio,
+        last_rebalance_plan=last_rebalance_plan,
     )
 
 
 @router.websocket("/ws/{session_id}")
 async def paper_session_websocket(websocket: WebSocket, session_id: UUID) -> None:
     origin = websocket.headers.get("origin")
-    if origin is not None and origin != settings.frontend_origin:
+    if origin is not None and origin not in settings.allowed_frontend_origins:
         await websocket.close(code=4403, reason="origin not allowed")
         return
     if await paper_manager.get(session_id) is None:

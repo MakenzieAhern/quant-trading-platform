@@ -38,6 +38,19 @@ async def test_untrusted_browser_origin_cannot_mutate_local_sessions() -> None:
         assert response.status_code == 403
 
 
+@pytest.mark.parametrize("origin", ["http://localhost:5173", "http://127.0.0.1:5173"])
+async def test_both_local_frontend_origins_can_reach_api(origin: str) -> None:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        preflight = await client.options(
+            "/api/health",
+            headers={"Origin": origin, "Access-Control-Request-Method": "GET"},
+        )
+        assert preflight.status_code == 200
+        assert preflight.headers["access-control-allow-origin"] == origin
+        mutation_probe = await client.post("/api/__origin_probe__", headers={"Origin": origin})
+        assert mutation_probe.status_code == 404
+
+
 def test_domain_layers_do_not_import_infrastructure() -> None:
     root = Path(__file__).parents[1] / "app"
     for layer in (

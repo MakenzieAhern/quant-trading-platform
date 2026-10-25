@@ -14,6 +14,7 @@ import { CreateBacktestPage } from "./CreateBacktestPage";
 
 describe("create backtest", () => {
   it("translates the legacy form without resetting entered capital", async () => {
+    const fetch = vi.spyOn(globalThis, "fetch");
     await act(async () => i18n.changeLanguage("en-US"));
     try {
       render(<CreateBacktestPage />);
@@ -30,6 +31,12 @@ describe("create backtest", () => {
       expect(await screen.findByRole("alert")).toHaveTextContent(
         "短周期小于长周期",
       );
+      await act(async () => i18n.changeLanguage("en-US"));
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "short period below long period",
+      );
+      expect(screen.getByLabelText("Initial cash")).toHaveValue("123456.789");
+      expect(fetch).not.toHaveBeenCalled();
     } finally {
       await act(async () => i18n.changeLanguage("en-US"));
     }
@@ -109,34 +116,108 @@ describe("create backtest", () => {
     );
   });
 
-  it("reuses a key for a retry and replaces it after payload edits", async () => {
+  it("does not reopen a completed run after Cancel changes the URL while the request is pending", async () => {
+    window.history.replaceState({}, "", "/backtests/new");
+    let resolveCreate: ((response: Response) => void) | undefined;
+    const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(
+      () =>
+        new Promise<Response>((resolve) => {
+          resolveCreate = resolve;
+        }),
+    );
+    render(<CreateBacktestPage />);
+    await userEvent.click(screen.getByRole("button", { name: "Run backtest" }));
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByRole("link", { name: "Cancel" }));
+    expect(window.location.pathname).toBe("/backtests");
+    await act(async () =>
+      resolveCreate?.(
+        jsonResponse({ run_id: RUN_ID, status: "SUCCEEDED", links: {} }, 201),
+      ),
+    );
+    expect(window.location.pathname).toBe("/backtests");
+  });
+
+  it("keeps the run action focused through a failed request and prevents a pending duplicate", async () => {
+    let rejectCreate: ((reason: Error) => void) | undefined;
     const fetch = vi
       .spyOn(globalThis, "fetch")
-      .mockResolvedValue(jsonResponse({ detail: "temporary" }, 500));
+      .mockImplementationOnce(
+        () =>
+          new Promise<Response>((_, reject) => {
+            rejectCreate = reject;
+          }),
+      )
+      .mockRejectedValue(new TypeError("offline"));
     render(<CreateBacktestPage />);
     const submit = screen.getByRole("button", { name: "Run backtest" });
     await userEvent.click(submit);
-    await screen.findByRole("alert");
-    const firstKey = new Headers(fetch.mock.calls[0]?.[1]?.headers).get(
-      "Idempotency-Key",
-    );
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(submit).toHaveFocus();
+    expect(submit).not.toBeDisabled();
+    expect(submit).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(submit);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await act(async () => rejectCreate?.(new TypeError("offline")));
+    expect(await screen.findByRole("alert")).toBeVisible();
+    expect(submit).toHaveFocus();
+    expect(submit).toHaveAttribute("aria-disabled", "false");
     await userEvent.click(submit);
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
-    const retryKey = new Headers(fetch.mock.calls[1]?.[1]?.headers).get(
-      "Idempotency-Key",
-    );
-    expect(retryKey).toBe(firstKey);
-
-    fireEvent.change(screen.getByLabelText("Initial cash"), {
-      target: { value: "100001" },
-    });
-    await userEvent.click(submit);
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
-    const editedKey = new Headers(fetch.mock.calls[2]?.[1]?.headers).get(
-      "Idempotency-Key",
-    );
-    expect(editedKey).not.toBe(firstKey);
   });
+
+  it.each([500, 408, "offline"])(
+    "reuses a key after %s and replaces it only after payload edits",
+    async (failure) => {
+      const fetch = vi
+        .spyOn(globalThis, "fetch")
+        .mockImplementation(() =>
+          failure === "offline"
+            ? Promise.reject(new TypeError("Failed to fetch"))
+            : Promise.resolve(
+                jsonResponse({ detail: "temporary" }, Number(failure)),
+              ),
+        );
+      render(<CreateBacktestPage />);
+      fireEvent.change(screen.getByLabelText("Initial cash"), {
+        target: { value: "100000.000000000000000001" },
+      });
+      const submit = screen.getByRole("button", { name: "Run backtest" });
+      await userEvent.click(submit);
+      await screen.findByRole("alert");
+      expect(
+        screen.queryByRole("link", { name: "Reload page" }),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("link", { name: "Return to workbench" }),
+      ).not.toBeInTheDocument();
+      expect(screen.getByLabelText("Initial cash")).toHaveValue(
+        "100000.000000000000000001",
+      );
+      const firstKey = new Headers(fetch.mock.calls[0]?.[1]?.headers).get(
+        "Idempotency-Key",
+      );
+      await userEvent.click(submit);
+      await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+      const retryKey = new Headers(fetch.mock.calls[1]?.[1]?.headers).get(
+        "Idempotency-Key",
+      );
+      expect(retryKey).toBe(firstKey);
+      expect(fetch.mock.calls[1]?.[1]?.body).toBe(
+        fetch.mock.calls[0]?.[1]?.body,
+      );
+
+      fireEvent.change(screen.getByLabelText("Initial cash"), {
+        target: { value: "100001" },
+      });
+      await userEvent.click(submit);
+      await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
+      const editedKey = new Headers(fetch.mock.calls[2]?.[1]?.headers).get(
+        "Idempotency-Key",
+      );
+      expect(editedKey).not.toBe(firstKey);
+    },
+  );
 
   it.each(["0", "-1", "1.5", "9007199254740992", ""])(
     "rejects invalid moving-average period %j",
@@ -195,16 +276,61 @@ describe("create backtest", () => {
     expect(screen.queryByText("../")).not.toBeInTheDocument();
   });
 
+  it("skips the immutable symbol during keyboard setup", async () => {
+    render(<CreateBacktestPage />);
+    screen.getByRole("link", { name: "Cancel" }).focus();
+    await userEvent.tab();
+    expect(screen.getByLabelText("Initial cash")).toHaveFocus();
+  });
+
   it.each([
-    [409, "Duplicate request conflict"],
-    [422, "Validation failed"],
-    [500, "execution failed safely"],
-  ])("shows a safe HTTP %s submission error", async (status, expected) => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      jsonResponse({ detail: "safe detail" }, status),
-    );
+    [409, "Duplicate request conflict", "backtests:createPage.conflictError"],
+    [422, "Validation failed", "backtests:createPage.validationError"],
+    [500, "execution failed safely", "backtests:createPage.executionError"],
+    [403, "Access was denied", "common:loadErrors.permission"],
+    [
+      404,
+      "Backtest creation is unavailable",
+      "backtests:createPage.unavailableError",
+    ],
+    [408, "The request timed out", "backtests:createPage.timeoutError"],
+  ])("shows a safe HTTP %s submission error", async (status, expected, key) => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(jsonResponse({ detail: "safe detail" }, status));
     render(<CreateBacktestPage />);
     await userEvent.click(screen.getByRole("button", { name: "Run backtest" }));
     expect(await screen.findByRole("alert")).toHaveTextContent(expected);
+    try {
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        i18n.t(key, { message: "safe detail" }),
+      );
+      expect(screen.getByLabelText("初始资金")).toHaveValue("100000");
+      expect(fetch).toHaveBeenCalledTimes(1);
+    } finally {
+      await act(async () => i18n.changeLanguage("en-US"));
+    }
+  });
+
+  it("explains offline submission in both locales without exposing diagnostics", async () => {
+    const fetch = vi
+      .spyOn(globalThis, "fetch")
+      .mockRejectedValue(new TypeError("Failed to fetch"));
+    render(<CreateBacktestPage />);
+    await userEvent.click(screen.getByRole("button", { name: "Run backtest" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "The service is unavailable",
+    );
+    expect(screen.getByText("Failed to fetch")).not.toBeVisible();
+    try {
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        i18n.t("backtests:createPage.offlineError"),
+      );
+      expect(fetch).toHaveBeenCalledTimes(1);
+    } finally {
+      await act(async () => i18n.changeLanguage("en-US"));
+    }
   });
 });

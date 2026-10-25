@@ -1,4 +1,11 @@
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "../../i18n";
@@ -7,6 +14,7 @@ import { CreateExperimentPage } from "../experiments/CreateExperimentPage";
 import {
   EXPERIMENT_DRAFT_KEY,
   DRAFT_RECOVERY_PREFIX,
+  UNREADABLE_DRAFT_PREFIX,
   readExperimentDraft,
   saveExperimentDraft,
   type ExperimentDraft,
@@ -31,6 +39,7 @@ beforeEach(async () => {
     if (
       key.startsWith(CONFIG_VERSION_PREFIX) ||
       key.startsWith(DRAFT_RECOVERY_PREFIX) ||
+      key.startsWith(UNREADABLE_DRAFT_PREFIX) ||
       key === EXPERIMENT_DRAFT_KEY
     )
       window.localStorage.removeItem(key);
@@ -52,6 +61,215 @@ beforeEach(async () => {
   });
 });
 describe("configuration versions in the guided wizard", () => {
+  it.each([
+    ["en-US", "recovery"],
+    ["zh-CN", "recovery"],
+    ["en-US", "version"],
+    ["zh-CN", "version"],
+  ] as const)(
+    "keeps the clamped page after cross-tab shrink and regrowth in %s %s",
+    async (locale, kind) => {
+      await i18n.changeLanguage(locale);
+      const prefix =
+        kind === "recovery" ? DRAFT_RECOVERY_PREFIX : CONFIG_VERSION_PREFIX;
+      const ids = Array.from({ length: 21 }, () => crypto.randomUUID());
+      const raws = ids.map((id, index) => {
+        const draft = {
+          ...current,
+          form: { ...configuration, name: `Recovery ${index}` },
+          savedAt: new Date(Date.UTC(2026, 0, 1, 0, 0, index)).toISOString(),
+        };
+        const raw = JSON.stringify(
+          kind === "recovery"
+            ? draft
+            : {
+                schema: 1,
+                id,
+                name: draft.form.name,
+                createdAt: draft.savedAt,
+                kind: "saved",
+                draft,
+              },
+        );
+        localStorage.setItem(prefix + id, raw);
+        return raw;
+      });
+      const currentRaw = JSON.stringify(current);
+      localStorage.setItem(EXPERIMENT_DRAFT_KEY, currentRaw);
+      const restore = vi.fn();
+      const create = vi.spyOn(experimentApi, "create");
+      render(
+        <ConfigurationVersionsPanel current={current} onRestore={restore} />,
+      );
+      const libraryLabel =
+        locale === "en-US" ? "Named configuration versions" : "命名配置版本";
+      const recoveryLabel =
+        locale === "en-US"
+          ? "Browser page recovery drafts"
+          : "浏览器页面草稿恢复";
+      const region = screen.getByRole("region", { name: libraryLabel });
+      let recovery;
+      if (kind === "recovery") {
+        const summary = screen.getByText(recoveryLabel);
+        await userEvent.click(summary);
+        recovery = within(summary.closest("details")!);
+      } else {
+        recovery = within(region);
+      }
+      const list = () =>
+        kind === "recovery"
+          ? recovery.getByRole("list")
+          : region.querySelector(":scope > ul")!;
+      const pager = () =>
+        screen.getByRole("group", {
+          name: `${kind === "recovery" ? recoveryLabel : libraryLabel} — ${i18n.t("common:pagination")}`,
+        });
+      await userEvent.click(
+        within(pager()).getByRole("button", { name: i18n.t("common:next") }),
+      );
+      expect(list().children).toHaveLength(1);
+      expect(list()).toHaveTextContent("Recovery 0");
+      const readFailure = vi
+        .spyOn(Storage.prototype, "key")
+        .mockImplementation(() => {
+          throw new DOMException("blocked", "SecurityError");
+        });
+      act(() =>
+        fireEvent(
+          window,
+          new StorageEvent("storage", { key: prefix + ids[0] }),
+        ),
+      );
+      expect(
+        screen
+          .getAllByRole("alert")
+          .some((alert) =>
+            alert.textContent?.includes(
+              locale === "en-US" ? "could not be read" : "无法读取浏览器存储",
+            ),
+          ),
+      ).toBe(true);
+      readFailure.mockRestore();
+      act(() =>
+        fireEvent(
+          window,
+          new StorageEvent("storage", { key: prefix + ids[0] }),
+        ),
+      );
+      expect(list().children).toHaveLength(1);
+      expect(list()).toHaveTextContent("Recovery 0");
+      act(() => {
+        localStorage.removeItem(prefix + ids[0]);
+        fireEvent(
+          window,
+          new StorageEvent("storage", { key: prefix + ids[0] }),
+        );
+      });
+      expect(list().children).toHaveLength(20);
+      expect(pager()).toHaveTextContent(
+        i18n.t("common:pageOf", { start: 1, end: 20, total: 20 }),
+      );
+      for (const button of within(pager()).getAllByRole("button"))
+        expect(button).toBeDisabled();
+      act(() => {
+        localStorage.setItem(prefix + ids[0], raws[0]);
+        fireEvent(
+          window,
+          new StorageEvent("storage", { key: prefix + ids[0] }),
+        );
+      });
+      expect(list().children).toHaveLength(20);
+      expect(list()).not.toHaveTextContent("Recovery 0");
+      expect(pager()).toHaveTextContent(
+        i18n.t("common:pageOf", { start: 1, end: 20, total: 21 }),
+      );
+      expect(
+        within(pager()).getByRole("button", {
+          name: i18n.t("common:previous"),
+        }),
+      ).toBeDisabled();
+      expect(
+        within(pager()).getByRole("button", { name: i18n.t("common:next") }),
+      ).toBeEnabled();
+      for (let index = 0; index < ids.length; index += 1)
+        expect(localStorage.getItem(prefix + ids[index])).toBe(raws[index]);
+      await userEvent.click(
+        within(pager()).getByRole("button", { name: i18n.t("common:next") }),
+      );
+      expect(list().children).toHaveLength(1);
+      expect(list()).toHaveTextContent("Recovery 0");
+      expect(localStorage.getItem(EXPERIMENT_DRAFT_KEY)).toBe(currentRaw);
+      expect(restore).not.toHaveBeenCalled();
+      expect(create).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([
+    ["ALL", "All available A-shares", "全部可用 A 股"],
+    ["SSE", "Shanghai exchange", "上海证券交易所"],
+    ["SZSE", "Shenzhen exchange", "深圳证券交易所"],
+  ] as const)(
+    "explains saved %s scope in both languages without changing the snapshot",
+    async (universe, english, chinese) => {
+      const target = saveConfigurationVersion("Scope preview", {
+        ...current,
+        form: { ...configuration, universe },
+      });
+      const raw = localStorage.getItem(CONFIG_VERSION_PREFIX + target.id);
+      const restore = vi.fn();
+      render(
+        <ConfigurationVersionsPanel current={current} onRestore={restore} />,
+      );
+      await userEvent.click(
+        screen.getByRole("button", {
+          name: "Review and restore: Scope preview",
+        }),
+      );
+      const dialog = screen.getByRole("dialog");
+      expect(
+        within(dialog).getByText("Stock universe").nextElementSibling,
+      ).toHaveTextContent(english);
+      await act(async () => i18n.changeLanguage("zh-CN"));
+      expect(
+        within(dialog).getByText("股票范围").nextElementSibling,
+      ).toHaveTextContent(chinese);
+      await userEvent.click(within(dialog).getByText("精确配置与草稿元数据"));
+      expect(dialog.querySelector("pre")?.textContent).toContain(
+        `"universe": "${universe}"`,
+      );
+      expect(localStorage.getItem(CONFIG_VERSION_PREFIX + target.id)).toBe(raw);
+      expect(restore).not.toHaveBeenCalled();
+    },
+  );
+
+  it("keeps unreadable draft text available to copy after remount and locale change", async () => {
+    const id = crypto.randomUUID();
+    const raw = '{"version":1,"form":';
+    localStorage.setItem(UNREADABLE_DRAFT_PREFIX + id, raw);
+    const restore = vi.fn();
+    const create = vi.spyOn(experimentApi, "create");
+    const first = render(
+      <ConfigurationVersionsPanel current={current} onRestore={restore} />,
+    );
+    await userEvent.click(screen.getByText("Unreadable draft copies"));
+    await userEvent.click(screen.getByText(`Raw draft copy: ${id}`));
+    expect(screen.getByLabelText("Original draft text")).toHaveValue(raw);
+    expect(screen.getByLabelText("Original draft text")).toHaveAttribute(
+      "readonly",
+    );
+    first.unmount();
+    render(
+      <ConfigurationVersionsPanel current={current} onRestore={restore} />,
+    );
+    await act(async () => i18n.changeLanguage("zh-CN"));
+    await userEvent.click(screen.getByText("无法读取的草稿副本"));
+    await userEvent.click(screen.getByText(`原始草稿副本: ${id}`));
+    expect(screen.getByLabelText("原始草稿文本")).toHaveValue(raw);
+    expect(localStorage.getItem(UNREADABLE_DRAFT_PREFIX + id)).toBe(raw);
+    expect(restore).not.toHaveBeenCalled();
+    expect(create).not.toHaveBeenCalled();
+  });
+
   it("rejects a recovery slot changed after preview and displays fractions in fraction fields", async () => {
     saveExperimentDraft(configuration, 2, current.idempotencyKey);
     const original = localStorage.getItem(EXPERIMENT_DRAFT_KEY);
@@ -214,6 +432,40 @@ describe("configuration versions in the guided wizard", () => {
     expect(screen.getByLabelText("Starting capital (CNY)")).toHaveValue(
       target.draft.form.initial_cash,
     );
+  });
+  it("returns focus to the workspace when restoring removes the selected version's row", async () => {
+    const oldest = saveConfigurationVersion("Oldest setup", {
+      ...current,
+      step: 0,
+    });
+    localStorage.setItem(
+      CONFIG_VERSION_PREFIX + oldest.id,
+      JSON.stringify({ ...oldest, createdAt: "2020-01-01T00:00:00Z" }),
+    );
+    for (let index = 0; index < 19; index += 1)
+      saveConfigurationVersion(`Other setup ${index}`, current);
+    const restore = vi.fn();
+    render(
+      <main id="main-content" tabIndex={-1}>
+        <ConfigurationVersionsPanel
+          current={{ ...current, step: 0 }}
+          onRestore={restore}
+        />
+      </main>,
+    );
+    const trigger = screen.getByRole("button", {
+      name: "Review and restore: Oldest setup",
+    });
+    trigger.focus();
+    await userEvent.keyboard("{Enter}");
+    await userEvent.click(
+      within(screen.getByRole("dialog")).getByRole("button", {
+        name: "Back up current draft and restore",
+      }),
+    );
+    expect(restore).toHaveBeenCalledOnce();
+    expect(trigger).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
   });
   it("reports quota failure and retains the name, current form and draft", async () => {
     saveExperimentDraft(configuration, 2, current.idempotencyKey);

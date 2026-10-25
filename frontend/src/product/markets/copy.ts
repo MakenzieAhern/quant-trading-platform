@@ -25,6 +25,8 @@ const en = {
   searchLabel: "Symbol, code or source-observed name",
   searchHelp:
     "Names are catalogue/source observations, not a claim about a security's name on a historical date.",
+  pendingSearch:
+    "Press Search securities to apply the text; previous results are hidden.",
   exchange: "Exchange",
   all: "All exchanges",
   sse: "Shanghai (SSE)",
@@ -56,7 +58,7 @@ const en = {
     "Your watchlist is empty. Save a security from the search results.",
   savedAt: "Added at",
   archivedSource:
-    "The saved source is unavailable. You can still remove this entry.",
+    "The saved source is unavailable or has changed. You can still remove this entry.",
   coverage: "Registered coverage",
   asOf: "Archive as-of",
   retrieved: "Archive retrieval time",
@@ -117,7 +119,11 @@ const en = {
   status: "Observation status",
   risk: "Recorded risk status",
   normal: "Normal",
+  st: "ST — risk-warning designation",
+  starSt: "*ST — delisting-risk warning",
+  delistingPeriod: "Delisting period",
   unknown: "Unknown",
+  unrecognizedRisk: "Unrecognized risk code",
   blocked: "Opening execution blocked",
   yes: "Yes",
   no: "No",
@@ -156,6 +162,7 @@ const zh: typeof en = {
   search: "检索证券",
   searchLabel: "股票代码、标识或来源观察名称",
   searchHelp: "名称来自目录／来源观察，不代表该证券在某个历史日期使用此名称。",
+  pendingSearch: "请点击“检索证券”应用输入内容；此前的检索结果已隐藏。",
   exchange: "交易所",
   all: "全部交易所",
   sse: "上海（SSE）",
@@ -169,7 +176,8 @@ const zh: typeof en = {
   szseMain: "深市主板",
   chiNext: "创业板",
   inspect: "查看历史",
-  detailUnavailable: "无法打开此证券链接。请检查已注册的数据来源，或重新检索该证券。",
+  detailUnavailable:
+    "无法打开此证券链接。请检查已注册的数据来源，或重新检索该证券。",
   closeDetail: "关闭详情",
   save: "加入自选",
   remove: "移除自选",
@@ -184,7 +192,7 @@ const zh: typeof en = {
     "保存在本地数据库中。即使证券代码相同，历史档案与合成演示的自选记录仍彼此独立。",
   watchlistEmpty: "自选列表为空，可从检索结果添加证券。",
   savedAt: "加入时间",
-  archivedSource: "该记录的数据来源不可用，但仍可移除自选。",
+  archivedSource: "该记录的数据来源不可用或已变更，但仍可移除自选。",
   coverage: "已注册覆盖区间",
   asOf: "档案数据截至",
   retrieved: "档案获取时间",
@@ -242,7 +250,11 @@ const zh: typeof en = {
   status: "记录状态",
   risk: "已记录风险状态",
   normal: "正常",
+  st: "ST（风险警示标记）",
+  starSt: "*ST（退市风险警示）",
+  delistingPeriod: "退市整理期",
   unknown: "未知",
+  unrecognizedRisk: "未识别的风险代码",
   blocked: "开盘执行受限",
   yes: "是",
   no: "否",
@@ -265,28 +277,40 @@ export function useMarketCopy() {
 }
 export type MarketCopy = typeof en;
 export function boardLabel(board: string, c: MarketCopy) {
-  return (
-    (
-      {
-        SSE_MAIN: c.sseMain,
-        SSE_STAR: c.star,
-        SZSE_MAIN: c.szseMain,
-        SZSE_CHINEXT: c.chiNext,
-      } as Record<string, string>
-    )[board] ?? board
-  );
+  const labels: Record<string, string> = {
+    SSE_MAIN: c.sseMain,
+    SSE_STAR: c.star,
+    SZSE_MAIN: c.szseMain,
+    SZSE_CHINEXT: c.chiNext,
+  };
+  return Object.hasOwn(labels, board) ? labels[board] : board;
 }
 export function observationLabel(status: string, c: MarketCopy) {
-  return (
-    (
-      {
-        OBSERVED: c.observed,
-        SUSPENDED: c.suspended,
-        SUSPENSION_BOUNDARY_UNCERTAIN: c.uncertainSuspension,
-        FEATURE_ONLY: c.feature,
-        MISSING_OBSERVATION: c.missing,
-        OUTSIDE_LISTING: c.outside,
-      } as Record<string, string>
-    )[status] ?? c.unknown
-  );
+  const labels: Record<string, string> = {
+    OBSERVED: c.observed,
+    SUSPENDED: c.suspended,
+    SUSPENSION_BOUNDARY_UNCERTAIN: c.uncertainSuspension,
+    FEATURE_ONLY: c.feature,
+    MISSING_OBSERVATION: c.missing,
+    OUTSIDE_LISTING: c.outside,
+  };
+  return Object.hasOwn(labels, status) ? labels[status] : c.unknown;
+}
+
+export function riskLabel(status: string | null, c: MarketCopy) {
+  switch (status) {
+    case "NORMAL":
+      return c.normal;
+    case "ST":
+      return c.st;
+    case "STAR_ST":
+      return c.starSt;
+    case "DELISTING_PERIOD":
+      return c.delistingPeriod;
+    case null:
+    case "":
+      return c.unknown;
+    default:
+      return `${c.unrecognizedRisk}: ${status}`;
+  }
 }

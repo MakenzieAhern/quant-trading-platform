@@ -5,12 +5,15 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import warnings
 from bisect import bisect_right
 from collections import defaultdict
+from collections.abc import Callable
 from datetime import UTC, datetime
-from decimal import Decimal, InvalidOperation
+from decimal import Context, Decimal, InvalidOperation, localcontext
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
@@ -19,13 +22,24 @@ import pyarrow.parquet as pq
 from openpyxl import load_workbook
 
 from app.data.catalog import (
+    DatasetManifest,
     DatasetPartition,
     finalize_manifest,
     load_manifest,
     verify_dataset,
     write_manifest,
 )
-from app.data.catalog.checksums import sha256_file
+from app.data.catalog.checksums import canonical_sha256, sha256_file, verified_file_bytes
+from app.data.catalog.freeze import require_unfrozen, write_immutable
+from app.data.full_dataset import parse_action_records
+from app.domain.markets.corporate_actions import OrdinaryDistributionReference
+from scripts.full_dataset_build_inputs import load_candidate_build_inputs, producer_sha256
+from scripts.full_dataset_sources import (
+    verify_source_contracts,
+    verify_source_lineage,
+    verify_source_manifest,
+)
+from scripts.ordinary_distribution_dates import normalize_ordinary_dates
 from scripts.publish_akshare_pilot import write_table
 from scripts.reconcile_sse_cninfo import canonical, save, sha
 from scripts.szse_st_recovery import risk_state
@@ -33,6 +47,8 @@ from scripts.szse_st_recovery import risk_state
 DATASET_ID = "cn-a-research-20100101-20251231-v1"
 START = "2010-01-01"
 END = "2025-12-31"
+# Bump when raw parsing, units, ordering or serialization semantics change.
+RAW_PARSER_VERSION = "OFFICIAL_RAW_INPUT_BOUND_V2"
 RAW_FIELDS = (
     "security_id",
     "exchange",
@@ -55,11 +71,16 @@ def decimal_text(value: object, *, scale: Decimal = Decimal(1)) -> str | None:
     if value in (None, "", "--", "-"):
         return None
     try:
-        parsed = Decimal(str(value).replace(",", "")) * scale
+        parsed = Decimal(str(value).replace(",", ""))
     except InvalidOperation as exc:
         raise ValueError(f"INVALID_DECIMAL:{value}") from exc
-    if not parsed.is_finite():
+    if not parsed.is_finite() or not scale.is_finite():
         raise ValueError(f"INVALID_DECIMAL:{value}")
+    # Unit conversion must be exact and independent of the caller's Decimal context.
+    with localcontext(
+        Context(prec=max(28, len(parsed.as_tuple().digits) + len(scale.as_tuple().digits)))
+    ):
+        parsed *= scale
     return format(parsed, "f")
 
 
@@ -184,12 +205,49 @@ class StreamingPartition:
         )
 
 
-def verified_bytes(path: Path) -> tuple[bytes, dict[str, Any]]:
+def verified_bytes(
+    path: Path, expected: tuple[str, str] | None = None
+) -> tuple[bytes, dict[str, Any]]:
     raw = path.read_bytes()
-    metadata = json.loads(path.with_suffix(path.suffix + ".meta.json").read_bytes())
+    metadata_bytes = path.with_suffix(path.suffix + ".meta.json").read_bytes()
+    metadata = json.loads(metadata_bytes)
     if sha(raw) != metadata["sha256"]:
         raise ValueError(f"SOURCE_CHECKSUM_CHANGED:{path}")
+    if expected is not None and (sha(raw), sha(metadata_bytes)) != expected:
+        raise ValueError(f"RAW_CHECKPOINT_INPUT_MISMATCH:{path}")
     return raw, metadata
+
+
+def _raw_input_snapshot(
+    exchange: str, paths: list[Path], resolver: SecurityResolver, status_resolver: StatusResolver
+) -> tuple[str, dict[str, tuple[str, str]]]:
+    sources = {}
+    for path in paths:
+        raw_sha = sha256_file(path)
+        metadata_bytes = path.with_suffix(path.suffix + ".meta.json").read_bytes()
+        if json.loads(metadata_bytes)["sha256"] != raw_sha:
+            raise ValueError(f"SOURCE_CHECKSUM_CHANGED:{path}")
+        sources[str(path)] = (raw_sha, sha(metadata_bytes))
+    return canonical_sha256(
+        {
+            "parser_version": RAW_PARSER_VERSION,
+            "exchange": exchange,
+            "start": START,
+            "end": END,
+            "fields": RAW_FIELDS,
+            "sources": sources,
+            "security_intervals": sorted(resolver._intervals.items()),
+            "status_intervals": sorted(status_resolver._rows.items()),
+        }
+    ), sources
+
+
+def _require_raw_output(path: Path) -> None:
+    if any(parent.is_symlink() for parent in (path, *path.parents)):
+        raise ValueError(f"UNSAFE_RAW_CHECKPOINT_PATH:{path}")
+    require_unfrozen(path)
+    if path.is_dir():
+        require_unfrozen(path / ".raw-write-check")
 
 
 def raw_stage(
@@ -198,18 +256,63 @@ def raw_stage(
     paths: list[Path],
     resolver: SecurityResolver,
     status_resolver: StatusResolver,
+    *,
+    expected_sources: dict[str, tuple[str, str]] | None = None,
 ) -> tuple[list[DatasetPartition], list[dict[str, Any]], list[dict[str, str]]]:
+    if exchange not in {"SSE", "SZSE"}:
+        raise ValueError("INVALID_RAW_EXCHANGE")
+    build = build.absolute()
+    paths = sorted(path.absolute() for path in paths)
+    if not paths or len({path.resolve() for path in paths}) != len(paths):
+        raise ValueError("INVALID_RAW_SOURCE_SET")
     target = build / "raw" / exchange
     receipt_path = build / f"raw-{exchange.lower()}-checkpoint.json"
-    if receipt_path.exists() and target.exists():
-        checkpoint = json.loads(receipt_path.read_bytes())
-        parts = [DatasetPartition.model_validate(row) for row in checkpoint["partitions"]]
-        if all(sha256_file(build / part.relative_path) == part.sha256 for part in parts):
-            return parts, checkpoint["lineage"], checkpoint["rejected"]
-        raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
-
     temporary = build / f".raw-{exchange.lower()}.incomplete"
+    for output in (target, receipt_path, receipt_path.with_suffix(".json.tmp"), temporary):
+        _require_raw_output(output)
+    if any(
+        source.resolve().is_relative_to(build.resolve())
+        for path in paths
+        for source in (path, path.with_suffix(path.suffix + ".meta.json"))
+    ):
+        raise ValueError("RAW_SOURCE_OUTPUT_OVERLAP")
+    if receipt_path.exists() != target.exists():
+        raise ValueError(f"INCOMPLETE_RAW_CHECKPOINT:{exchange}")
+    if receipt_path.exists() and (not receipt_path.is_file() or not target.is_dir()):
+        raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
+    input_sha256, source_hashes = _raw_input_snapshot(exchange, paths, resolver, status_resolver)
+    if expected_sources is not None and source_hashes != expected_sources:
+        raise ValueError(f"RAW_SELECTED_INPUT_MISMATCH:{exchange}")
+    if receipt_path.exists():
+        checkpoint = json.loads(receipt_path.read_bytes())
+        if checkpoint.get("input_sha256") != input_sha256 or checkpoint.get("exchange") != exchange:
+            raise ValueError(f"RAW_CHECKPOINT_INPUT_MISMATCH:{exchange}")
+        recorded_sha = checkpoint.pop("checkpoint_sha256", None)
+        if canonical_sha256(checkpoint) != recorded_sha:
+            raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
+        parts = [DatasetPartition.model_validate(row) for row in checkpoint["partitions"]]
+        relative_paths = [part.relative_path for part in parts]
+        if relative_paths != sorted(set(relative_paths)) or any(
+            not re.fullmatch(rf"raw/{exchange}/\d{{4}}-(0[1-9]|1[0-2])\.parquet", name)
+            for name in relative_paths
+        ):
+            raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
+        children = list(target.iterdir())
+        for child in children:
+            _require_raw_output(child)
+        if {build / name for name in relative_paths} != set(children) or any(
+            not child.is_file() for child in children
+        ):
+            raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
+        if not all(sha256_file(build / part.relative_path) == part.sha256 for part in parts):
+            raise ValueError(f"INVALID_RAW_CHECKPOINT:{exchange}")
+        if _raw_input_snapshot(exchange, paths, resolver, status_resolver)[0] != input_sha256:
+            raise ValueError(f"RAW_CHECKPOINT_INPUT_MISMATCH:{exchange}")
+        return parts, checkpoint["lineage"], checkpoint["rejected"]
+
     if temporary.exists():
+        for child in temporary.rglob("*"):
+            _require_raw_output(child)
         shutil.rmtree(temporary)
     temporary.mkdir(parents=True)
     writers: dict[str, StreamingPartition] = {}
@@ -235,8 +338,8 @@ def raw_stage(
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", UserWarning)
-        for path in sorted(paths):
-            raw, meta = verified_bytes(path)
+        for path in paths:
+            raw, meta = verified_bytes(path, source_hashes[str(path)])
             lineage.append(
                 {
                     "source_path": str(path),
@@ -283,7 +386,7 @@ def raw_stage(
                         if len(buffers[month]) >= flush_at:
                             flush(month)
             else:
-                workbook = load_workbook(path, read_only=True, data_only=True)
+                workbook = load_workbook(BytesIO(raw), read_only=True, data_only=True)
                 sheet = workbook.active
                 if sheet.calculate_dimension() == "A1:A1":
                     sheet.reset_dimensions()
@@ -354,15 +457,21 @@ def raw_stage(
     for month, writer in sorted(writers.items()):
         relative = f"raw/{exchange}/{month}.parquet"
         parts.append(writer.close(relative))
+    if _raw_input_snapshot(exchange, paths, resolver, status_resolver)[0] != input_sha256:
+        raise ValueError(f"RAW_CHECKPOINT_INPUT_MISMATCH:{exchange}")
+    for output in (target, receipt_path, receipt_path.with_suffix(".json.tmp"), temporary):
+        _require_raw_output(output)
     target.parent.mkdir(parents=True, exist_ok=True)
     temporary.rename(target)
     checkpoint = {
         "exchange": exchange,
+        "input_sha256": input_sha256,
         "partitions": [part.model_dump(mode="json") for part in parts],
         "lineage": lineage,
         "rejected": rejected,
     }
-    save(receipt_path, checkpoint)
+    checkpoint["checkpoint_sha256"] = canonical_sha256(checkpoint)
+    write_immutable(receipt_path, canonical(checkpoint))
     return parts, lineage, rejected
 
 
@@ -454,9 +563,18 @@ def action_row(
     }
 
 
-def event_rows(path: Path, *, event_kind: str = "CORPORATE_ACTION") -> list[dict[str, str | None]]:
+def read_json_file(path: Path) -> Any:
+    return json.loads(path.read_bytes())
+
+
+def event_rows(
+    path: Path,
+    *,
+    event_kind: str = "CORPORATE_ACTION",
+    read_json: Callable[[Path], Any] = read_json_file,
+) -> list[dict[str, str | None]]:
     result = []
-    for item in json.loads(path.read_bytes())["events"]:
+    for item in read_json(path)["events"]:
         event = item["event"]
         security = event["security_id"]
         acceptance = {key: value for key, value in item.items() if key != "event"}
@@ -474,11 +592,16 @@ def event_rows(path: Path, *, event_kind: str = "CORPORATE_ACTION") -> list[dict
 
 
 def structural_event_rows(
-    repository: Path, rights_path: Path, merger_path: Path, structural_path: Path
+    repository: Path,
+    rights_path: Path,
+    merger_path: Path,
+    structural_path: Path,
+    *,
+    read_json: Callable[[Path], Any] = read_json_file,
 ) -> list[dict[str, str | None]]:
     rows = []
-    rights_report = json.loads(rights_path.read_bytes())
-    rights_inventory = json.loads(Path(rights_report["inventory_path"]).read_bytes())
+    rights_report = read_json(rights_path)
+    rights_inventory = read_json(Path(rights_report["inventory_path"]))
     for item in rights_inventory["rows"]:
         event = item["event"]
         rows.append(
@@ -492,7 +615,7 @@ def structural_event_rows(
             )
         )
 
-    merger_census = json.loads(merger_path.read_bytes())
+    merger_census = read_json(merger_path)
     for item in merger_census["executable_events"]:
         event = item["event"]
         rows.append(
@@ -508,7 +631,7 @@ def structural_event_rows(
     if sum(row["event_kind"] == "MERGER" for row in rows) != 24:
         raise ValueError("MERGER_LEDGER_COUNT_CHANGED")
 
-    structural = json.loads(structural_path.read_bytes())
+    structural = read_json(structural_path)
     for section, event_kind, security_key, date_keys in (
         (
             "demerger_full_census",
@@ -552,64 +675,391 @@ def structural_event_rows(
     return rows
 
 
-def materialize(staging: Path, repository: Path) -> dict[str, Any]:
-    state = json.loads((repository / ".research/project_state.json").read_bytes())
-    preflight_path = repository / state["full_source_preflight_report"]
-    preflight = json.loads(preflight_path.read_bytes())
-    if (
+def ordinary_reference_rows(
+    report: dict[str, Any], actions: list[dict[str, Any]], file_sha256: str
+) -> list[dict[str, str | None]]:
+    if report.get("manifest_sha256") != canonical_sha256(
+        {key: value for key, value in report.items() if key != "manifest_sha256"}
+    ):
+        raise ValueError("ORDINARY_REFERENCE_REPORT_MANIFEST_MISMATCH")
+    records = report["private_candidate_reference_rows"]
+    if any(row["event_kind"] != "ORDINARY_REFERENCE" for row in records):
+        raise ValueError("ORDINARY_REFERENCE_KIND_MISMATCH")
+    references = [
+        OrdinaryDistributionReference.model_validate_json(row["event_json"]) for row in records
+    ]
+    keys = {(str(reference.security_id), reference.ex_date.isoformat()) for reference in references}
+    if any(not START <= day <= END for _, day in keys):
+        raise ValueError("ORDINARY_REFERENCE_OUTSIDE_BUILD_COVERAGE")
+    paired = [row for row in actions if (row["security_id"], row["application_date"]) in keys]
+    # Use the runtime's full boundary/pair validation, including extra structural legs.
+    parse_action_records([*paired, *records], END)
+    return [
+        action_row(
+            reference.model_dump(mode="json"),
+            reference.event_checksum,
+            event_kind="ORDINARY_REFERENCE",
+            application_date=reference.ex_date.isoformat(),
+            security_id=str(reference.security_id),
+            acceptance={
+                "scope": "PRICE_ONLY_NOT_ACCOUNTING",
+                "input_report_file_sha256": file_sha256,
+                "input_report_manifest_sha256": report["manifest_sha256"],
+            },
+        )
+        for reference in references
+    ]
+
+
+def materialization_report(
+    manifest: DatasetManifest, manifest_path: Path, ownership: dict[str, Any] | None
+) -> dict[str, Any]:
+    counts = {part.relative_path: part.row_count for part in manifest.partitions}
+    raw = {path: count for path, count in counts.items() if path.startswith("raw/")}
+    report = {
+        "dataset_id": manifest.dataset_id,
+        "coverage": [str(manifest.coverage_start), str(manifest.coverage_end)],
+        "securities": manifest.security_count,
+        "security_intervals": counts["securities.parquet"],
+        "trading_sessions": counts["calendar.parquet"],
+        "raw_partitions": len(raw),
+        "raw_rows": sum(raw.values()),
+        "sse_raw_rows": sum(count for path, count in raw.items() if path.startswith("raw/SSE/")),
+        "szse_raw_rows": sum(count for path, count in raw.items() if path.startswith("raw/SZSE/")),
+        "feature_only_rows": counts["feature-only-observations.parquet"],
+        "rejected_nonbar_rows": counts["rejected-observations.parquet"],
+        "adjustment_rows": counts["adjustment-factors.parquet"],
+        "corporate_action_rows": counts["corporate-actions.parquet"],
+        "suspension_events": counts["suspension-events.parquet"],
+        "failed_sources": 0,
+        "manifest_sha256": manifest.canonical_sha256,
+        "manifest_file_sha256": sha256_file(manifest_path),
+        "dataset_audited": False,
+        "dataset_frozen": False,
+    }
+    if ownership:
+        kinds = (
+            pq.read_table(
+                BytesIO(
+                    verified_file_bytes(
+                        manifest_path.parent / "corporate-actions.parquet",
+                        next(
+                            part.sha256
+                            for part in manifest.partitions
+                            if part.relative_path == "corporate-actions.parquet"
+                        ),
+                    )
+                ),
+                columns=["event_kind"],
+            )
+            .column("event_kind")
+            .to_pylist()
+        )
+        reference_count = kinds.count("ORDINARY_REFERENCE")
+        report.update(
+            build_inputs=ownership,
+            full_financial_admission=False,
+            dataset_registered=False,
+            operation=ownership["operation"],
+            ordinary_reference_rows=reference_count,
+            accounting_action_rows=counts["corporate-actions.parquet"] - reference_count,
+        )
+    return report
+
+
+def materialize(
+    staging: Path | None,
+    repository: Path,
+    *,
+    build_spec: Path | None = None,
+    build_spec_sha256: str | None = None,
+) -> dict[str, Any]:
+    producer = producer_sha256() if build_spec is not None else None
+    if (build_spec is None) != (build_spec_sha256 is None) or (
+        build_spec is not None and staging is not None
+    ):
+        raise ValueError("SELECT_EXACTLY_ONE_BUILD_INPUT_MODE")
+    candidate = (
+        load_candidate_build_inputs(
+            build_spec,
+            build_spec_sha256,
+            repository,
+            legacy_dataset_id=DATASET_ID,
+            coverage=(START, END),
+        )
+        if build_spec is not None and build_spec_sha256 is not None
+        else None
+    )
+    if candidate is None and staging is None:
+        raise ValueError("LEGACY_STAGING_REQUIRED")
+    ownership = candidate.ownership() if candidate else None
+    if ownership and ownership["producer_sha256"] != producer:
+        raise ValueError("CANDIDATE_PRODUCER_CHANGED")
+
+    def read_json(path: Path) -> Any:
+        return candidate.read_json(repository, path) if candidate else read_json_file(path)
+
+    # Defaults below are evaluated only as paths, never read in the explicit candidate mode.
+    staging = staging if staging is not None else Path()
+    state = (
+        candidate.reference_pins
+        if candidate
+        else json.loads((repository / ".research/project_state.json").read_bytes())
+    )
+    preflight_path = (
+        candidate.source(repository, "SOURCE_PREFLIGHT")
+        if candidate
+        else repository / state["full_source_preflight_report"]
+    )
+    preflight = read_json(preflight_path)
+    if candidate is None and (
         state["r5_status"] != "RUNNING_FULL_DATASET_MATERIALIZATION"
         or preflight["status"] != "PASS"
         or preflight["manifest_sha256"] != state["full_source_preflight_manifest_sha256"]
         or sha(preflight_path.read_bytes()) != state["full_source_preflight_file_sha256"]
     ):
         raise ValueError("FULL_DATASET_MATERIALIZATION_NOT_AUTHORIZED")
-    final = staging.parent / DATASET_ID
-    root = staging / "full-dataset-build-v1"
+    verify_source_manifest(preflight_path, state["full_source_preflight_manifest_sha256"])
+
+    def source(name: str, legacy: Path) -> Path:
+        return candidate.source(repository, name) if candidate else legacy
+
+    def auxiliary(name: str, legacy: Path) -> Path:
+        return candidate.auxiliary_inputs[name].path if candidate else legacy
+
+    master_path = source(
+        "SECURITY_MASTER",
+        staging / "full-master-public-v1-final/point-in-time-security-master.json",
+    )
+    master_authority_path = repository / state["p0_public_report_path"]
+    master = verify_source_manifest(
+        master_path,
+        state["p0_public_report_manifest_sha256"],
+        master_authority_path=master_authority_path,
+    )
+    if candidate:
+        master = read_json(master_path)
+    if (
+        preflight["components"]["security_master"]["manifest_sha256"]
+        != state["p0_public_report_manifest_sha256"]
+    ):
+        raise ValueError("SOURCE_PREFLIGHT_MASTER_REFERENCE_MISMATCH")
+    dataset_id = candidate.dataset_id if candidate else DATASET_ID
+    final = candidate.final_root if candidate else staging.parent / DATASET_ID
+    root = candidate.work_root if candidate else staging / "full-dataset-build-v1"
     build = root / "catalog-build"
+    if candidate and ownership:
+        candidate.claim_work_root(ownership)
     if final.exists():
+        contracts = pq.read_table(final / "source-contracts.parquet").to_pylist()
+        verify_source_contracts(contracts, repository, state)
         manifest = load_manifest(final / "manifest.json")
+        verify_source_lineage(contracts, manifest.source_lineage)
         verify_dataset(final, manifest)
-        return json.loads((root / "materialization-report.json").read_bytes())
+        retained_report: dict[str, Any] = json.loads(
+            (root / "materialization-report.json").read_bytes()
+        )
+        if candidate:
+            if (
+                contracts != list(candidate.source_contracts)
+                or manifest.dataset_id != dataset_id
+                or {str(path.relative_to(final)) for path in final.rglob("*.parquet")}
+                != {part.relative_path for part in manifest.partitions}
+                or retained_report
+                != materialization_report(manifest, final / "manifest.json", ownership)
+                or json.loads((final / "build-inputs.json").read_bytes()) != ownership
+            ):
+                raise ValueError("CANDIDATE_PUBLICATION_IDENTITY_CHANGED")
+            candidate.recheck(repository)
+            if candidate.ownership() != ownership:
+                raise ValueError("CANDIDATE_PRODUCER_CHANGED")
+            # Recover only the post-rename receipt; never rebuild or replace a published dataset.
+            write_immutable(
+                root / "publication-checkpoint.json",
+                canonical({**retained_report, "published": True}) + b"\n",
+            )
+        return retained_report
+    sse_authority_path = source("SSE_ST", staging / "full-sse-st-v1/sse-st-authority-v4.json")
+    sse_authority = read_json(sse_authority_path)
+
+    szse_st_path = source("SZSE_ST", staging / "full-szse-st-v1/dated-name-coverage-probe-v9.json")
+    szse_st_authority = read_json(szse_st_path)
+
+    inventory_path = auxiliary(
+        "adjustment_inventory",
+        staging / "full-adjustment-audit-v1/retained-curve-inventory-v2.json",
+    )
+    adjustment_authority_path = source(
+        "ADJUSTMENTS", staging / "full-adjustment-audit-v1/full-adjustment-authority-v2.json"
+    )
+    inventory = read_json(inventory_path)
+    adjustment_authority = read_json(adjustment_authority_path)
+
+    cash_path = source(
+        "CASH_ACTIONS", staging / "full-distribution-notices-v1/cash-full-coverage-v43.json"
+    )
+    bonus_path = source(
+        "BONUS_ACTIONS", staging / "full-bonus-inventory-v1/retained-bonus-ledger-v32.json"
+    )
+    gap_distribution_path = source(
+        "GAP_DISTRIBUTION_ACTIONS",
+        staging / "full-adjustment-audit-v1/accepted-gap-distribution-ledger-v1.json",
+    )
+    rights_path = source(
+        "RIGHTS_ACTIONS", staging / "full-rights-inventory-v1/full-rights-census-v1.json"
+    )
+    merger_path = source(
+        "MERGER_ACTIONS", staging / "full-merger-v1/merger-candidate-census-v4.json"
+    )
+    structural_path = source(
+        "STRUCTURAL_ACTIONS", staging / "full-structural-census-v1/structural-action-census-v1.json"
+    )
+
+    calendar_path = source("CALENDAR", staging / "full-calendar-v1/calendar-manifest-v3.json")
+    calendar = read_json(calendar_path)
+    benchmark_root = staging / "full-benchmark-v1"
+    benchmark_manifest = read_json(
+        source("BENCHMARK", benchmark_root / "acceptance-manifest-v2.json")
+    )
+
+    if candidate:
+        contracts = list(candidate.source_contracts)
+    else:
+        source_contracts = [
+            ("SOURCE_PREFLIGHT", preflight_path, preflight["manifest_sha256"], preflight["status"]),
+            ("SECURITY_MASTER", master_path, state["p0_public_report_manifest_sha256"], "PASS"),
+            (
+                "SSE_ST",
+                sse_authority_path,
+                sse_authority["manifest_sha256"],
+                sse_authority["SSE_HISTORICAL_ST_RECONSTRUCTION"],
+            ),
+            (
+                "SZSE_ST",
+                szse_st_path,
+                state["full_szse_st_probe_sha256"],
+                state["full_szse_st_status"],
+            ),
+            (
+                "SUSPENSIONS",
+                staging / "full-suspension-revalidation-v36/suspension-authority-v1.json",
+                state["full_suspension_authority_manifest_sha256"],
+                "PASS_PUBLIC_OFFICIAL_RECONSTRUCTION",
+            ),
+            (
+                "ADJUSTMENTS",
+                adjustment_authority_path,
+                adjustment_authority["manifest_sha256"],
+                adjustment_authority["adjustment_authority"],
+            ),
+            (
+                "CASH_ACTIONS",
+                cash_path,
+                json.loads(cash_path.read_bytes())["manifest_sha256"],
+                "PASS",
+            ),
+            (
+                "BONUS_ACTIONS",
+                bonus_path,
+                json.loads(bonus_path.read_bytes())["manifest_sha256"],
+                "PASS",
+            ),
+            (
+                "GAP_DISTRIBUTION_ACTIONS",
+                gap_distribution_path,
+                json.loads(gap_distribution_path.read_bytes())["manifest_sha256"],
+                "PASS",
+            ),
+            (
+                "RIGHTS_ACTIONS",
+                rights_path,
+                json.loads(rights_path.read_bytes())["manifest_sha256"],
+                "PASS",
+            ),
+            (
+                "MERGER_ACTIONS",
+                merger_path,
+                json.loads(merger_path.read_bytes())["manifest_sha256"],
+                "PASS",
+            ),
+            (
+                "STRUCTURAL_ACTIONS",
+                structural_path,
+                json.loads(structural_path.read_bytes())["manifest_sha256"],
+                "PASS",
+            ),
+            ("CALENDAR", calendar_path, calendar["manifest_sha256"], "PASS"),
+            (
+                "BENCHMARK",
+                benchmark_root / "acceptance-manifest-v2.json",
+                benchmark_manifest["manifest_sha256"],
+                benchmark_manifest["status"],
+            ),
+            (
+                "MARKET_RULES_AND_COSTS",
+                Path(state["full_transaction_cost_report"]),
+                state["full_transaction_cost_report_manifest_sha256"],
+                state["full_transaction_cost_authority"],
+            ),
+        ]
+        contracts = [
+            {
+                "name": name,
+                "source_path": str(path),
+                "source_file_sha256": sha(path.read_bytes()),
+                "source_manifest_sha256": manifest_sha,
+                "status": status,
+            }
+            for name, path, manifest_sha, status in source_contracts
+        ]
+    verify_source_contracts(contracts, repository, state)
+
     build.mkdir(parents=True, exist_ok=True)
 
-    master_path = staging / "full-master-public-v1-final/point-in-time-security-master.json"
-    master = json.loads(master_path.read_bytes())
     resolver = SecurityResolver(master)
-    sse_authority_path = staging / "full-sse-st-v1/sse-st-authority-v4.json"
-    sse_authority = json.loads(sse_authority_path.read_bytes())
     sse_status = StatusResolver(sse_authority["intervals"])
-    szse_st_path = staging / "full-szse-st-v1/dated-name-coverage-probe-v9.json"
-    szse_st_authority = json.loads(szse_st_path.read_bytes())
     szse_status = StatusResolver(szse_st_authority["daily_replay"]["intervals"])
     raw_root = staging / "full-raw-coverage-v1"
     sse_parts, sse_lineage, sse_rejected = raw_stage(
         build,
         "SSE",
-        [
+        [pin.path for pin in candidate.raw_sources["SSE"]]
+        if candidate
+        else [
             path
             for path in (raw_root / "sse-official-day-controls-v1").glob("*.json")
             if len(path.stem) == 6 and path.stem.isdigit()
         ],
         resolver,
         sse_status,
+        expected_sources={
+            str(pin.path): (pin.sha256, pin.metadata_sha256) for pin in candidate.raw_sources["SSE"]
+        }
+        if candidate
+        else None,
     )
     szse_parts, szse_lineage, szse_rejected = raw_stage(
         build,
         "SZSE",
-        list((raw_root / "szse-official-day-controls-v1").glob("[0-9]*.xlsx")),
+        [pin.path for pin in candidate.raw_sources["SZSE"]]
+        if candidate
+        else list((raw_root / "szse-official-day-controls-v1").glob("[0-9]*.xlsx")),
         resolver,
         szse_status,
+        expected_sources={
+            str(pin.path): (pin.sha256, pin.metadata_sha256)
+            for pin in candidate.raw_sources["SZSE"]
+        }
+        if candidate
+        else None,
     )
 
-    inventory_path = staging / "full-adjustment-audit-v1/retained-curve-inventory-v2.json"
-    adjustment_authority_path = (
-        staging / "full-adjustment-audit-v1/full-adjustment-authority-v2.json"
-    )
-    inventory = json.loads(inventory_path.read_bytes())
-    adjustment_authority = json.loads(adjustment_authority_path.read_bytes())
     factors = adjustment_rows(inventory, adjustment_authority)
-    partial_path = raw_root / "szse-20110725-monthly-reconstruction-v6/report.json"
-    partial = json.loads(partial_path.read_bytes())
+    partial_path = auxiliary(
+        "feature_only_observations",
+        raw_root / "szse-20110725-monthly-reconstruction-v6/report.json",
+    )
+    partial = read_json(partial_path)
     feature_rows = []
     for row in sorted(partial["results"], key=lambda item: item["security_id"]):
         raw_close = Decimal(row["official_target_close"])
@@ -631,10 +1081,11 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
     if len(feature_rows) != 239:
         raise ValueError("FEATURE_ONLY_ROW_COUNT_CHANGED")
 
-    suspension_path = (
-        staging / "full-suspension-revalidation-v36/normalized-suspension-events-v1.json"
+    suspension_path = auxiliary(
+        "suspension_events",
+        staging / "full-suspension-revalidation-v36/normalized-suspension-events-v1.json",
     )
-    suspension = json.loads(suspension_path.read_bytes())
+    suspension = read_json(suspension_path)
     suspensions = []
     for exchange in ("sse", "szse"):
         for row in suspension[exchange]:
@@ -651,20 +1102,24 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
                 }
             )
 
-    cash_path = staging / "full-distribution-notices-v1/cash-full-coverage-v43.json"
-    bonus_path = staging / "full-bonus-inventory-v1/retained-bonus-ledger-v32.json"
-    gap_distribution_path = (
-        staging / "full-adjustment-audit-v1/accepted-gap-distribution-ledger-v1.json"
-    )
-    rights_path = staging / "full-rights-inventory-v1/full-rights-census-v1.json"
-    merger_path = staging / "full-merger-v1/merger-candidate-census-v4.json"
-    structural_path = staging / "full-structural-census-v1/structural-action-census-v1.json"
     corporate_actions = (
-        event_rows(cash_path)
-        + event_rows(bonus_path)
-        + event_rows(gap_distribution_path)
-        + structural_event_rows(repository, rights_path, merger_path, structural_path)
+        event_rows(cash_path, read_json=read_json)
+        + event_rows(bonus_path, read_json=read_json)
+        + event_rows(gap_distribution_path, read_json=read_json)
+        + structural_event_rows(
+            repository, rights_path, merger_path, structural_path, read_json=read_json
+        )
     )
+    if candidate and (date_pin := candidate.auxiliary_inputs.get("ordinary_dates")):
+        corporate_actions = normalize_ordinary_dates(
+            corporate_actions, read_json(date_pin.path), date_pin.path
+        )
+    if candidate and (reference_pin := candidate.auxiliary_inputs.get("ordinary_references")):
+        corporate_actions.extend(
+            ordinary_reference_rows(
+                read_json(reference_pin.path), corporate_actions, reference_pin.sha256
+            )
+        )
     if len({row["event_checksum"] for row in corporate_actions}) != len(corporate_actions):
         raise ValueError("DUPLICATE_CORPORATE_ACTION")
     corporate_actions.sort(
@@ -674,99 +1129,15 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
             row["event_checksum"] or "",
         )
     )
-    calendar_path = staging / "full-calendar-v1/calendar-manifest-v3.json"
-    calendar = json.loads(calendar_path.read_bytes())
-    benchmark_root = staging / "full-benchmark-v1"
-    benchmark_manifest = json.loads((benchmark_root / "acceptance-manifest-v2.json").read_bytes())
-    benchmark_source = benchmark_root / "benchmark.parquet"
+    benchmark_source = auxiliary("benchmark_parquet", benchmark_root / "benchmark.parquet")
     if sha256_file(benchmark_source) != benchmark_manifest["partition"]["sha256"]:
         raise ValueError("BENCHMARK_CHANGED")
     benchmark_target = build / "csi300.parquet"
-    if not benchmark_target.exists():
+    if candidate:
+        write_immutable(benchmark_target, candidate.read_bytes(repository, benchmark_source))
+    elif not benchmark_target.exists():
         shutil.copyfile(benchmark_source, benchmark_target)
 
-    source_contracts = [
-        ("SOURCE_PREFLIGHT", preflight_path, preflight["manifest_sha256"], preflight["status"]),
-        ("SECURITY_MASTER", master_path, state["p0_public_report_manifest_sha256"], "PASS"),
-        (
-            "SSE_ST",
-            sse_authority_path,
-            sse_authority["manifest_sha256"],
-            sse_authority["SSE_HISTORICAL_ST_RECONSTRUCTION"],
-        ),
-        (
-            "SZSE_ST",
-            szse_st_path,
-            state["full_szse_st_probe_sha256"],
-            state["full_szse_st_status"],
-        ),
-        (
-            "SUSPENSIONS",
-            staging / "full-suspension-revalidation-v36/suspension-authority-v1.json",
-            state["full_suspension_authority_manifest_sha256"],
-            "PASS_PUBLIC_OFFICIAL_RECONSTRUCTION",
-        ),
-        (
-            "ADJUSTMENTS",
-            adjustment_authority_path,
-            adjustment_authority["manifest_sha256"],
-            adjustment_authority["adjustment_authority"],
-        ),
-        ("CASH_ACTIONS", cash_path, json.loads(cash_path.read_bytes())["manifest_sha256"], "PASS"),
-        (
-            "BONUS_ACTIONS",
-            bonus_path,
-            json.loads(bonus_path.read_bytes())["manifest_sha256"],
-            "PASS",
-        ),
-        (
-            "GAP_DISTRIBUTION_ACTIONS",
-            gap_distribution_path,
-            json.loads(gap_distribution_path.read_bytes())["manifest_sha256"],
-            "PASS",
-        ),
-        (
-            "RIGHTS_ACTIONS",
-            rights_path,
-            json.loads(rights_path.read_bytes())["manifest_sha256"],
-            "PASS",
-        ),
-        (
-            "MERGER_ACTIONS",
-            merger_path,
-            json.loads(merger_path.read_bytes())["manifest_sha256"],
-            "PASS",
-        ),
-        (
-            "STRUCTURAL_ACTIONS",
-            structural_path,
-            json.loads(structural_path.read_bytes())["manifest_sha256"],
-            "PASS",
-        ),
-        ("CALENDAR", calendar_path, calendar["manifest_sha256"], "PASS"),
-        (
-            "BENCHMARK",
-            benchmark_root / "acceptance-manifest-v2.json",
-            benchmark_manifest["manifest_sha256"],
-            benchmark_manifest["status"],
-        ),
-        (
-            "MARKET_RULES_AND_COSTS",
-            Path(state["full_transaction_cost_report"]),
-            state["full_transaction_cost_report_manifest_sha256"],
-            state["full_transaction_cost_authority"],
-        ),
-    ]
-    contracts = [
-        {
-            "name": name,
-            "source_path": str(path),
-            "source_file_sha256": sha(path.read_bytes()),
-            "source_manifest_sha256": manifest_sha,
-            "status": status,
-        }
-        for name, path, manifest_sha, status in source_contracts
-    ]
     lineage = sse_lineage + szse_lineage
     rejected = sse_rejected + szse_rejected
     costs = [
@@ -825,10 +1196,14 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
     )
     manifest = finalize_manifest(
         {
-            "dataset_id": DATASET_ID,
+            "dataset_id": dataset_id,
             "provider": "OFFICIAL_SSE+OFFICIAL_SZSE+SINA+CSI",
-            "provider_version": "R5_PUBLIC_OFFICIAL_RECONSTRUCTION_V1",
-            "retrieval_timestamp": datetime.fromisoformat(
+            "provider_version": "PRODUCT_SUCCESSOR_MATERIALIZATION_V1"
+            if candidate
+            else "R5_PUBLIC_OFFICIAL_RECONSTRUCTION_V1",
+            "retrieval_timestamp": candidate.recorded_at_utc
+            if candidate
+            else datetime.fromisoformat(
                 preflight["approval"]["recorded_at_utc"].replace("Z", "+00:00")
             ).astimezone(UTC),
             "coverage_start": START,
@@ -841,7 +1216,9 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
                 "Separate event-bound HFQ factors plus three official cash overlays; "
                 "raw execution only"
             ),
-            "rule_version": state["market_rule_manifest_sha256"],
+            "rule_version": candidate.market_rule_manifest_sha256
+            if candidate
+            else state["market_rule_manifest_sha256"],
             "source_lineage": tuple(
                 sorted(f"{row['name']}:{row['source_manifest_sha256']}" for row in contracts)
             ),
@@ -855,38 +1232,46 @@ def materialize(staging: Path, repository: Path) -> dict[str, Any]:
             ),
         }
     )
+    if candidate:
+        candidate.recheck(repository)
+        if build_spec is None or sha256_file(build_spec) != build_spec_sha256:
+            raise ValueError("CANDIDATE_BUILD_SPEC_CHANGED")
+        if candidate.ownership() != ownership:
+            raise ValueError("CANDIDATE_PRODUCER_CHANGED")
+        write_immutable(build / "build-inputs.json", canonical(ownership) + b"\n")
     write_manifest(build / "manifest.json", manifest)
     verify_dataset(build, manifest)
-    report = {
-        "dataset_id": DATASET_ID,
-        "coverage": [START, END],
-        "securities": manifest.security_count,
-        "security_intervals": len(master),
-        "trading_sessions": len(calendar["sessions"]),
-        "raw_partitions": len(sse_parts) + len(szse_parts),
-        "raw_rows": sum(part.row_count for part in (*sse_parts, *szse_parts)),
-        "sse_raw_rows": sum(part.row_count for part in sse_parts),
-        "szse_raw_rows": sum(part.row_count for part in szse_parts),
-        "feature_only_rows": len(feature_rows),
-        "rejected_nonbar_rows": len(rejected),
-        "adjustment_rows": len(factors),
-        "corporate_action_rows": len(corporate_actions),
-        "suspension_events": len(suspensions),
-        "failed_sources": 0,
-        "manifest_sha256": manifest.canonical_sha256,
-        "manifest_file_sha256": sha((build / "manifest.json").read_bytes()),
-        "dataset_audited": False,
-        "dataset_frozen": False,
-    }
-    save(root / "materialization-report.json", report)
+    report = materialization_report(manifest, build / "manifest.json", ownership)
+    if candidate:
+        write_immutable(root / "materialization-report.json", canonical(report) + b"\n")
+    else:
+        save(root / "materialization-report.json", report)
     build.rename(final)
-    save(root / "publication-checkpoint.json", {**report, "published": True})
+    if candidate:
+        write_immutable(
+            root / "publication-checkpoint.json", canonical({**report, "published": True}) + b"\n"
+        )
+    else:
+        save(root / "publication-checkpoint.json", {**report, "published": True})
     return report
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--staging", required=True, type=Path)
+    inputs = parser.add_mutually_exclusive_group(required=True)
+    inputs.add_argument("--staging", type=Path)
+    inputs.add_argument("--build-spec", type=Path)
+    parser.add_argument("--build-spec-sha256")
     parser.add_argument("--repository", required=True, type=Path)
     args = parser.parse_args()
-    print(json.dumps(materialize(args.staging, args.repository)), flush=True)
+    print(
+        json.dumps(
+            materialize(
+                args.staging,
+                args.repository,
+                build_spec=args.build_spec,
+                build_spec_sha256=args.build_spec_sha256,
+            )
+        ),
+        flush=True,
+    )

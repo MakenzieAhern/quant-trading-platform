@@ -1,6 +1,10 @@
 import { ApiError, apiRequest, REQUEST_TIMEOUT_MS } from "../../api/client";
 import { API_BASE_URL } from "../../api/config";
 import { ApiContractError } from "../../api/contracts";
+import {
+  parseCurrentDatasetQuality,
+  parseCurrentSourceIntegrity,
+} from "../experiments/api";
 import type { Page } from "../experiments/types";
 import type {
   MarketBar,
@@ -57,7 +61,16 @@ function dataset(value: unknown): MarketDataset {
   )
     throw new ApiContractError();
   integer(item.security_count);
+  if (
+    item.execution_available !== undefined &&
+    typeof item.execution_available !== "boolean"
+  )
+    throw new ApiContractError();
+  if (item.execution_reason_code !== undefined)
+    nullableText(item.execution_reason_code);
   strings(item.universes);
+  parseCurrentDatasetQuality(item.current_dataset_quality);
+  parseCurrentSourceIntegrity(item.current_source_integrity);
   return item as unknown as MarketDataset;
 }
 function security(value: unknown): Security {
@@ -311,6 +324,17 @@ export function validRange(range: MarketRange, dataset: MarketDataset) {
 }
 export const securityName = (item: Security) =>
   item.name ?? item.source_observed_name ?? item.symbol;
+export function canReadWatchlistItem(
+  item: WatchlistItem,
+  source: MarketDataset | undefined,
+): boolean {
+  return (
+    item.source_available === true &&
+    source?.available === true &&
+    source.dataset_id === item.dataset_id &&
+    source.sha256 === item.dataset_sha256
+  );
+}
 export function closingPrice(item: MarketBar, view: "raw" | "adjusted") {
   return item[view].close;
 }

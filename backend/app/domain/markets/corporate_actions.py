@@ -1,8 +1,10 @@
 import hashlib
 import json
+from collections.abc import Iterable
 from datetime import date
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Context, Decimal, localcontext
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -209,6 +211,97 @@ def corporate_action_sort_key(action: CorporateAction) -> tuple[date, str, int, 
     )
 
 
+class OrdinaryDistributionInputError(ValueError):
+    code = "UNSUPPORTED_ORDINARY_DISTRIBUTION_INPUT"
+
+
+class OrdinaryDistributionReference(BaseModel):
+    """Price-only official inputs; never cash, shares or an accounting event."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    security_id: SecurityId
+    announcement_date: date
+    record_date: date
+    ex_date: date
+    cash_event_checksum: str = Field(pattern=r"^[0-9a-f]{64}$")
+    share_event_checksum: str = Field(pattern=r"^[0-9a-f]{64}$")
+    cash_per_total_old_share: NonNegativeDecimal
+    share_ratio_per_total_old_share: PositiveDecimal
+    basis: Literal["ISSUER_EXPLICIT_TOTAL_CAPITAL_REPURCHASE_EXCLUDED"]
+    source_document: str = Field(min_length=1)
+    source_url: str = Field(pattern=r"^https://\S+$")
+    source_document_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    retrieved_at: UtcDateTime
+    source_version: str = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def validate_dates(self) -> "OrdinaryDistributionReference":
+        if not self.announcement_date <= self.record_date < self.ex_date:
+            raise ValueError("ORDINARY_REFERENCE_DATES_UNRESOLVED")
+        return self
+
+    @property
+    def event_checksum(self) -> str:
+        payload = json.dumps(self.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(payload.encode()).hexdigest()
+
+    def require_matching_actions(self, actions: Iterable[CorporateAction]) -> None:
+        pair = tuple(actions)
+        require_unambiguous_ordinary_distributions(pair)
+        if len(pair) != 2 or {a.event_checksum for a in pair} != {
+            self.cash_event_checksum,
+            self.share_event_checksum,
+        }:
+            raise ValueError("ORDINARY_REFERENCE_ENTITLEMENT_PAIR_MISMATCH")
+        cash = [a for a in pair if a.action_type is CorporateActionType.CASH_DIVIDEND]
+        shares = [
+            a
+            for a in pair
+            if a.action_type
+            in {CorporateActionType.STOCK_DIVIDEND, CorporateActionType.BONUS_SHARE}
+        ]
+        if (
+            len(cash) != 1
+            or len(shares) != 1
+            or any(
+                a.security_id != self.security_id
+                or a.record_date != self.record_date
+                or a.ex_date != self.ex_date
+                or a.effective_date != self.ex_date
+                or a.announcement_date is None
+                or a.announcement_date > self.record_date
+                for a in pair
+            )
+        ):
+            raise ValueError("ORDINARY_REFERENCE_ENTITLEMENT_DATES_MISMATCH")
+        share = shares[0]
+        if (
+            cash[0].event_checksum != self.cash_event_checksum
+            or share.event_checksum != self.share_event_checksum
+            or share.announcement_date != self.announcement_date
+            or share.source_document_sha256 != self.source_document_sha256
+            or share.source_url != self.source_url
+            or share.source_document != self.source_document
+            or share.listing_date != self.ex_date
+        ):
+            raise ValueError("ORDINARY_REFERENCE_SOURCE_MISMATCH")
+
+    def reference_price(
+        self,
+        previous_close: Decimal,
+        minimum_tick: Decimal,
+        actions: Iterable[CorporateAction],
+    ) -> Decimal:
+        self.require_matching_actions(actions)
+        return cash_bonus_reference_price(
+            previous_close,
+            cash_per_old_share=self.cash_per_total_old_share,
+            aggregate_share_ratio=self.share_ratio_per_total_old_share,
+            minimum_tick=minimum_tick,
+        )
+
+
 def require_supported_corporate_action(action: CorporateAction) -> None:
     if action.action_type is CorporateActionType.RIGHTS_RELATED_EVENT:
         if issues := action.rights_issues():
@@ -221,12 +314,80 @@ def require_supported_corporate_action(action: CorporateAction) -> None:
         return
     if action.completeness is not CorporateActionCompleteness.COMPLETE:
         raise ValueError("unsupported or incomplete corporate action")
+    if action.action_type in {
+        CorporateActionType.CASH_DIVIDEND,
+        CorporateActionType.STOCK_DIVIDEND,
+        CorporateActionType.BONUS_SHARE,
+    }:
+        # Known dates must fit ex-date accounting; missing legacy metadata is not proof.
+        if action.ex_date is None or action.effective_date not in (None, action.ex_date):
+            raise OrdinaryDistributionInputError("ORDINARY_DISTRIBUTION_EFFECTIVE_DATE_UNSUPPORTED")
+        if action.record_date is not None and action.record_date >= action.ex_date:
+            raise OrdinaryDistributionInputError("ORDINARY_DISTRIBUTION_RECORD_DATE_UNSUPPORTED")
     if action.action_type is CorporateActionType.CASH_DIVIDEND:
+        if action.payment_date not in (None, action.ex_date):
+            raise OrdinaryDistributionInputError("ORDINARY_DISTRIBUTION_PAYMENT_DATE_UNSUPPORTED")
+        if action.share_ratio not in (None, Decimal(0)):
+            raise OrdinaryDistributionInputError("CASH_DIVIDEND_WITH_SHARE_RATIO_UNSUPPORTED")
         return
     if (
         action.action_type in {CorporateActionType.STOCK_DIVIDEND, CorporateActionType.BONUS_SHARE}
         and action.share_ratio is not None
         and action.share_ratio > 0
     ):
+        if action.cash_per_share != 0:
+            raise OrdinaryDistributionInputError("SHARE_DISTRIBUTION_WITH_CASH_UNSUPPORTED")
         return
     raise ValueError("unsupported corporate action type")
+
+
+def cash_bonus_reference_price(
+    previous_close: Decimal,
+    *,
+    cash_per_old_share: Decimal,
+    aggregate_share_ratio: Decimal,
+    minimum_tick: Decimal,
+) -> Decimal:
+    """Ordinary gross cash plus one aggregate distribution; not rights/conversions."""
+    values = (previous_close, cash_per_old_share, aggregate_share_ratio, minimum_tick)
+    if (
+        not all(value.is_finite() for value in values)
+        or previous_close <= cash_per_old_share
+        or cash_per_old_share < 0
+        or aggregate_share_ratio < 0
+        or minimum_tick <= 0
+    ):
+        raise ValueError("INVALID_CASH_BONUS_REFERENCE_INPUT")
+    with localcontext(Context(prec=50)):
+        reference = (previous_close - cash_per_old_share) / (Decimal(1) + aggregate_share_ratio)
+        rounded = (reference / minimum_tick).quantize(
+            Decimal(1), rounding=ROUND_HALF_UP
+        ) * minimum_tick
+    if rounded <= 0:
+        raise ValueError("INVALID_CASH_BONUS_REFERENCE_INPUT")
+    return rounded
+
+
+def require_unambiguous_ordinary_distributions(actions: Iterable[CorporateAction]) -> None:
+    """Reject duplicate economic legs before accounting; receipt hashes are not identity."""
+    identities: set[tuple[SecurityId, date | None, CorporateActionType]] = set()
+    share_groups: set[tuple[SecurityId, date | None]] = set()
+    for action in actions:
+        if action.action_type not in {
+            CorporateActionType.CASH_DIVIDEND,
+            CorporateActionType.STOCK_DIVIDEND,
+            CorporateActionType.BONUS_SHARE,
+        }:
+            continue
+        require_supported_corporate_action(action)
+        identity = (action.security_id, action.ex_date, action.action_type)
+        if identity in identities:
+            raise OrdinaryDistributionInputError("DUPLICATE_ORDINARY_DISTRIBUTION")
+        identities.add(identity)
+        if action.action_type is not CorporateActionType.CASH_DIVIDEND:
+            group = (action.security_id, action.ex_date)
+            if group in share_groups:
+                # ponytail: one aggregate old-share ratio; separately modeled legs need
+                # audited old-share allocation, not sequential multiplicative accounting.
+                raise OrdinaryDistributionInputError("MULTIPLE_SHARE_DISTRIBUTIONS_UNSUPPORTED")
+            share_groups.add(group)

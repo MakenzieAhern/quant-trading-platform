@@ -5,9 +5,15 @@ const en = {
     "The recovery copy changed after this preview opened. No restore was performed. Close this preview, refresh the saved drafts, and review the new values before confirming.",
   recoveries: "Browser page recovery drafts",
   recoveryHelp:
-    "Each opened page keeps its latest draft before updating the shared draft. These are recovery copies, not a history of every edit. Another tab may have replaced the shared draft; the copies here are retained. Restoring never reruns a submitted experiment. Old page copies are not automatically deleted and count toward browser storage limits.",
+    "Each opened page keeps its latest draft before updating the shared draft. These are recovery copies, not a history of every edit. Another tab may have replaced the shared draft; its copy is retained. A page's copy is cleared only after its experiment is confirmed saved on the server. Restoring a copy does not itself run an experiment. Remaining copies count toward browser storage limits.",
   recover: "Review recovery draft",
   recoveryEmpty: "No browser page recovery drafts are stored.",
+  unreadableCopies: "Unreadable draft copies",
+  unreadableCopyHelp:
+    "Exact original text kept before starting a new draft. Select and copy it for manual recovery. These copies cannot be restored or run here.",
+  unreadableCopyEmpty: "No unreadable draft copies are stored.",
+  unreadableCopy: "Raw draft copy",
+  unreadableRaw: "Original draft text",
   localOnly:
     "Saved only in this browser on this device, not backed up to the server. Clearing browser data can remove these versions. Submitted experiment configurations remain unchanged on the server.",
   name: "Version name",
@@ -49,9 +55,15 @@ const zh: typeof en = {
     "打开预览后，此恢复副本已改变，本次未恢复。请关闭预览，刷新保存草稿并核对新值后再确认。",
   recoveries: "浏览器页面草稿恢复",
   recoveryHelp:
-    "每个打开的页面在更新共享草稿前，先保留自己的最新草稿。这是恢复副本，不是每次修改的完整历史。其他标签可能替换了共享草稿，此处副本仍会保留。恢复不会重新运行已提交实验。旧页面副本不会自动删除，会占用浏览器存储空间。",
+    "每个打开的页面在更新共享草稿前，先保留自己的最新草稿。这是恢复副本，不是每次修改的完整历史。其他标签替换共享草稿后，其副本仍会保留。仅在确认实验已保存到服务端后，才清除该页面的副本。恢复副本本身不会运行实验；其余副本仍会占用浏览器存储空间。",
   recover: "查看恢复草稿",
   recoveryEmpty: "尚无浏览器页面恢复草稿。",
+  unreadableCopies: "无法读取的草稿副本",
+  unreadableCopyHelp:
+    "新建草稿前保留的原始文本。可选中复制以手动恢复；此处不能将副本直接恢复或运行。",
+  unreadableCopyEmpty: "尚无无法读取的草稿副本。",
+  unreadableCopy: "原始草稿副本",
+  unreadableRaw: "原始草稿文本",
   localOnly:
     "仅保存在当前设备的此浏览器中，未备份到服务器。清理浏览器数据可能删除这些版本。已提交实验的服务器配置保持不变。",
   name: "版本名称",

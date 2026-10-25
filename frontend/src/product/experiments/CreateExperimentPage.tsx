@@ -1,5 +1,12 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
+import { ApiError } from "../../api/client";
 import { Link } from "../../components/Link";
 import { useApiResource } from "../../hooks/useApiResource";
 import {
@@ -7,49 +14,210 @@ import {
   formatDecimal,
   isPositiveDecimal,
 } from "../../utils/format";
-import { navigate, useNavigationGuard } from "../../utils/navigation";
+import {
+  navigate,
+  replaceUrl,
+  useNavigationGuard,
+} from "../../utils/navigation";
 import { usePageDataContext } from "../dataContext";
+import { Dialog } from "../Dialog";
+import { ProductError } from "../ProductPages";
 import { ConfigurationVersionsPanel } from "../configs";
+import { useConfigurationCopy } from "../configs/copy";
+import { startNewExperimentDraft } from "../configs/storage";
 import { experimentApi } from "./api";
-import { useExperimentCopy } from "./copy";
+import { useExperimentCopy, type ExperimentCopy } from "./copy";
 import {
   EXPERIMENT_DRAFT_KEY,
-  readExperimentDraft,
+  beginExperimentDraftPage,
+  clearCompletedExperimentDraft,
+  parseExperimentDraft,
   saveExperimentDraft,
 } from "./draft";
-import { experimentError } from "./errors";
-import type { Capabilities, ExperimentConfiguration } from "./types";
+import { datasetExecutionCode, experimentError } from "./errors";
+import { explainDatasetFindings, explainExperimentCode } from "./codes";
+import type {
+  Capabilities,
+  DatasetCapability,
+  ExperimentConfiguration,
+} from "./types";
 import "./experiments.css";
+
+function executable(dataset: DatasetCapability | undefined) {
+  return !!dataset && datasetExecutionCode(dataset) === null;
+}
+
+function finishNewIntent() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("new");
+  replaceUrl(url.pathname + url.search);
+}
+
+function existingDraft() {
+  try {
+    const raw = window.localStorage.getItem(EXPERIMENT_DRAFT_KEY);
+    let draft = null;
+    try {
+      draft = raw === null ? null : parseExperimentDraft(JSON.parse(raw));
+    } catch {
+      // A malformed value remains available as exact text for recovery.
+    }
+    return { draft, raw, unreadable: raw !== null && !draft };
+  } catch {
+    return { draft: null, raw: null, unreadable: true };
+  }
+}
 
 export function CreateExperimentPage() {
   const c = useExperimentCopy();
+  const versions = useConfigurationCopy();
+  const newIntent =
+    new URLSearchParams(window.location.search).get("new") === "1";
+  const [choice, setChoice] = useState<"pending" | "resume" | "started">(
+    "pending",
+  );
+  const original =
+    choice === "pending"
+      ? existingDraft()
+      : { draft: null, raw: null, unreadable: false };
+  const [choiceError, setChoiceError] = useState<"failed" | "conflict" | null>(
+    null,
+  );
   const [revision, setRevision] = useState(0);
   const capabilities = useApiResource(
     (signal) => experimentApi.capabilities(signal),
     [revision],
   );
+  useEffect(() => {
+    if (
+      newIntent &&
+      capabilities.data &&
+      !original.draft &&
+      !original.unreadable
+    ) {
+      finishNewIntent();
+    }
+  }, [newIntent, capabilities.data, original.draft, original.unreadable]);
   return (
     <div className="experimentWorkspace">
       <header className="experimentHeader">
-        <p className="experimentEyebrow">{c.steps[0]}</p>
         <h1>{c.title}</h1>
         <p>{c.intro}</p>
       </header>
       {capabilities.loading && <p role="status">{c.loading}</p>}
       {capabilities.error && (
-        <div className="experimentNotice" role="alert">
-          <p>{c.networkError}</p>
-          <button
-            className="button secondary"
-            onClick={() => setRevision((value) => value + 1)}
-          >
-            {c.retryLoad}
-          </button>
-        </div>
+        <ProductError
+          error={capabilities.error}
+          retry={() => setRevision((value) => value + 1)}
+        />
       )}
+      {choice === "pending" &&
+        original.unreadable &&
+        (original.raw === null ? (
+          <p role="alert">{versions.readFailed}</p>
+        ) : (
+          <section
+            className="experimentPanel"
+            aria-labelledby="unreadable-draft-title"
+          >
+            <h2 id="unreadable-draft-title">{c.unreadableDraftTitle}</h2>
+            <p>{c.unreadableDraftHint}</p>
+            <details>
+              <summary>{c.unreadableDraftText}</summary>
+              <textarea
+                className="experimentUnreadableDraft"
+                aria-label={c.unreadableDraftText}
+                readOnly
+                rows={5}
+                value={original.raw}
+              />
+            </details>
+            {choiceError && <p role="alert">{versions[choiceError]}</p>}
+            <button
+              className="button"
+              disabled={!capabilities.data?.strategies.length}
+              onClick={() => {
+                try {
+                  saveExperimentDraft(
+                    initialForm(capabilities.data!, c.defaultName),
+                    0,
+                    crypto.randomUUID(),
+                    {
+                      expectedRaw: original.raw,
+                      replaceUnreadable: true,
+                      newIntent: true,
+                    },
+                  );
+                  finishNewIntent();
+                  setChoice("started");
+                } catch (reason) {
+                  setChoiceError(
+                    reason instanceof Error &&
+                      reason.message === "DRAFT_CHANGED_IN_ANOTHER_TAB"
+                      ? "conflict"
+                      : "failed",
+                  );
+                }
+              }}
+            >
+              {c.unreadableDraftStart}
+            </button>
+          </section>
+        ))}
       {capabilities.data &&
         (capabilities.data.strategies.length ? (
-          <ExperimentWizard capabilities={capabilities.data} />
+          choice === "pending" && original.unreadable ? null : newIntent &&
+            choice === "pending" &&
+            original.draft ? (
+            <section
+              className="experimentPanel"
+              aria-labelledby="new-draft-title"
+            >
+              <h2 id="new-draft-title">{c.newDraftTitle}</h2>
+              <p>{c.newDraftHint}</p>
+              {choiceError && <p role="alert">{versions[choiceError]}</p>}
+              <div className="experimentActions">
+                <button
+                  className="button secondary"
+                  onClick={() => {
+                    finishNewIntent();
+                    setChoice("resume");
+                  }}
+                >
+                  {c.newDraftResume}
+                </button>
+                <button
+                  className="button"
+                  onClick={() => {
+                    try {
+                      startNewExperimentDraft(
+                        original.draft!,
+                        initialForm(capabilities.data!, c.defaultName),
+                        versions.backup,
+                      );
+                      finishNewIntent();
+                      setChoice("started");
+                    } catch (reason) {
+                      setChoiceError(
+                        reason instanceof Error &&
+                          reason.message === "DRAFT_CHANGED_IN_ANOTHER_TAB"
+                          ? "conflict"
+                          : "failed",
+                      );
+                    }
+                  }}
+                >
+                  {c.newDraftStart}
+                </button>
+              </div>
+            </section>
+          ) : (
+            <ExperimentWizard
+              capabilities={capabilities.data}
+              showRestored={choice !== "started"}
+              focusOnMount={choice !== "pending"}
+            />
+          )
         ) : (
           <p role="alert">{c.noStrategies}</p>
         ))}
@@ -63,9 +231,9 @@ function initialForm(
 ): ExperimentConfiguration {
   const dataset =
     capabilities.datasets.find(
-      (item) => item.available && item.mode === "historical_exploration",
+      (item) => executable(item) && item.mode === "historical_exploration",
     ) ??
-    capabilities.datasets.find((item) => item.available) ??
+    capabilities.datasets.find(executable) ??
     capabilities.datasets[0];
   const requested = new URLSearchParams(window.location.search).get("strategy");
   const strategy =
@@ -94,45 +262,63 @@ function initialForm(
   };
 }
 
-function validConfiguration(
+type ConfigurationField = keyof ExperimentCopy["fieldErrors"];
+
+function validTradingDate(value: string) {
+  const date = new Date(`${value}T00:00:00Z`);
+  return (
+    /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+    !Number.isNaN(date.getTime()) &&
+    date.toISOString().slice(0, 10) === value
+  );
+}
+
+function invalidConfigurationField(
   form: ExperimentConfiguration,
   capabilities: Capabilities,
   step: number,
-): boolean {
+): ConfigurationField | null {
   const strategy = capabilities.strategies.find(
     (item) => item.strategy_id === form.strategy_id,
   );
-  if (!strategy) return false;
-  if (step === 0) return true;
+  if (!strategy) return "strategy";
+  if (step === 0) return null;
   const dataset = capabilities.datasets.find(
     (item) => item.dataset_id === form.dataset_id,
   );
+  if (!dataset || !executable(dataset)) return "dataset";
+  if (!form.name.trim() || form.name.length > 120) return "name";
   if (
-    !dataset?.available ||
-    !form.name.trim() ||
     !isPositiveDecimal(form.initial_cash) ||
-    comparePositiveDecimals(form.initial_cash, "1000000000000") === 1 ||
-    !form.start_date ||
-    !form.end_date ||
-    form.start_date > form.end_date ||
-    form.start_date < dataset.coverage_start ||
-    form.end_date > dataset.coverage_end ||
-    !dataset.universes.includes(form.universe)
+    comparePositiveDecimals(form.initial_cash, "1000000000000") === 1
   )
-    return false;
+    return "cash";
+  if (
+    !validTradingDate(form.start_date) ||
+    form.start_date < dataset.coverage_start ||
+    form.start_date > dataset.coverage_end
+  )
+    return "start";
+  if (
+    !validTradingDate(form.end_date) ||
+    form.end_date < form.start_date ||
+    form.end_date > dataset.coverage_end
+  )
+    return "end";
+  if (!dataset.universes.includes(form.universe)) return "universe";
   for (const key of ["rebalance_sessions", "maximum_holdings"] as const) {
     const value = form.strategy[key],
       range = strategy.parameters[key];
     if (!Number.isSafeInteger(value) || value < range.min || value > range.max)
-      return false;
+      return key === "rebalance_sessions" ? "rebalance" : "holdings";
   }
-  if (step === 1) return true;
-  for (const [value, max] of [
-    [form.costs.commission_rate, "0.01"],
-    [form.costs.minimum_commission, "1000"],
-  ]) {
+  if (step === 1) return null;
+  for (const [field, value, max] of [
+    ["commission", form.costs.commission_rate, "0.01"],
+    ["minimum", form.costs.minimum_commission, "1000"],
+  ] as const) {
     const comparison = comparePositiveDecimals(value, max);
-    if (comparison === null || comparison === 1) return false;
+    if (comparison === null || comparison === 1) return field;
   }
   const magnitude = form.risk.max_drawdown.replace(/^-/, "");
   if (
@@ -141,38 +327,82 @@ function validConfiguration(
     (isPositiveDecimal(form.risk.max_drawdown) &&
       form.risk.max_drawdown !== "0")
   )
-    return false;
-  return (
-    isPositiveDecimal(form.risk.max_position_weight) &&
+    return "drawdown";
+  return isPositiveDecimal(form.risk.max_position_weight) &&
     comparePositiveDecimals(form.risk.max_position_weight, "1") !== 1
-  );
+    ? null
+    : "position";
 }
 
-function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
+function focusInvalidField(form: HTMLFormElement | null) {
+  const field = form?.querySelector<HTMLElement>('[aria-invalid="true"]');
+  const details = field?.closest("details");
+  if (details) details.open = true;
+  field?.focus();
+}
+
+function ExperimentWizard({
+  capabilities,
+  showRestored,
+  focusOnMount,
+}: {
+  capabilities: Capabilities;
+  showRestored: boolean;
+  focusOnMount: boolean;
+}) {
   const c = useExperimentCopy();
   const { i18n } = useTranslation();
-  const [restored] = useState(readExperimentDraft);
+  const [atMount] = useState(() => {
+    beginExperimentDraftPage();
+    return existingDraft();
+  });
+  const restored = atMount.draft;
+  const expectedRaw = useRef(atMount.raw);
   const [form, setForm] = useState(
     () => restored?.form ?? initialForm(capabilities, c.defaultName),
   );
   const [step, setStep] = useState(restored?.step ?? 0);
+  const previousStep = useRef(step);
   const [requestKey, setRequestKey] = useState(
     () => restored?.idempotencyKey ?? crypto.randomUUID(),
   );
   const [saved, setSaved] = useState(Boolean(restored));
   const savedRef = useRef(Boolean(restored));
   const [storageError, setStorageError] = useState(false);
+  const [draftConflict, setDraftConflict] = useState(false);
+  const draftConflictRef = useRef(false);
+  const [exitOpen, setExitOpen] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [pending, setPending] = useState(false);
   const [acknowledged, setAcknowledged] = useState(false);
   const locked = useRef(false);
   const active = useRef(true);
   const heading = useRef<HTMLHeadingElement>(null);
-  const strategy = capabilities.strategies.find(
-    (item) => item.strategy_id === form.strategy_id,
-  );
+  const formElement = useRef<HTMLFormElement>(null);
+  const errorElement = useRef<HTMLDivElement>(null);
+  const invalidField =
+    error === "validation"
+      ? invalidConfigurationField(form, capabilities, 3)
+      : null;
   const dataset = capabilities.datasets.find(
     (item) => item.dataset_id === form.dataset_id,
+  );
+  const fieldAccessibility = (field: ConfigurationField) => ({
+    "aria-invalid": invalidField === field || undefined,
+    "aria-describedby":
+      [
+        invalidField === field ? "experiment-validation-error" : null,
+        field === "dataset" ? "experiment-dataset-version" : null,
+        field === "dataset" &&
+        (dataset?.current_dataset_quality || dataset?.current_source_integrity)
+          ? "experiment-dataset-quality"
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" ") || undefined,
+  });
+  const strategy = capabilities.strategies.find(
+    (item) => item.strategy_id === form.strategy_id,
   );
   const chinese = i18n.language.startsWith("zh");
   usePageDataContext(
@@ -184,7 +414,33 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
       ? strategy.name_zh
       : strategy.name_en
     : form.strategy_id;
-  useNavigationGuard(() => savedRef.current || window.confirm(c.exitConfirm));
+  useNavigationGuard(
+    () => savedRef.current || window.confirm(c.unsavedLeaveConfirm),
+  );
+
+  const save = useCallback(() => {
+    try {
+      const raw = saveExperimentDraft(form, step, requestKey, {
+        expectedRaw: expectedRaw.current,
+        recoveryOnly: draftConflictRef.current,
+      });
+      if (draftConflictRef.current) return false;
+      expectedRaw.current = raw;
+      setStorageError(false);
+      return true;
+    } catch (reason) {
+      savedRef.current = false;
+      setSaved(false);
+      if (
+        reason instanceof Error &&
+        reason.message === "DRAFT_CHANGED_IN_ANOTHER_TAB"
+      ) {
+        draftConflictRef.current = true;
+        setDraftConflict(true);
+      } else setStorageError(true);
+      return false;
+    }
+  }, [form, step, requestKey]);
 
   useEffect(() => {
     active.current = true;
@@ -193,29 +449,68 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
     };
   }, []);
   useEffect(() => {
+    if (focusOnMount) heading.current?.focus();
+  }, [focusOnMount]);
+  useEffect(() => {
+    if (previousStep.current === step) return;
+    previousStep.current = step;
     heading.current?.focus();
   }, [step]);
   useEffect(() => {
-    const save = () => {
-      try {
-        saveExperimentDraft(form, step, requestKey);
-        return true;
-      } catch {
-        return false;
+    if (!error) return;
+    if (formElement.current?.querySelector('[aria-invalid="true"]'))
+      focusInvalidField(formElement.current);
+    else errorElement.current?.focus();
+  }, [error, step]);
+  useEffect(() => {
+    const changed = (event: StorageEvent) => {
+      if (event.key === EXPERIMENT_DRAFT_KEY) {
+        try {
+          if (
+            window.localStorage.getItem(EXPERIMENT_DRAFT_KEY) ===
+            expectedRaw.current
+          )
+            return;
+        } catch {
+          // Fail closed when the shared draft cannot be checked.
+        }
+        draftConflictRef.current = true;
+        setDraftConflict(true);
+        savedRef.current = false;
+        setSaved(false);
       }
     };
-    save();
+    window.addEventListener("storage", changed);
+    return () => window.removeEventListener("storage", changed);
+  }, []);
+  useEffect(() => {
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (!cancelled) save();
+    });
     const unload = (event: BeforeUnloadEvent) => {
-      if (!savedRef.current || !save()) {
+      let recovered = false;
+      let sharedUnchanged = false;
+      try {
+        saveExperimentDraft(form, step, requestKey, { recoveryOnly: true });
+        recovered = true;
+        sharedUnchanged =
+          window.localStorage.getItem(EXPERIMENT_DRAFT_KEY) ===
+          expectedRaw.current;
+      } catch {
+        // A failed page recovery must not be described as saved.
+      }
+      if (!savedRef.current || !recovered || !sharedUnchanged) {
         event.preventDefault();
         event.returnValue = "";
       }
     };
     window.addEventListener("beforeunload", unload);
     return () => {
+      cancelled = true;
       window.removeEventListener("beforeunload", unload);
     };
-  }, [form, step, requestKey, saved, c.exitConfirm]);
+  }, [save, form, step, requestKey]);
 
   function update(next: ExperimentConfiguration) {
     setForm(next);
@@ -226,24 +521,32 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
     setAcknowledged(false);
   }
   function persist() {
-    try {
-      saveExperimentDraft(form, step, requestKey);
+    if (save()) {
       setSaved(true);
       savedRef.current = true;
-      setStorageError(false);
       return true;
-    } catch {
-      setStorageError(true);
-      return false;
     }
+    return false;
   }
   function move(next: number) {
-    if (next > step && !validConfiguration(form, capabilities, step)) {
-      setError("validation");
+    const invalid = invalidConfigurationField(form, capabilities, step);
+    if (next > step && invalid) {
+      rejectConfiguration(invalid);
       return;
     }
     setError(null);
     setStep(next);
+  }
+  function rejectConfiguration(field: ConfigurationField) {
+    setStep(
+      field === "strategy"
+        ? 0
+        : ["commission", "minimum", "drawdown", "position"].includes(field)
+          ? 2
+          : 1,
+    );
+    if (error === "validation") focusInvalidField(formElement.current);
+    setError("validation");
   }
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -252,22 +555,22 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
       return;
     }
     if (locked.current) return;
-    if (!acknowledged || !validConfiguration(form, capabilities, 3)) {
+    const invalid = invalidConfigurationField(form, capabilities, 3);
+    if (invalid) {
+      rejectConfiguration(invalid);
+      return;
+    }
+    if (!acknowledged) {
       setError("validation");
       return;
     }
+    setError(null);
+    if (!persist()) return;
     locked.current = true;
     setPending(true);
-    setError(null);
-    persist();
     try {
       const job = await experimentApi.create(form, requestKey);
-      try {
-        if (readExperimentDraft()?.idempotencyKey === requestKey)
-          window.localStorage.removeItem(EXPERIMENT_DRAFT_KEY);
-      } catch {
-        /* The durable server job is authoritative after creation. */
-      }
+      clearCompletedExperimentDraft(form, requestKey);
       if (active.current && window.location.pathname === "/research/new")
         navigate(`/experiments/${job.job_id}`);
     } catch (reason) {
@@ -282,7 +585,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
     universe === "ALL" ? c.all : universe === "SSE" ? c.sse : c.szse;
   return (
     <>
-      {restored && (
+      {showRestored && restored && (
         <p className="experimentRestored" role="status">
           {c.restored}
         </p>
@@ -297,12 +600,26 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
       </ol>
       <div className="experimentWizardLayout">
         <form
+          ref={formElement}
+          noValidate
           className="experimentPanel experimentForm"
           onSubmit={(event) => void submit(event)}
         >
           <h2 ref={heading} tabIndex={-1}>
             {c.steps[step]}
           </h2>
+          {(step === 1 || step === 3) &&
+            dataset &&
+            (dataset.current_dataset_quality ||
+              dataset.current_source_integrity) && (
+              <p
+                id="experiment-dataset-quality"
+                className="experimentNotice"
+                role="note"
+              >
+                {explainDatasetFindings(dataset, i18n.language)}
+              </p>
+            )}
           <fieldset disabled={pending}>
             {step === 0 && (
               <div className="experimentStrategyChoices">
@@ -312,6 +629,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                     className={`experimentChoice ${entry.strategy_id === form.strategy_id ? "isSelected" : ""}`}
                   >
                     <input
+                      {...fieldAccessibility("strategy")}
                       type="radio"
                       name="strategy"
                       value={entry.strategy_id}
@@ -347,6 +665,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.name}
                   <input
+                    {...fieldAccessibility("name")}
                     required
                     maxLength={120}
                     value={form.name}
@@ -358,6 +677,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.dataset}
                   <select
+                    {...fieldAccessibility("dataset")}
                     value={form.dataset_id}
                     onChange={(event) => {
                       const chosen = capabilities.datasets.find(
@@ -380,16 +700,23 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                       <option
                         key={entry.dataset_id}
                         value={entry.dataset_id}
-                        disabled={!entry.available}
+                        disabled={!executable(entry)}
                       >
                         {entry.mode === "synthetic_demo"
                           ? c.demo
                           : c.historical}
-                        {!entry.available ? ` · ${c.unavailable}` : ""}
+                        {` · ${entry.dataset_id}`}
+                        {!executable(entry) ? ` · ${c.unavailable}` : ""}
                       </option>
                     ))}
                   </select>
                 </label>
+                <p
+                  id="experiment-dataset-version"
+                  className="experimentTechnical"
+                >
+                  {c.dataset}: {form.dataset_id}
+                </p>
                 {dataset && (
                   <p className="experimentHelp">
                     {c.coverage}: {dataset.coverage_start} —{" "}
@@ -397,14 +724,21 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                     {c.securities}
                   </p>
                 )}
-                {!dataset?.available && (
+                {!executable(dataset) && (
                   <p role="alert">
-                    {c.dataUnavailable} <Link href="/data">{c.dataset}</Link>
+                    {dataset && datasetExecutionCode(dataset)
+                      ? explainExperimentCode(
+                          datasetExecutionCode(dataset)!,
+                          i18n.language,
+                        )
+                      : c.dataUnavailable}{" "}
+                    <Link href="/data">{c.dataset}</Link>
                   </p>
                 )}
                 <label>
                   {c.cash}
                   <input
+                    {...fieldAccessibility("cash")}
                     required
                     inputMode="decimal"
                     value={form.initial_cash}
@@ -417,19 +751,24 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                   <label>
                     {c.start}
                     <input
+                      {...fieldAccessibility("start")}
                       type="date"
                       required
                       min={dataset?.coverage_start}
                       max={form.end_date || dataset?.coverage_end}
                       value={form.start_date}
                       onInput={(event) =>
-                        update({ ...form, start_date: event.currentTarget.value })
+                        update({
+                          ...form,
+                          start_date: event.currentTarget.value,
+                        })
                       }
                     />
                   </label>
                   <label>
                     {c.end}
                     <input
+                      {...fieldAccessibility("end")}
                       type="date"
                       required
                       min={form.start_date || dataset?.coverage_start}
@@ -445,6 +784,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.universe}
                   <select
+                    {...fieldAccessibility("universe")}
                     value={form.universe}
                     onChange={(event) =>
                       update({
@@ -468,6 +808,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                     <label>
                       {c.rebalance}
                       <input
+                        {...fieldAccessibility("rebalance")}
                         type="number"
                         required
                         min={strategy?.parameters.rebalance_sessions.min}
@@ -487,6 +828,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                     <label>
                       {c.holdings}
                       <input
+                        {...fieldAccessibility("holdings")}
                         type="number"
                         required
                         min={strategy?.parameters.maximum_holdings.min}
@@ -512,6 +854,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.commission}
                   <input
+                    {...fieldAccessibility("commission")}
                     inputMode="decimal"
                     required
                     value={form.costs.commission_rate}
@@ -530,6 +873,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.minimum}
                   <input
+                    {...fieldAccessibility("minimum")}
                     inputMode="decimal"
                     required
                     value={form.costs.minimum_commission}
@@ -547,6 +891,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.drawdown}
                   <input
+                    {...fieldAccessibility("drawdown")}
                     inputMode="decimal"
                     required
                     value={form.risk.max_drawdown}
@@ -565,6 +910,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
                 <label>
                   {c.position}
                   <input
+                    {...fieldAccessibility("position")}
                     inputMode="decimal"
                     required
                     value={form.risk.max_position_weight}
@@ -608,13 +954,44 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
             )}
           </fieldset>
           {Boolean(error) && (
-            <div className="experimentError" role="alert">
+            <div
+              ref={errorElement}
+              id="experiment-validation-error"
+              className="experimentError"
+              role="alert"
+              tabIndex={-1}
+            >
               {error === "validation"
                 ? c.validation
                 : experimentError(error, c)}
+              {error !== "validation" &&
+                (!(error instanceof ApiError) ||
+                  error.status === 408 ||
+                  error.status >= 500) && (
+                  <p>
+                    {c.uncertainSubmission}{" "}
+                    <Link href="/tasks">{c.checkTaskCenter}</Link>
+                  </p>
+                )}
+              {invalidField && (
+                <p>
+                  {c.fieldErrors[invalidField]}
+                  {invalidField === "rebalance" &&
+                    strategy &&
+                    ` (${strategy.parameters.rebalance_sessions.min}–${strategy.parameters.rebalance_sessions.max})`}
+                  {invalidField === "holdings" &&
+                    strategy &&
+                    ` (${strategy.parameters.maximum_holdings.min}–${strategy.parameters.maximum_holdings.max})`}
+                </p>
+              )}
             </div>
           )}
           {storageError && <p role="alert">{c.storageError}</p>}
+          {draftConflict && (
+            <p role="alert">
+              {storageError ? c.draftConflictStorageFailed : c.draftConflict}
+            </p>
+          )}
           <div className="experimentActions">
             {step > 0 && (
               <button
@@ -629,7 +1006,8 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
             <button
               className="button"
               type="submit"
-              disabled={pending || (step === 3 && !acknowledged)}
+              disabled={step === 3 && !acknowledged}
+              aria-disabled={pending || (step === 3 && !acknowledged)}
             >
               {pending ? c.submitting : step === 3 ? c.confirm : c.next}
             </button>
@@ -648,7 +1026,7 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
               className="button secondary"
               disabled={pending}
               onClick={() => {
-                if (persist() && window.confirm(c.exitConfirm)) navigate("/");
+                if (persist()) setExitOpen(true);
               }}
             >
               {c.exit}
@@ -694,7 +1072,11 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
       <ConfigurationVersionsPanel
         current={{ form, step, idempotencyKey: requestKey }}
         disabled={pending}
+        restoreBlocked={draftConflict}
         onRestore={(draft) => {
+          expectedRaw.current = JSON.stringify(draft);
+          draftConflictRef.current = false;
+          setDraftConflict(false);
           setForm(draft.form);
           setStep(0);
           setRequestKey(draft.idempotencyKey);
@@ -705,6 +1087,27 @@ function ExperimentWizard({ capabilities }: { capabilities: Capabilities }) {
           setAcknowledged(false);
         }}
       />
+      {exitOpen && (
+        <Dialog title={c.exit} onClose={() => setExitOpen(false)}>
+          <p>{c.exitConfirm}</p>
+          <div className="experimentDraftActions">
+            <button
+              type="button"
+              className="button secondary"
+              onClick={() => setExitOpen(false)}
+            >
+              {c.back}
+            </button>
+            <button
+              type="button"
+              className="button"
+              onClick={() => navigate("/")}
+            >
+              {c.exit}
+            </button>
+          </div>
+        </Dialog>
+      )}
     </>
   );
 }

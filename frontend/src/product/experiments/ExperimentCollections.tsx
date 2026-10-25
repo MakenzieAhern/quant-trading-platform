@@ -1,8 +1,9 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pagination } from "../../components/Pagination";
 import { useApiResource } from "../../hooks/useApiResource";
 import { formatDecimal, formatPercent, formatUtc } from "../../utils/format";
+import { ProductError } from "../ProductPages";
 import { experimentApi, tradingDate } from "./api";
 import { useExperimentCopy } from "./copy";
 import { explainExperimentCode } from "./codes";
@@ -19,10 +20,23 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
   const [range, setRange] = useState<DateRange>({});
   const [invalid, setInvalid] = useState(false);
   const [focused, setFocused] = useState("");
+  const [focusRequest, setFocusRequest] = useState(0);
+  const [showBenchmark, setShowBenchmark] = useState(true);
+  const filterAnchor = useRef<HTMLElement>(null);
+  const firstDate = useRef<HTMLInputElement>(null);
+  const invalidRangeId = useId();
+  useEffect(() => {
+    if (invalid) firstDate.current?.focus();
+  }, [invalid]);
   const filter = focused ? { start_date: focused, end_date: focused } : range;
   return (
     <>
-      <section className="experimentPanel">
+      <section
+        className="experimentPanel"
+        ref={filterAnchor}
+        tabIndex={-1}
+        aria-label={u.filterTitle}
+      >
         <h2>{u.filterTitle}</h2>
         <p className="experimentHelp">{u.rangeHelp}</p>
         <form
@@ -31,6 +45,7 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             event.preventDefault();
             if (start && end && start > end) {
               setInvalid(true);
+              if (invalid) firstDate.current?.focus();
               return;
             }
             setInvalid(false);
@@ -45,8 +60,15 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             {c.start}
             <input
               type="date"
+              ref={firstDate}
               value={start}
-              onInput={(event) => setStart(event.currentTarget.value)}
+              aria-invalid={invalid || undefined}
+              aria-describedby={invalid ? invalidRangeId : undefined}
+              onInput={(event) => {
+                const value = event.currentTarget.value;
+                setStart(value);
+                if (!value || !end || value <= end) setInvalid(false);
+              }}
             />
           </label>
           <label>
@@ -54,7 +76,13 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             <input
               type="date"
               value={end}
-              onInput={(event) => setEnd(event.currentTarget.value)}
+              aria-invalid={invalid || undefined}
+              aria-describedby={invalid ? invalidRangeId : undefined}
+              onInput={(event) => {
+                const value = event.currentTarget.value;
+                setEnd(value);
+                if (!start || !value || start <= value) setInvalid(false);
+              }}
             />
           </label>
           <button className="button secondary" type="submit">
@@ -74,24 +102,41 @@ export function ExperimentCollections({ jobId }: { jobId: string }) {
             {u.reset}
           </button>
         </form>
-        {invalid && <p role="alert">{u.invalidRange}</p>}
+        {invalid && (
+          <p id={invalidRangeId} role="alert">
+            {u.invalidRange}
+          </p>
+        )}
         {focused && (
           <div className="experimentActions">
             <p role="status">
               {u.focusedDate}: <strong>{focused}</strong> · Asia/Shanghai
             </p>
-            <button className="button secondary" onClick={() => setFocused("")}>
+            <button
+              className="button secondary"
+              onClick={() => {
+                filterAnchor.current?.focus();
+                setFocused("");
+              }}
+            >
               {u.clearFocus}
             </button>
           </div>
         )}
       </section>
       <FilteredCollections
-        key={`${jobId}-${filter.start_date}-${filter.end_date}`}
+        key={`${jobId}-${filter.start_date}-${filter.end_date}-${focused}-${focusRequest}`}
         jobId={jobId}
         range={filter}
         focused={focused}
-        onFocusDate={setFocused}
+        showBenchmark={showBenchmark}
+        onShowBenchmark={setShowBenchmark}
+        onFocusDate={(date) => {
+          filterAnchor.current?.focus();
+          setFocused(date);
+          // Every explicit Show action reopens records, even after manual collapse.
+          setFocusRequest((value) => value + 1);
+        }}
       />
       <ExperimentExports jobId={jobId} range={filter} />
     </>
@@ -102,11 +147,15 @@ function FilteredCollections({
   jobId,
   range,
   focused,
+  showBenchmark,
+  onShowBenchmark,
   onFocusDate,
 }: {
   jobId: string;
   range: DateRange;
   focused: string;
+  showBenchmark: boolean;
+  onShowBenchmark: (show: boolean) => void;
   onFocusDate: (date: string) => void;
 }) {
   const c = useExperimentCopy();
@@ -127,31 +176,28 @@ function FilteredCollections({
         <p className="experimentHelp">{c.shownPage}</p>
         {equity.loading && <p role="status">{c.loading}</p>}
         {equity.error && (
-          <div role="alert">
-            <p>{c.networkError}</p>
-            <button
-              className="button secondary"
-              onClick={() => setRevision((value) => value + 1)}
-            >
-              {c.retryLoad}
-            </button>
-          </div>
+          <ProductError
+            error={equity.error}
+            retry={() => setRevision((value) => value + 1)}
+          />
         )}
         {equity.data && (
-          <>
-            <EquityDisplay
-              key={`${jobId}-${offset}`}
-              points={equity.data.items}
-              onFocusDate={onFocusDate}
-            />
-            <Pagination
-              offset={equity.data.offset}
-              limit={equity.data.limit}
-              total={equity.data.total}
-              onChange={setOffset}
-            />
-          </>
+          <EquityDisplay
+            key={`${jobId}-${offset}`}
+            points={equity.data.items}
+            showBenchmark={showBenchmark}
+            onShowBenchmark={onShowBenchmark}
+            onFocusDate={onFocusDate}
+          />
         )}
+        <Pagination
+          label={c.chart}
+          offset={offset}
+          limit={equity.data?.limit ?? 100}
+          total={equity.data?.total ?? null}
+          loading={equity.loading}
+          onChange={setOffset}
+        />
       </section>
       <details
         className="experimentPanel"
@@ -188,37 +234,39 @@ function FilteredCollections({
 
 function EquityDisplay({
   points,
+  showBenchmark,
+  onShowBenchmark,
   onFocusDate,
 }: {
   points: ExperimentEquity[];
+  showBenchmark: boolean;
+  onShowBenchmark: (show: boolean) => void;
   onFocusDate: (date: string) => void;
 }) {
   const c = useExperimentCopy();
   const u = useComparisonCopy();
   const id = useId();
-  const [showBenchmark, setShowBenchmark] = useState(true);
   const [selected, setSelected] = useState(points.at(-1)?.trading_date ?? "");
   if (!points.length) return <p>{u.filteredEmpty}</p>;
   const point = points.find((item) => item.trading_date === selected);
+  const hasBenchmark = points.every((item) => item.benchmark !== null);
   // Only SVG positions use Number. Financial labels and tables retain server strings.
   const values = points.flatMap((item) => [
     Number(item.equity),
-    ...(showBenchmark && item.benchmark !== null
-      ? [Number(item.benchmark)]
-      : []),
+    ...(showBenchmark && hasBenchmark ? [Number(item.benchmark)] : []),
   ]);
   const finite = values.every(Number.isFinite);
   const low = finite ? Math.min(...values) : 0;
   const high = finite ? Math.max(...values) : 1;
   const range = high - low || 1;
   const x = (index: number) =>
-    24 + (index / Math.max(1, points.length - 1)) * 852;
+    points.length === 1 ? 450 : 24 + (index / (points.length - 1)) * 852;
   const y = (value: string) => 210 - ((Number(value) - low) / range) * 180;
   const equityLine = finite
     ? points.map((item, index) => `${x(index)},${y(item.equity)}`).join(" ")
     : "";
   const benchmarkLine =
-    finite && points.every((item) => item.benchmark !== null)
+    finite && hasBenchmark
       ? points
           .map((item, index) => `${x(index)},${y(item.benchmark!)}`)
           .join(" ")
@@ -249,11 +297,18 @@ function EquityDisplay({
         <label className="experimentCheck">
           <input
             type="checkbox"
-            checked={showBenchmark}
-            onChange={(event) => setShowBenchmark(event.target.checked)}
+            checked={hasBenchmark && showBenchmark}
+            disabled={!hasBenchmark}
+            onChange={(event) => onShowBenchmark(event.target.checked)}
           />
           {c.showBenchmark}
         </label>
+        {!hasBenchmark && (
+          <span className="experimentHelp">{c.benchmarkUnavailable}</span>
+        )}
+        {!drawdownFinite && (
+          <span className="experimentHelp">{c.drawdownUnavailable}</span>
+        )}
         <label>
           {c.selectDate}
           <select
@@ -301,19 +356,47 @@ function EquityDisplay({
           />
           {finite ? (
             <>
-              <polyline className="experimentEquityLine" points={equityLine} />
-              {showBenchmark && benchmarkLine && (
+              {points.length > 1 && (
                 <polyline
-                  className="experimentBenchmarkLine"
-                  points={benchmarkLine}
+                  className="experimentEquityLine"
+                  points={equityLine}
                 />
               )}
-              {drawdownLine && (
-                <polyline
-                  className="experimentDrawdownLine"
-                  points={drawdownLine}
-                />
-              )}
+              {showBenchmark &&
+                benchmarkLine &&
+                (points.length === 1 ? (
+                  <circle
+                    className="experimentBenchmarkLine"
+                    cx={x(0)}
+                    cy={y(points[0].benchmark!)}
+                    r="6"
+                    fill="none"
+                    strokeWidth="2"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                ) : (
+                  <polyline
+                    className="experimentBenchmarkLine"
+                    points={benchmarkLine}
+                  />
+                ))}
+              {drawdownLine &&
+                (points.length === 1 ? (
+                  <circle
+                    className="experimentDrawdownLine"
+                    cx={x(0)}
+                    cy={260 + (drawdowns[0]! / lowestDrawdown) * 70}
+                    r="4"
+                    fill="none"
+                    strokeWidth="2"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                ) : (
+                  <polyline
+                    className="experimentDrawdownLine"
+                    points={drawdownLine}
+                  />
+                ))}
               {selectedIndex >= 0 && (
                 <line
                   x1={x(selectedIndex)}
@@ -346,19 +429,25 @@ function EquityDisplay({
         </svg>
         <figcaption>
           <span className="experimentEquityLegend">{c.equity}</span>
-          {showBenchmark && (
+          {finite && showBenchmark && hasBenchmark && (
             <span className="experimentBenchmarkLegend">
               {c.chartBenchmark}
             </span>
           )}
-          <span className="experimentDrawdownLegend">{c.drawdownSeries}</span>
+          {finite && drawdownFinite && (
+            <span className="experimentDrawdownLegend">{c.drawdownSeries}</span>
+          )}
         </figcaption>
       </figure>
       {point && (
-        <p className="experimentChartReadout">
+        <p
+          className="experimentChartReadout"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {c.selectedDate}: <strong>{point.trading_date}</strong> · {c.equity}:{" "}
           <strong>{formatDecimal(point.equity)}</strong>
-          {showBenchmark && (
+          {showBenchmark && hasBenchmark && (
             <>
               {" "}
               · {c.chartBenchmark}: {formatDecimal(point.benchmark)}
@@ -372,10 +461,11 @@ function EquityDisplay({
         <p className="experimentHelp">{c.tableScroll}</p>
         <div
           className="experimentTableScroll"
+          role="region"
           tabIndex={0}
-          aria-label={c.tableScroll}
+          aria-label={c.table}
         >
-          <table>
+          <table aria-label={c.table}>
             <thead>
               <tr>
                 <th scope="col">{c.date}</th>
@@ -430,20 +520,36 @@ function TradeCollection({
     (signal) => experimentApi.trades(jobId, signal, offset, range),
     [jobId, offset, range.start_date, range.end_date, revision],
   );
-  if (data.loading) return <p role="status">{c.loading}</p>;
+  // The key keeps this control mounted when only the resource content changes.
+  const pager = (
+    <Pagination
+      key="pagination"
+      label={c.trades}
+      offset={offset}
+      limit={data.data?.limit ?? 20}
+      total={data.data?.total ?? null}
+      loading={data.loading}
+      onChange={setOffset}
+    />
+  );
+  if (data.loading)
+    return (
+      <>
+        <p role="status">{c.loading}</p>
+        {pager}
+      </>
+    );
   if (data.error)
     return (
-      <div role="alert">
-        <p>{c.networkError}</p>
-        <button
-          className="button secondary"
-          onClick={() => setRevision((value) => value + 1)}
-        >
-          {c.retryLoad}
-        </button>
-      </div>
+      <>
+        <ProductError
+          error={data.error}
+          retry={() => setRevision((value) => value + 1)}
+        />
+        {pager}
+      </>
     );
-  if (!data.data) return null;
+  if (!data.data) return <>{pager}</>;
   return (
     <>
       <p className="experimentHelp">{c.tableScroll}</p>
@@ -452,10 +558,11 @@ function TradeCollection({
       ) : (
         <div
           className="experimentTableScroll"
+          role="region"
           tabIndex={0}
-          aria-label={c.tableScroll}
+          aria-label={c.trades}
         >
-          <table>
+          <table aria-label={c.trades}>
             <thead>
               <tr>
                 {[
@@ -506,12 +613,7 @@ function TradeCollection({
           </table>
         </div>
       )}
-      <Pagination
-        offset={data.data.offset}
-        limit={data.data.limit}
-        total={data.data.total}
-        onChange={setOffset}
-      />
+      {pager}
     </>
   );
 }
@@ -531,20 +633,35 @@ function DecisionCollection({
     (signal) => experimentApi.decisions(jobId, signal, offset, range),
     [jobId, offset, range.start_date, range.end_date, revision],
   );
-  if (data.loading) return <p role="status">{c.loading}</p>;
+  const pager = (
+    <Pagination
+      key="pagination"
+      label={c.decisions}
+      offset={offset}
+      limit={data.data?.limit ?? 20}
+      total={data.data?.total ?? null}
+      loading={data.loading}
+      onChange={setOffset}
+    />
+  );
+  if (data.loading)
+    return (
+      <>
+        <p role="status">{c.loading}</p>
+        {pager}
+      </>
+    );
   if (data.error)
     return (
-      <div role="alert">
-        <p>{c.networkError}</p>
-        <button
-          className="button secondary"
-          onClick={() => setRevision((value) => value + 1)}
-        >
-          {c.retryLoad}
-        </button>
-      </div>
+      <>
+        <ProductError
+          error={data.error}
+          retry={() => setRevision((value) => value + 1)}
+        />
+        {pager}
+      </>
     );
-  if (!data.data) return null;
+  if (!data.data) return <>{pager}</>;
   return (
     <>
       <p className="experimentHelp">{c.tableScroll}</p>
@@ -553,10 +670,11 @@ function DecisionCollection({
       ) : (
         <div
           className="experimentTableScroll"
+          role="region"
           tabIndex={0}
-          aria-label={c.tableScroll}
+          aria-label={c.decisions}
         >
-          <table>
+          <table aria-label={c.decisions}>
             <thead>
               <tr>
                 {[c.time, c.security, c.decision, c.reason].map((label) => (
@@ -575,7 +693,11 @@ function DecisionCollection({
                   <td>
                     {explainExperimentCode(item.reason_code, i18n.language)}
                     <details>
-                      <summary>{c.technical}</summary>
+                      <summary
+                        aria-label={`${c.technical}: ${item.security_id} · ${item.sequence}`}
+                      >
+                        {c.technical}
+                      </summary>
                       <code>{item.reason_code}</code>
                       <p>{item.message}</p>
                     </details>
@@ -586,12 +708,7 @@ function DecisionCollection({
           </table>
         </div>
       )}
-      <Pagination
-        offset={data.data.offset}
-        limit={data.data.limit}
-        total={data.data.total}
-        onChange={setOffset}
-      />
+      {pager}
     </>
   );
 }

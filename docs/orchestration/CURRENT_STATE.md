@@ -1,5 +1,489 @@
 # Current state
 
+## v1.2 STAR single-account boundary and current handoff — 2026-10-14
+
+Four synthetic regression cases correct the blanket need-for-aggregate inference:
+with qualified STAR per-order100000 and the current one-instruction-per-security
+EOD path, a normal single-account run cannot fill over500000.100000 fills;
+100001/500000/600000 are locally ACCEPTED then next-day MAXIMUM_QUANTITY/CANCELLED.
+Same-day retry and fresh in-memory replay preserve effective orders/results.
+106 related unit tests/Ruff/format PASS; independent review. This is not raw-event
+exactly-once, durable restart, declaration aggregate, cross-account or2026admission.
+
+Actual installed IAB ZH/EN study-to-account preparation preserves saved API config,
+historical dates and source-denial state. A separate stopped account still displays
+its exact saved cash/equity and unknown legacy P&L/plan, not a reconstructed ledger.
+[Evidence and scope](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-handoff-and-star-boundary/README.md>).
+Base4c964bd exactCI38517590071SUCCESS. This unit changes tests/docs only; no app
+publication, original DB write, new account, merge or release. FullM3–M5PARTIAL.
+Investor-scope question pending. Dynamic-context and durable-context-bridge gates
+already prove synthetic after-start manager/journal/resume integration; do not
+repeat it. Next close actual fixed-sample effective-dated source coverage and
+remaining financial/quality gates, preserving actual-source rights requirements.
+Older entries below retain their as-of findings; their integration/arrival "next"
+steps are superseded by the later completed gates, not current work instructions.
+
+## v1.2 STAR control original source and cumulative-buy gap — 2026-10-14
+
+New original688622 notice1225239101 supplies the April29 suspension/April30*ST
+boundary and an investor daily cumulative purchase condition absent from current
+per-order enforcement. Source, five rendered pages, receipt and tested pinned
+inspection are [retained privately](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-star-st-control/README.md>).
+Independent review agrees this is a source-admission gap, not an observed bad fill.
+14offline tests/Ruff/deterministic reconstruction pass. Existing no-fill and
+unregistered-verifier gates stay closed; no app/data/runtime changes. Full M3-M5
+remain IN_PROGRESS. Next qualify cumulative reservation semantics/effective dates
+and explicit simulated investor scope, without aggregating unrelated experiments.
+Six-control daily completeness, rights and other product gates remain required.
+Exact previous94b7a3bCI38516285636SUCCESS; later documentation CI is separate.
+
+## v1.2 daily-context candidate persistence — 2026-10-14
+
+The first after-start-context storage layer preserves immutable source bytes,
+candidate/version conflicts and first durable local observation before PG commit.
+19 synthetic persistence/race/budget cases are included in the final isolated
+2277PASS/1optional archiveSKIP suite. Ruff/592format/mypy150PASS. Independent
+review found a stale-clock concurrent-winner rejection; its RED test now passes.
+No candidate is execution-admitted; V2 qualification and manager/journal/resume
+integration remain required, and M3/M4/M5 remain IN_PROGRESS.
+[Evidence and failed runs](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261014-daily-context-arrival/README.md>).
+
+Unexpected deployment side effect: Docker Desktop stopped during work; normal
+startup caused original backend auto-restart and auto-Alembic to apply the
+bind-mounted0018 addition before planned publication. User informed; no production
+downgrade. Original schema0018/candidate0/5STOPPED/417events/APIpaperhealthy verified,
+not all-table equality. Previous4eb7bdf rollout does not certify this restart.
+Do not restart Docker with unpublished live-mounted migrations without assessing
+automatic startup. Isolated0018→0017→0018 passed; original data was not restored.
+
+Code37dd25d is pushed to draftPR32; exactCI38494149725 passes all three jobs:
+2277backend/1optionalSKIP,950frontend,static/build/migration/isolatedCompose.
+The final test also verifies a new store can retry only archived candidate/source
+files after original temporary input loss, retaining its first observation time.
+Full source/financial/real-forward and product gates remain PARTIAL.
+
+## v1.2 receipt bridge published; daily-context arrival is next — 2026-10-13
+
+`4eb7bdf` is now served locally. CI38406422590 passed2258backend/1optional archive
+SKIP and950frontend; all3jobs/36steps passed. Backend restarted once at13:49:10UTC;
+PG/Redis/frontend were not restarted.5stopped accounts/417events,12terminal research
+and4terminal updates remain; no source fetch or account start occurred.
+[248-artifact publication and browser evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md>).
+
+Windows verifies13served files and security headers. Actual Chrome ZH/EN shows
+both retained parser labels/hashes plus explicit read-only caveats; creation keeps
+forward/history unavailable and demo modes available. One verifier expectation
+and one omitted observation-diagnostic comparison were corrected with retained
+failures and22tests; no second restart or data rewrite. Source configuration is
+confirmed absent independently of the fixed public capability response.
+
+M3/M4/M5 and full U1–U8 remain PARTIAL. Next implement append-only qualified daily
+context arriving after account start, binding consumed pins/real observation UTC
+into existing journal/resume. The finite bridge is not real-forward acceptance.
+Preserve source/financial gaps300147/000425, missing-ledger disposition and the
+remaining quality/delivery gates; no frozen/OOS/merge/tag/release changes.
+
+## v1.2 receipt-bound paper isolated integration passed — 2026-10-13
+
+The reviewed implementation connects a deployment-pinned source contract and canonical
+receipts to the existing paper manager, risk/OMS, plan and journal. Synthetic
+warmup plus two forward-shaped days exercise actual proposals and next-day fills;
+this is integration evidence, not actual new-market acceptance. No real contract
+has been registered and the public creation capability remains unavailable.
+
+The strengthened reader now reproduces normalized rows from retained raw bytes.
+A read-only check of all six actual cached bundles passes with all18files unchanged.
+The two documented parser-label exceptions remain inspection-only and strict
+execution rejects them. No original DB or provider was accessed by that probe.
+[Current evidence and original failure](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-receipt-to-paper/README.md>).
+
+Independent review closed stale-clock rejection, wrong frontend source-pin binding,
+the fixed receipt-count ceiling and conflicting/expired base cost schedules.
+Final backend2258PASS/1optional archiveSKIP and frontend950PASS/54files; backend
+Ruff/588format/mypy148 and frontend static/build PASS. Actual isolated PostgreSQL,
+REST, ASGI WebSocket JSON and new-manager resume pass. Failed prior test runs remain
+recorded; no append-only production guard was weakened. Exact-head CI and publication
+are pending, and these synthetic integration tests do not prove actual forward use.
+The served application remains aa5f529; its earlier CI does not cover this work.
+Root owns integration/Git; all authors are frozen and reviewers read-only.
+Next close the real engineering gap: daily context must arrive after start rather
+than requiring all future context in the immutable contract. Retain per-day pins
+and observation times for resume; do not infer missing ST/actions/suspensions.
+Actual source qualification and full U1–U8/M3–M5 remain PARTIAL.
+
+## v1.2 Recheck styling published and visually verified — 2026-10-13
+
+`aa5f529` is served on localhost5173. CI38395584853 passed2177backend/1optional
+archive SKIP and902frontend; the frontend-only publication preserves all four
+container start times and33selected responses,5accounts/417events. Windows checks
+all13served files. Actual Chrome verifies five selected combinations across
+four widths, Chinese/English and light/dark; cash is retained and keyboard flow
+works. A stale first mobile capture is explicitly excluded from passing evidence.
+[Exact evidence and limits](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities-style/README.md>).
+
+Next connect independently admitted daily receipt inputs to the existing paper
+manager, plan and journal transaction. The source-admission contract is missing;
+raw receipts and a constructed ResearchSession are not approval. Source/financial,
+real-forward and full quality/release acceptance remain incomplete. No new account,
+strategy, frozen data, OOS, merge or release action.
+
+## v1.2 Paper creation checks deployed and browser reviewed — 2026-10-13
+
+The capability and delayed-receipt fixes are served locally from `efd1297`.
+Its CI38392162439 passed all three jobs:2177backend PASS/1optional archive SKIP,
+902frontend PASS, static/build and isolated migration/Compose checks PASS.
+The existing backend restarted once; PostgreSQL, Redis and frontend were not
+restarted. Selected saved responses,5stopped accounts and417events are unchanged.
+[Publication and browser evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities/README.md>).
+
+Actual Chrome Chinese/English creation checks preserve entered cash and mode
+through a recheck. Unavailable historical/forward choices explain why; saved
+history remains readable. No account was created or started. A one-line styling
+fix for the recheck button passes150focused tests and needs frontend publication
+and visual recheck. This supersedes the deployment-pending entry below.
+
+Full U1–U8/M3–M5 remains PARTIAL. Source gaps300147/000425, financial/lifecycle
+admission, lawful real forward inputs and the receipt-to-plan/account chain,
+genuine missing-ledger disposition and remaining quality/release gates persist.
+No frozen data, formal study, OOS, merge, tag or release action.
+
+## v1.2 Paper creation availability and receipt safety — 2026-10-13
+
+The creation form now checks configured replay and historical execution admission
+before offering a new request. Unavailable modes remain visible with bilingual
+reasons; rechecking preserves cash, dates and mode. Existing request recovery
+remains independent. An actual delayed-receipt race is fixed: leaving the page
+before submission no longer creates a new account after the receipt check finishes.
+
+Full local backend 2177 PASS/1 optional archive SKIP and frontend 902 PASS;
+static checks and build PASS. [Evidence, failures and publication status](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-paper-capabilities/README.md>).
+The configured-source child probe confirms historical creation still refuses
+source-integrity failure and forward remains unavailable; it is not the served
+process. New code is not deployed yet. Prior797bb012 CI38388164430 SUCCESS is
+separate from the pending new commit's CI.
+
+Next safely publish after exact-head CI, fresh backup and quiescence checks.
+Full U1–U8/M3–M5 remains PARTIAL: actual admitted forward inputs and the production
+receipt-to-plan/account chain, source/financial/lifecycle admission, genuine missing
+ledgers and remaining browser/quality/release acceptance are still required.
+No frozen research, formal study, OOS, merge or release action.
+
+## v1.2 candidate audit shares the runtime listing boundary — 2026-10-13
+
+The candidate audit could report its action-session precondition PASS for a late
+bonus listing that runtime rejected. A complete synthetic build reproduced the
+gap. Both callers now supply the accepted next session to one shared validation
+helper, preserving same-ex/next/null and rights semantics.216related tests and
+all backend static checks PASS; independent review found no scopedP1/P2.
+[Eight retained cases and exact-head CI](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-candidate-listing-audit/README.md>),
+proof ec8a5adc, binds587 fixture files and15 codepins. Period-end wiring is scoped,
+not a full-period financial proof; original RED temporary files are no longer
+available, with their failing tool output retained honestly.
+
+No additional service restart: the semantically unchanged guard published at
+a369968 remains loaded. Financial/lifecycle and real-source admission remain
+unproven. U7 also still lacks a production receipt-to-session/plan/processing
+bridge; current modes are replay, simulated A-share and historical A-share only.
+Next advance that required integration from actual contracts, without enabling
+raw candidates, inventing source rights or treating fixtures as real forward
+evidence. Full U1–U8/M3–M5 stays PARTIAL; no merge/release/frozen/OOS action.
+
+## v1.2 date guards deployed with selected state preserved — 2026-10-13
+
+CI38385449677 on a369968 passed all3jobs/36steps: backend2152PASS/1optionalSKIP,
+frontend870PASS and Compose PASS. Existing backend89aa restarted once at
+10:50:09.99589481UTC; schema0017 unchanged, successful startup, no migration.
+PG/Redis/frontend identities and start times are unchanged; Windows API/frontend
+HTTP200. [Publication evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-date-guard-publication/README.md>),
+sealed77cda9b2, retains fresh backup and exact32-body comparison.2legacy runs,
+5stopped accounts/417events,12research/4updates and product/frontend files remain
+unchanged. This is not full-table, restore-drill or browser acceptance.
+
+Next close a reproduced audit discrepancy: candidate action-session preconditions
+do not yet include the engine's calendar-aware listing guard. Share that check
+and prove it through synthetic candidate partitions, preserving valid next-session
+listings and unresolved financial gates. Full U1–U8/M3–M5 stays PARTIAL; remaining
+source/lifecycle, lawful-forward, original-ledger and native-browser gates persist.
+No original dataset, strategy, OOS, merge, tag or release action.
+
+## v1.2 cross tab test initialization repair — 2026-10-13
+
+Hosted run38383415919 failed one frontend test after backend2152PASS/1optionalSKIP
+and Compose PASS. A controlled probe confirmed the test dispatched beforeunload
+before the async-loaded wizard installed its listener. Two tests now await React
+effects before native cross-tab events; original assertions and production code
+are unchanged. Focused90PASS/static checks and independent review PASS. Full
+frontend and exact-head CI results are retained with the original failed run in
+[CI recovery evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-dated-distribution-accounting/CI_RECOVERY.md>).
+
+Date guards are not yet deployed. After successful CI, take fresh private backups
+and verify terminal legacy backtests as well as product jobs, stopped accounts
+and no pending receipts before a backend-only restart. Compare selected saved
+HTTP contents afterward; do not claim an all-table audit or browser acceptance.
+Full U1–U8/M3–M5 remains incomplete; source, lawful-forward and lost-ledger gates
+remain. No dataset admission, frozen/OOS change, merge or release.
+
+## v1.2 dated ordinary accounting and safe date boundaries — 2026-10-13
+
+The normalized actual 300155 pair now reaches the dated loader, session engine
+and portfolio in an isolated, reproducible proof. Synthetic 100-share opening
+holdings receive cash80 and150shares while basis1000 remains intact; the controlled
+mark reconciles total PnL0, or-5 with fee5. An ex-day pending buy receives no fill
+or entitlement and releases its reservation. This is not historical performance.
+[Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-dated-distribution-accounting/README.md>).
+
+The proof exposed real early-credit/early-sale input defects. Shared ordinary
+date checks and a calendar-aware listing guard now reject before account mutation.
+Same-ex and next-accepted-session listings remain supported; a read-only date
+scan preserves all286 explicit next-session events and rejects no existing archive
+record. Null metadata stays unknown.71new/659related tests, Ruff/583format/app-mypy146
+PASS. Normal/optimized proof c9390065 and reversed Decimal inputs agree; independent
+review and exact-head CI receipts are retained beside evidence when complete.
+
+The running application has not yet loaded this fix. After review and CI, use the
+existing safe publication procedure, then continue source/lifecycle/accounting and
+full product acceptance. Source-economic gaps300147/000425, native browser control,
+lawful actual forward data and genuine missing ledgers remain unresolved. Frozen
+research/data/OOS and original runtime/DB are unchanged. Full U1–U8/M3–M5 PARTIAL;
+no successor dataset admission, merge or release.
+
+## v1.2 source derived dates integrated into candidate builds — 2026-10-13
+
+The shared build/audit path now replaces missing ordinary cash payment and bonus
+listing dates using pinned source PDFs. Real retained 300155 evidence produces
+two new event hashes, with only the respective date changed. All old acceptance
+and negative findings remain intact. Report `5ab64452` repeats under normal and
+optimized Python and input reversal; the other four selected events are unchanged.
+[Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-ordinary-date-normalization/README.md>).
+
+540 related tests PASS, including 108 new cases. Ruff, 582-file formatting and
+146-file application typing PASS. Independent review defects were repaired;
+final review and exact-head CI receipts belong beside the evidence report.
+Source economic integrity remains FAIL with 300147/000425 unresolved; financial
+admission remains false. No real dataset, runtime, DB, study, OOS or frozen asset
+was changed. Full U1–U8/M3–M5 remains PARTIAL; no merge or release.
+
+Next validate the normalized actual events through the existing dated session
+and portfolio paths in an isolated evidence harness, preserving the original
+holder, cash and basis assumptions. This is distinct from source-gap closure
+and whole-dataset financial admission. Continue the remaining source/lifecycle,
+native-browser, lawful-forward and genuine-ledger requirements without repeating
+accepted acquisition or narrowing the product objective.
+
+## v1.2 official correction now bound to candidate audit — 2026-10-13
+
+Candidate audit now consumes the versioned300155 correction chain, with original
+findings retained and no financial approval. Actual cached-source verification
+checks six known event legs: one cash-total text contradiction explained, two
+source gaps still unresolved. Report28a51c2f repeats exactly under normal/optimized
+Python and input reversal. This is not a new full-archive audit.
+[Evidence and repeat command](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-candidate-correction-audit/README.md>).
+
+235 focused tests PASS; all backend Ruff/577format/app-mypy146 PASS. Independent
+review's additional-correction tail defect fixed through full-document matching.
+Final scoped proof review and exact-head CI receipt live in the evidence folder.
+Frozen/research/OOS/tag and local application remain unchanged; no new dataset.
+Next separately normalize evidenced300155 payment/listing dates with original-to-new
+lineage. Continue remaining source/lifecycle/accounting and full U1–U8/M3–M5 gates;
+do not reuse old acquisition windows or turn this explanation into global PASS.
+Full product PARTIAL, PR32 remains draft; no merge or release.
+
+## v1.2 official aggregate correction recovered — 2026-10-13
+
+Official CNINFO59352083 / notice2011-038 closes300155 cash-total text conflict:
+576,000,000→57,600,000 CNY; per-holder terms unchanged. Full-page independent
+review and pinned metadata/PDF checks PASS; evidence70d9930b verifies repeatably.
+Publication2011-04-27 15:53 Asia/Shanghai is a hard lower knowledge boundary,
+not midnight or the December governance report date.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-official-source-closure/README.md>).
+
+Preserve old3gap/6leg negative report and frozen rows. Remaining source-text
+gaps300147/000425 are not closed; original300155 dates remain unnormalized.
+Next strictly bind this correction in candidate audit, with old-to-new lineage
+and unresolved findings retained. Current financial admission false, runtime
+unchanged; no new dataset/study/OOS/merge/release. Full U1–U8/M3–M5 PARTIAL.
+
+## v1.2 local PnL publication checkpoint — 2026-10-13
+
+Current product authority remains `.product/state.json` and
+`docs/product/ACCEPTANCE.md`, not the older frozen research checkpoint.
+Exact PnL/source guards are now served locally;27 saved HTTP bodies and417events
+retain prior values, with only explicit legacy-null additions.13 frontend assets
+pass Windows/WSL SHA checks; original containers/volumes retained. Two new
+JSONB/REST/ASGI cases pass in a210PASS/1optionalSKIP related suite. Final test/docs
+CI receipt is outsideGit in `product-evidence/v1.2/m4/20261013-pnl-publication`.
+Browser verification, source economic/integrity admission, lawful real forward
+data and missing-ledger disposition remain. Full productPARTIAL; no merge/release,
+new strategy/OOS run or frozen research mutation.
+
+## v1.2 isolated successor build entry — 2026-10-08
+
+Explicit new-version input/owned output entry implemented in the existing
+materializer, without `.research` fallback or inherited legacy approval.
+Selected raw/meta/auxiliary/rule/source inputs are bound to a new preflight;
+parser consumes verified bytes. Resume rebuilds the report from the checked
+manifest, preserves false audit/financial flags and recovers only missing
+post-rename receipt. Legacy fixed entry remains compatible.
+277 related tests/static/type checks PASS; four retained synthetic build/reorder/
+interruption cases plus actual CLI resume PASS. Independent readonly scoped
+review closed P2s. [265-file proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-successor-build-inputs/README.md>)
+manifest2ab20883d397d985c17a303f25f3528dc584cf1e9003531364bc37b43af64597.
+
+No real dataset or financial approval. Next integrate existing price-only
+companions and new-version actual audit inputs/results, without copying old
+fixed-count/literal PASS acceptance. The real reference bundle remains inspection
+only; full source/economic/lifecycle facts still govern materialization/admission.
+Original frozen assets/.research/OOS/tag/runtime unchanged. No app/DB/provider/
+strategy action; full U1-U8/M0-M5 ACTIVE/PARTIAL and GitHub HOLD.
+
+## v1.2 raw resume binds actual inputs — 2026-10-08
+
+Shared raw_stage stale-input reuse defect FIXED; 244 related tests PASS,
+including47 new cases with real temporary JSON/XLSX/Parquet. Input ordering,
+source/meta bytes, full master/ST context, coverage/schema/parser, receipt and
+exact partitions are checked. Changed inputs/legacy receipts refuse without
+replacing published outputs. Independent Decimal, metadata-cleanup and hardlink
+P2 defects reproduced/fixed; final scoped review noP1/P2.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-raw-resume-input-binding/README.md>):
+34 bindings1c3ac57b20d3e0e962cb08280f6d8f6ec6c27bb2882bc2831148b5d51d0576ff.
+
+This is a data-build prerequisite, not a new dataset or financial approval.
+Real archive builder NOT_RUN; original frozen/.research/tag hashes unchanged;
+no application/runtime/DB/strategy changes. Fixed-v1 identity/output/approval
+coupling remains the next engineering task, with owned work-root boundaries.
+Whole-pipeline crash recovery and financial gates must not inherit fixture PASS.
+Full U1-U8/M0-M5 ACTIVE/PARTIAL; GitHub HOLD.
+
+## v1.2 independent full-source reference candidate — 2026-10-08
+
+New isolated candidate reference chain VERIFIED; financial coverage remains
+PARTIAL/no admission. All15 original source bytes and frozen/.research assets
+unchanged;13 candidate rows exact, only master and preflight references differ.
+Fresh inspection-preflight does not inherit historical PASS/approval;5 pins only.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-reference-chain/README.md>):
+real candidate canonical dfdd998f4cf316479e648ffdb49bb55b9479e9c61d79b4cbf0d7cde6dbde5706,
+43 bindings adf9a80e9b810911f38111df737e32d34bca28d92d4539701408b9d14c390cf7.
+Normal and optimized/reversed repeats identical;111 source tests/Ruff/format/
+script-mypy PASS. Independent byte-rebinding P2 reproduced and repaired before
+real execution. No runtime/frontend changes or new full-suite/browser claim.
+
+Original platform remains healthy with d183ad3 application changes deployed.
+Legacy source integrity still FAIL, candidate is not registered or frozen.
+Next explicit successor-version build inputs/output isolation must preserve all
+financial/source gates and reject INSPECTION_ONLY; do not call fixed-v1 builder.
+Full financial/lifecycle/lawful-forward/genuine-ledger/quality/delivery requirements
+remain; U1–U8/M0–M5 ACTIVE. GitHub HOLD/no remote operations.
+
+## v1.2 source guard now deployed locally — 2026-10-08
+
+Original8000/5173 now load source commit d183ad36144dfee3b3d43aaef7b3b1ad96a9b642.
+Known-invalid historical sources reject new execution; cache and saved records
+remain readable with saved-version findings. This resolves rollout, not source
+authority or economic completeness. Full U1–U8/M0–M5 ACTIVE/PARTIAL.
+
+One controlled existing-backend restart after0017/no-active/no-pending checks;
+PG/Redis/frontend IDs and starts unchanged. 19 selected before/after GETs preserve
+old fields and independently verify19 saved-version findings. Product cache tar
+unchanged; selected statuses and417 events unchanged, NOT an all-table audit.
+Actual original IAB EN1440/ZH390 studies/accounts preserve exact financial strings
+and dates; source warnings visible. Tested13 assets HTTP/SHA exact,175 old assets
+retained. No new create/start/provider/strategy request or frozen mutation.
+[Publication proof](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-admission-publication/README.md>):
+323 native bindings, adcd949dcd2dc985acffcf7b61b85d691a237393738cd12423b074e72500f631.
+1579backend+1existingoptionalSKIP/840frontend/static/build evidence remains bound.
+Next repair new-version full15-source references in a separate inspection-only
+bundle; never rewrite frozen65 or inherit old approval. GitHub HOLD; financial,
+lawful-forward, genuine-ledger, current quality and release gates remain.
+
+## v1.2 source execution guard and saved-version findings — 2026-10-08
+
+Scoped engineering and isolated browser PASS; NOT yet loaded by original8000/5173.
+Shared registry rejects known-invalid/unverified historical sources; paper checks
+its saved SHA before STARTING. Cache reads and old idempotent receipts remain.
+Saved results/exports/formal records/accounts project independent source findings
+using their own ID+SHA; old plans, financial strings and frozen bytes stay intact.
+Frontend reuses one bilingual explanation/strict parsers, including source-only
+notes and accessible descriptions.
+
+1579 backend PASS +1 existing optional archive SKIP, 840 frontend PASS in49files,
+Ruff/format/mypy/ESLint/types/build/Alembic check PASS. Independent read-only reviews
+no scoped P1/P2. Actual IAB EN1440/ZH390 proof uses synthetic paused account plus
+real readonly registry/projection, not original DB/financial execution. Native124
+bindings twicePASS:02bebe0082f034d1524aa4f6acf0a6c8eb69ad631854c0e7f595d0acf199187b.
+[Evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261008-source-admission/README.md>).
+
+Own QA stopped/closed; disposable tmpfs test PG stopped0/retained. Original four
+services unchanged/healthy, source/frozen/research/tag intact. Fresh original DB
+0017==head; 12 research/5 STOPPED paper/4 update jobs terminal,417paper events.
+Next verify pending receipts/ownership and a bounded original-backend-only restart
+plus frontend publication; do not recreate/copy scratch or refresh denied44tables.
+This is not source repair or full financial admission. All U1–U8/M0–M5 ACTIVE,
+M3/M4/M5 IN_PROGRESS; GitHub HOLD/no requests/push/merge/tag/release.
+
+## v1.2 visible market notice published; next source admission guard — 2026-10-08
+
+M3/M4/M5 IN_PROGRESS, full U1–U8/M0–M5 ACTIVE/PARTIAL. Market economic-quality
+repair is scoped PASS: 9 RED→52focused/829frontend/static/build, actual bilingual
+historical source/detail and demo-switch verification, four raw GET API snapshots.
+Exact tested13 assets now served on original5173; atomicindex7281f6ac, no restart,
+169oldfile backup/168oldnonindex retained/HTTP SHA match. Independent readonly
+review no scoped P1/P2. Native222 proof twice PASS, checksum306e8db665d4392c8129c8e3778783c65132ea9db38db6999a55e9742f22a67e.
+All four original service identities/starts and frozen/research/tag unchanged.
+
+Legacy source-contract integrity FAIL remains distinct from economic gap; this
+notice is not financial admission. Actual saved catalog still permits execution:
+next shared registry for_execution/new paper STARTING boundary must fail closed
+for known-invalid provenance while retaining readonly cache and old receipts.
+Independently propagate exact saved-version source findings through all metadata
+surfaces, without a false Docker-time15-source PASS or frozen mutation. All other
+financial/forward/lawful-feed/genuine-ledger/quality/delivery gates remain.
+GitHub HOLD/no request/push/merge/tag/release. Prior entries below are historical.
+
+## v1.2 source-reference guards complete; full product PARTIAL — 2026-10-08
+
+M3/M4/M5 remain IN_PROGRESS and full U1–U8/M0–M5 goal ACTIVE. New engineering
+guard milestone PASS only: 155 focused / 1563 full backend PASS + 1 existing
+optional-archive SKIP, Ruff/format/mypy/17 migrations/Alembic/test Compose PASS.
+Independent scoped read-only review found no remaining P1/P2. Native 49-entry
+proof twice verifies payload/code/original bytes, SHA `f5d0262cfe109aa33bd24de2acf176fca4a8d35ef7cf489af5c97158da28b3a4`.
+Fresh/resume/audit/freeze now reject malformed, rebound or unapproved source refs;
+four-way freeze identity equality repaired. No original full dataset job ran.
+
+Legacy 65-character P0 reference is still FAIL, not silently corrected. All 20
+original inputs/frozen/.research/tag unchanged; financial admission false.
+Original PG/Redis/backend/frontend IDs/starts unchanged and healthy/HTTP200/paper;
+owned test tmpfs PG stopped cleanly. Frontend 815 prior results retained; older
+backend-code-bound proofs remain historical after this code change.
+
+Next safe product action: markets currently receives exact-version economic
+quality metadata but drops parser validation and page/detail notices. Reuse the
+existing parser/explanations, test both languages/actual detail metadata and
+source switching, then browser review. Source-contract failure is a separate
+unpropagated application status, not solved by an economic notice alone.
+No frozen/methodology/OOS/production DB/provider change; GitHub HOLD, no requests
+or push/merge/release. Earlier checkpoints below are retained historical evidence.
+
+## v1.2 local work continues; new-version provenance integrity PARTIAL — 2026-10-08
+
+Current product authority is `docs/product/PRODUCT_MASTER.md` and `.product/state.json`.
+The historical v1.1 research/release checkpoints below are retained evidence, not
+current permission to rerun OOS or assume remote CI is available. Full U1–U8/M0–M5
+v1.2 goal is ACTIVE/PARTIAL; GitHub HOLD, no remote requests/push/merge/tag/release.
+
+Original loopback5173 frontend/API8000paper/Compose PostgreSQL+Redis+backend are
+healthy with unchanged starts. Current frontend815 tests/static/build PASS;
+draft21→20→21 cross-tab regrowth repaired and locally published without restart.
+Independent002168 official source/market boundary proof is complete for its
+unrestricted public-holder share-event identity, not financial admission.
+
+New actual provenance defect:SECURITY_MASTER contract uses65hex manifest reference
+while checksum-valid P0 authority has64hex; masterfile/15sourcebytes are valid.
+Oldstate/preflight/catalog/freeze preserve the65value. New20payload proof9a3a58d7
+records SOURCE_CONTRACT_INTEGRITY=FAIL/full_financial_admission=false. Nextengineering
+step is new-version canonical-reference validation, not frozen/research rewriting
+or reacquisition. All prior studies/OOS/results/identity remain unchanged. Other
+financial/forward/genuineledger/AA/native200/performance/delivery gates remain.
+
 ## Final local release QA PASS / PR integration active — 2026-09-22
 
 Docker Desktop was upgraded in place to 4.92.0 without deleting images, volumes, PostgreSQL,

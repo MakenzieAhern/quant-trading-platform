@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 import { backtestsApi } from "../api/backtests";
@@ -29,9 +29,17 @@ export function CreateBacktestPage() {
   const [oversold, setOversold] = useState("30");
   const [overbought, setOverbought] = useState("70");
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | Error | null>(null);
   const requestKey = useRef<string | null>(null);
   const submissionLocked = useRef(false);
+  const active = useRef(true);
+
+  useEffect(() => {
+    active.current = true;
+    return () => {
+      active.current = false;
+    };
+  }, []);
 
   const changed = () => {
     requestKey.current = null;
@@ -43,11 +51,11 @@ export function CreateBacktestPage() {
     if (submissionLocked.current) return;
     setError(null);
     if (maxNotional && !isPositiveDecimal(maxNotional)) {
-      setError(t("createPage.maxNotionalError"));
+      setError("createPage.maxNotionalError");
       return;
     }
     if (!isPositiveDecimal(initialCash) || !isPositiveDecimal(quantity)) {
-      setError(t("createPage.decimalError"));
+      setError("createPage.decimalError");
       return;
     }
     let strategy: CreateBacktestRequest["strategy"];
@@ -55,7 +63,7 @@ export function CreateBacktestPage() {
       const short = parsePositiveInteger(shortPeriod);
       const long = parsePositiveInteger(longPeriod);
       if (short === null || long === null || short >= long) {
-        setError(t("createPage.periodError"));
+        setError("createPage.periodError");
         return;
       }
       strategy = {
@@ -73,7 +81,7 @@ export function CreateBacktestPage() {
         thresholdOrder !== -1 ||
         upperBound !== -1
       ) {
-        setError(t("createPage.rsiError"));
+        setError("createPage.rsiError");
         return;
       }
       strategy = {
@@ -100,28 +108,39 @@ export function CreateBacktestPage() {
     requestKey.current ??= crypto.randomUUID();
     submissionLocked.current = true;
     setPending(true);
+    const originatingUrl = window.location.href;
     try {
       const created = await backtestsApi.create(payload, requestKey.current);
-      navigate(`/backtests/${created.run_id}`);
+      if (active.current && window.location.href === originatingUrl)
+        navigate(`/backtests/${created.run_id}`);
     } catch (reason) {
-      if (reason instanceof ApiError && reason.status === 409) {
-        setError(t("createPage.conflictError", { message: reason.message }));
-      } else if (reason instanceof ApiError && reason.status === 422) {
-        setError(t("createPage.validationError", { message: reason.message }));
-      } else if (reason instanceof ApiError && reason.status >= 500) {
-        setError(t("createPage.executionError"));
-      } else {
-        setError(
-          reason instanceof Error
-            ? reason.message
-            : t("createPage.submitError"),
-        );
-      }
+      if (active.current)
+        setError(reason instanceof Error ? reason : "createPage.submitError");
     } finally {
       submissionLocked.current = false;
-      setPending(false);
+      if (active.current) setPending(false);
     }
   };
+
+  const errorKey =
+    typeof error === "string"
+      ? error
+      : error instanceof ApiError && error.status === 409
+        ? "createPage.conflictError"
+        : error instanceof ApiError && error.status === 422
+          ? "createPage.validationError"
+          : error instanceof ApiError && error.status >= 500
+            ? "createPage.executionError"
+            : error instanceof ApiError &&
+                (error.status === 401 || error.status === 403)
+              ? "common:loadErrors.permission"
+              : error instanceof ApiError && error.status === 404
+                ? "createPage.unavailableError"
+                : error instanceof ApiError && error.status === 408
+                  ? "createPage.timeoutError"
+                  : error instanceof TypeError
+                    ? "createPage.offlineError"
+                    : "createPage.submitError";
 
   return (
     <>
@@ -153,7 +172,7 @@ export function CreateBacktestPage() {
             </label>
             <label>
               {t("createPage.symbol")}
-              <input name="symbol" value="AAPL" readOnly />
+              <input name="symbol" value="AAPL" readOnly tabIndex={-1} />
             </label>
           </div>
         </fieldset>
@@ -288,14 +307,27 @@ export function CreateBacktestPage() {
         </fieldset>
         {error && (
           <div id="form-error" className="formError" role="alert">
-            {error}
+            <p>
+              {t(errorKey, {
+                message: error instanceof Error ? error.message : "",
+              })}
+            </p>
+            {error instanceof Error && (
+              <>
+                <p>{t("createPage.recoveryHint")}</p>
+                <details>
+                  <summary>{t("common:loadErrors.diagnostic")}</summary>
+                  <code>{error.message}</code>
+                </details>
+              </>
+            )}
           </div>
         )}
         <div className="formActions">
           <button
             className="button buttonPrimary"
             type="submit"
-            disabled={pending}
+            aria-disabled={pending}
           >
             {pending ? t("createPage.running") : t("createPage.run")}
           </button>

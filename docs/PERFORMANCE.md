@@ -18,7 +18,7 @@ Run only in the disposable test project:
 
 ```bash
 docker compose -f compose.test.yml run --rm backend sh -c 'alembic upgrade head && python scripts/benchmark.py'
-docker compose -f compose.test.yml down --volumes
+docker compose -f compose.test.yml stop
 ```
 
 The 10x input increase costs more than 10x engine time: strategies recompute indicators

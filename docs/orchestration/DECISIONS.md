@@ -1,5 +1,4179 @@
 # Decisions
 
+## 2026-10-25 v1.2 — human-approved BaoStock usage-scope inquiry
+
+The human answered “允许仅咨询使用范围” to the explicit BaoStock inquiry request.
+This permits asking whether SSE/SZSE A-share EOD data may be cached and used in a
+private single-user local research application for simulated rebalance plans and
+persisted simulated fills, and requesting the applicable written terms. It does
+not authorize purchases, contracts, credential disclosure or actual feed admission.
+
+The [prepared message](../product/SOURCE_READINESS.md#written-rights-clarification-needed-unsent)
+contains no attachments, private market rows or account details. The official-home
+search result lists `baostock@163.com`; the sender/channel is still unconfirmed.
+Gmail and Outlook Email integrations are available but unconnected. No message
+has been sent. Continue with the approved scope after the channel is confirmed,
+without repeating this consent question; retain actual delivery/reply evidence.
+Full source coverage, historical economic gaps and product acceptance stay open.
+
+## 2026-10-16 v1.2 — human-approved historical ledger loss disposition
+
+The human answered the explicit loss-disposition question: “接受明确损失处置，保留事故记录”.
+Accounts with short IDs `4b64380f` and `07d72259` are recorded as historical
+records lost and unrecoverable from available genuine evidence. This is acceptance
+of disclosed loss, **not restoration**. Preserve the incident/investigation record,
+including the unresolved possibility of other unrecorded post-backup rows.
+Do not replay, fabricate replacement journals, delete existing data or relabel
+synthetic/new accounts as the originals.
+
+Further acceptance may use the already verified post-incident baseline and its
+scoped restore/recovery evidence. Close only the pending human loss-disposition
+blocker; do not claim new recovery testing, independent disaster recovery, source
+authority, complete U7/product acceptance or release approval. Genuine pre-loss
+evidence found later must be assessed separately without overwriting current data.
+The dated earlier incident entries remain intact; this decision supersedes their
+pending-disposition status, not the facts of the loss.
+
+## 2026-10-14 v1.2 — human-approved independent simulated investors
+
+The user explicitly selected independent simulated accounts: each account is its
+own simulated investor; daily cumulative purchase limits must not pool unrelated
+accounts. Preserve experiment isolation. This resolves only the investor-scope
+choice, not the effective-dated rule/source qualification or implementation gate.
+An applicable cumulative limit is keyed by account, security and exchange trading
+date, not account-wide holdings, net purchases after sales, or shared strategy ID.
+No real broker identity, linked-account grouping, live order or frozen-methodology
+change is authorized. Existing saved ledgers must not be rewritten.
+
+For the supported A-share daily route, separately verify one instruction per
+security/session, order expiry, account isolation and deterministic restoration.
+The existing STAR100000 per-order boundary is conditional on qualified rules and
+is not a general500000 declaration-ledger implementation. Future multiple-order
+paths must prove their own aggregate reservation/fill/cancel/restart behavior.
+
+## 2026-10-14 v1.2 — own product arithmetic context
+
+Keep the existing portfolio/risk convention of28 significant digits/HALF_EVEN,
+and explicit ROUND_FLOOR for lots. Do not inherit arbitrary caller precision,
+rounding or traps when computing plan projections, capped targets or product
+summary aggregates. Independent probes showed a plan amount/hash difference,
+a0-to100share sizing difference and benchmark/turnover differences for identical
+inputs. Separate RED-to-GREEN units preserve the previous default28 results.
+No global Decimal mutation, financial policy revision, persisted-plan migration,
+frozen result rewrite or claim of an observed deployed loss. Source financial
+integrity and real after-start forward acceptance remain independent required gates.
+
+## 2026-10-14 v1.2 — stop the unrelated April correction lead
+
+Read the complete official300147 notice59214209/2011-021, not just its generic
+correction title. It changes an equity-transfer appraisal reference in2011-016;
+it does not correct either disputed share-class table. Preserve the PDF, source
+identity, timestamp/checksum and negative finding privately. Do not reacquire this
+notice, silently repair table arithmetic or infer no other correction exists.
+300147/000425 remain unresolved. Move to independent required product checks until
+a materially different source hypothesis is established; source rights, genuine
+missing-ledger evidence and full product acceptance remain separate obligations.
+
+## 2026-10-14 v1.2 — blocked-data recovery and deployment API origin
+
+Keep execution blocked on failed source/economic verification while providing
+read-only cached-version, saved-research and focused bilingual-help navigation.
+Reuse existing Link/help components; no automatic synthetic fallback or new task.
+Actual preview and production browser checks are separate gates. The first build
+incorrectly used the preview's same-origin API address on static-only nginx;
+actual5173 QA failed and the old index was atomically restored. Retain that
+failure. Corrected build explicitly pins existing localhost8000; no nginx/CORS
+security changes, backend restart or data restore. Preserve both asset sets and
+fresh index backups; bytes served and service health alone are not browser proof.
+Full U1-U8 acceptance and source rights/coverage obligations remain unchanged.
+
+## 2026-10-14 v1.2 — distinguish current inventory type from daily authority
+
+Correct the September23 inventory description:5222 records are not all ordinary
+A shares. Reuse572 cached official STAR type overviews; acquire only46 specific
+missing overviews in one bounded no-retry batch. Source bytes and receipts reconcile
+the retained inventory to5221ordinaryA/1CDR/0unknown types;689009 is explicitlyCDR.
+Do not rerun the Pilot master collector, which discards186later listings here.
+No backdating, fabricated publication/receipt times, current-name ST inference,
+missing-event normality or source admission. Mixed-date type corroboration is a
+prerequisite, not an executable current universe. Preserve all frozen research.
+
+Independent review found a future restart could retry an interrupted request
+without a terminal receipt. Preserve the actually executedv1 script, add an
+exclusive pre-network attempt marker in the successor and prove interruption
+stops reopening without network tests. Do not rerun or retroactively add attempt
+timestamps to this successful46-response batch. See SOURCE_READINESS and private
+20261014-real-source-inventory evidence for exact hashes and remaining authorities.
+
+## 2026-10-14 v1.2 — consume qualified daily facts through the existing paper runtime
+
+Keep V1 journals compatible. V2 removes the requirement to author future daily
+facts but does not remove independent source qualification: server composition
+registers no real verifier until its parsers and completeness evidence are accepted.
+The candidate flag, root hash and local recapture time cannot approve themselves.
+Pin source observations separately from candidate capture/DB registration; validate
+whole-period fixed authority/cost coverage before account creation. Wait for both
+qualified context and raw receipts, preserve exact consumed context on replay,
+reject conflicts for new days and never skip a missing day. Live and resume share
+the input time lower bound, rejecting clock rollback without fabricating UTC.
+
+Independent read-only review reproduced an expired-root creation and a pre-receipt
+commit marker. Both became regression tests and passed the same independent
+counterexamples after repair. Actual PG tests cover receipts/account/journal,
+REST/ASGI and new-manager resume; their V2 context oracle remains synthetic/in-memory.
+Separate candidate-store tests cover real PG exact-pin reads and corrupted sources.
+These are not an end-to-end real official acquisition or full U7 proof. No migration,
+runtime restart, provider acquisition, financial admission, strategy/OOS or release.
+
+## 2026-10-14 v1.2 — candidate arrival is not source admission
+
+Implement the daily arrival persistence boundary first, reusing immutable files
+and existing PostgreSQL append-only triggers. Stored candidates have no execution
+approval. Their publication time, first durable local capture and DB registration
+are distinct. Identity includes the root, parser and frame; changing that identity
+is not proof of new upstream information. V2 source qualification must independently
+establish causal source observation, not promote this candidate flag or timestamp.
+Keep original evidence, all conflicts and explicit read budgets; no latest-wins.
+
+Independent review's concurrent later-winner test reproduced stale-clock rejection.
+Refresh current time after reading the immutable winning intent; preserve its time.
+Failed DB registration leaves evidence for retry, not an admitted or consumed input.
+
+Docker restoration unexpectedly auto-started the bind-mounted backend and its
+Alembic command applied0018. Preserve and disclose this additive empty-table state,
+verify selected original records, test rollback only in quant_test, and retain
+schema-aware code. Future Docker starts must inspect unpublished migrations and
+restart commands; use source isolation for migration development. No claim that
+the previous publication backup/equality receipt covers this automatic restart.
+
+## 2026-10-13 v1.2 — next context-arrival unit and scoped rollout evidence
+
+Independent review maps the next U7 slice to a V2 immutable eligibility/warmup/
+known-calendar root and append-only dated context registration in existing
+PostgreSQL, with reversible additive migration and a real source-validating
+ingestion entry point. Persist actual first observation separately from source
+publication/registration times; repeated identical input cannot move the first
+time. New conflicting versions stay conflicts, not silent replacements. No HTTP
+approved flag or test source may establish source admission. Keep the finite
+account date boundary and explicit resource limits rather than an endless daemon.
+
+Consume only when both canonical raw and qualified context are available before
+the causal deadline. Bind context ID/SHA and observation UTC with market/plan/
+portfolio provenance; resume by consumed pin, preserving V1 journal compatibility,
+original account start and existing INTERRUPTED behavior. Tests must cover either
+arrival order after start, missing/late/conflicting facts, duplicate registration,
+DB/commit failures and pause/new-manager replay without duplicate fills.
+
+Rollout review also establishes that the public forward capability is fixed false,
+not proof of absent server configuration. Publication separately inspected both
+relevant Settings as absent. The old receipt diagnostic is intentionally also
+returned on its bound observation; strict compatibility permits just that field
+for the two pinned receipts, not arbitrary raw-data changes. Original verifier
+failures were retained and corrected with22tests, without another service restart.
+
+## 2026-10-13 v1.2 — receipt bridge boundaries and next daily-context gap
+
+Final review also reproduced base transaction-cost disagreement and uncovered
+dates. Reject these at source admission, before the existing explicit user broker
+commission overrides. Require one base schedule per warmup/forward date, equal to
+all rule contexts. Retain the existing conservative buying-power estimate; do not
+claim it equals effective-dated final fill fees or silently change methodology.
+Receipt reconciliation budget scales with the admitted universe; overflow fails
+explicitly rather than silently truncating or excluding the1001st security.
+
+Retained raw bytes must reproduce normalized receipt rows; recomputing hashes
+alone cannot authorize a changed price or coerced Boolean. The two previously
+documented immutable parser-label exceptions keep original evidence, receive an
+inspection diagnostic, and remain rejected by strict execution verification.
+
+The initial forward bridge reuses the actual manager, RiskEngine, OMS, Portfolio,
+plan and atomic journal. Synthetic contract tests are engineering evidence only.
+Its fixed daily-context manifest is a finite prerequisite: it cannot prove future
+ST, suspension, adjustment or corporate-action facts, nor support newly arriving
+daily context after account start. Independent design review identifies this as
+the next required U7 integration gap, not a completed forward mode. Preserve
+immutable source eligibility and add separately pinned append-only dated context
+arrivals and replay bindings; do not infer facts from missing events or vendor flags.
+
+Review also reproduced stale-clock rejection during a receipt read and frontend
+acceptance of internally consistent provenance from the wrong saved admission.
+Both require root-cause shared guards and negative tests. A failed disposable-PG
+test attempted DELETE against append-only evidence and masked its invalid API
+fixture field. Fix only the test request and guarded quant_test cleanup; never
+weaken the production append-only trigger. Original failure evidence remains.
+
+## v1.2 Bind new-market processing to verified receipts and causal dates — 2026-10-13
+
+The receipt cache records facts, not execution admission. The new-market path
+must verify the original raw response against normalized rows, retain the first
+canonical observation's receipt, and bind independently accepted calendar,
+security status, rules, actions and costs. Reacquiring an old row after account
+start must not create a new first-seen time. A late daily input must not create
+an order retrospectively executable at an opening that already occurred.
+
+Reuse the current paper manager, plans and atomic event journal. Existing paused
+accounts preserve their original start time; interrupted accounts currently do
+not resume. Do not claim automatic process-loss continuation or enable a forward
+mode until its actual source and runtime requirements pass. Private local trial
+terms and complete financial-source admission are distinct questions; no new
+commercial-license requirement is inferred from an incomplete data contract.
+
+## v1.2 Retain the 300147 supporting-source contradiction — 2026-10-13
+
+The bounded official offline-listing notice review found another printed conflict:
+the unrestricted-share row's stated result exceeds its stated total capital.
+Arithmetic cannot silently correct that source or prove the absence of changes
+between March and May. The original event finding remains unresolved.
+[Document review and immutable evidence](<C:/Users/1/Documents/ChatGPT/量化交易/product-evidence/v1.2/m4/20261013-300147-offline-listing-review/README.md>).
+
+The implemented cash-correction loader is narrow; it does not establish a policy
+that only explicit correction notices could ever resolve all source conflicts.
+No independent share-class chain is admitted or implemented here. Continue the
+product connection work without another broad historical acquisition pass.
+
+## v1.2 Keep browser and publication evidence scoped — 2026-10-13
+
+Use the supported Chrome extension's verified local URL for DOM and viewport
+checks; do not retry the rejected native Windows URL-control route. These checks
+cannot establish native foreground timing, system motion or full accessibility.
+Retain the full-page timeout and stale first English screenshot as failed or
+limited observations; use the subsequent final English frame for visual evidence.
+
+The actual recheck button lacked the existing design-system class. Reuse
+`button secondary` without new CSS, components or behavior. Publish this frontend
+change separately from the already loaded backend and retain both asset sets;
+there is no reason to restart PostgreSQL, Redis or backend for this correction.
+
+## v1.2 Check new paper creation without blocking saved recovery — 2026-10-13
+
+Use a read-only endpoint over the existing configured-source and execution-admission
+checks. A checksum, readable history or raw provider receipt does not establish
+financial acceptance or legal forward use. Keep unavailable modes visible with
+reasons instead of silently selecting demo. Current capabilities are a UI hint;
+the server must still validate every new request.
+
+Apply this preflight only to new request creation. Existing idempotent receipt
+recovery must work even after source availability changes. Recheck current page,
+URL and capability after receipt/lock waits, before generating a new request key.
+The observed POST-after-navigation failure is fixed without pretending that
+navigation cancels a request already sent. Read-only rechecks preserve focus and
+form values. Do not add an unused forward adapter or promote candidate data to
+execution: the full admitted-input/receipt/plan/account chain remains required.
+
+## v1.2 Share accepted calendar action validation with candidate audit — 2026-10-13
+
+The execution-only listing guard left the independent candidate audit's component
+gate incomplete. Move it into the existing holding-independent helper and require
+both callers to supply the accepted successor explicitly. None means no successor
+is known, never skip validation. Use accepted open dates and the loader's period-end
+successor; an absent security bar cannot erase a real trading session.
+
+Preserve same-ex/next/null and rights behavior, pre-mutation refusal and source-code
+pins. Keep the separate reference-price failures and15 financial/lifecycle gates
+unproven. Eight retained synthetic cases and216related tests prove this boundary,
+not actual registry facts, real-data financial admission or full U7 acceptance.
+The original failing temporary directory disappeared before archival; report the
+true RED tool output, not a fabricated retained artifact.
+
+## v1.2 Publish reviewed guards without rebuilding services — 2026-10-13
+
+Only existing backend89aa restarted after exact-head CI, a fresh private logical
+backup, terminal legacy/product jobs, stopped accounts and no pending receipts.
+Schema0017 and migration source were unchanged, so startup Alembic was a no-op.
+All32 selected HTTP bodies and product/frontend file hashes remained equal;
+PG/Redis/frontend were not restarted. Preserve backup d3104ca3 and compatible
+prior source725d6e8; never overwrite later user data with this backup.
+
+Publication verification now fails if both snapshots omit required records or
+pins. Explicit completeness checks survive Python optimization; the prior helper
+is reused with -E without editing its historical evidence.2RED→17PASS and final
+independent review support this scoped check, not every table or raw ledger key.
+The full product goal and all genuine source/financial/browser gates remain open.
+
+## v1.2 Synchronize test effects before native cross tab events — 2026-10-13
+
+Keep the original failed CI run38383415919 and its complete log. Its sole frontend
+failure came from observing a rendered button before React's passive unload
+listener was committed. A controlled DOM probe reproduced the scheduling gap;
+awaiting the same mount through act removed it. Apply that barrier to both native
+cross-tab tests, without sleep, retry, weaker assertions or production changes.
+This corrects test initialization, not a new browser acceptance claim.
+
+For the pending date-guard deployment, extend the existing quiescence check to
+legacy backtest_runs: synchronous legacy requests are absent from product jobs.
+Require only SUCCEEDED/FAILED legacy runs, terminal product jobs, STOPPED accounts
+and no pending receipts. Snapshot checks are not a write lock; compare again
+immediately before restart and afterward. Never restore over later user writes.
+
+## v1.2 Enforce existing ordinary action date support before accounting — 2026-10-13
+
+Verified source checksums do not make an unsupported settlement schedule safe.
+An isolated counterexample showed known future cash payment credited on ex date;
+another allowed a200-share sale before new bonus shares were listed when only100
+old shares existed. Reject these cases before changing cash, shares, pending orders
+or the active session; do not invent receivables or separately locked shares.
+
+Reuse shared ordinary-action validation for known effective/record/payment dates.
+Apply listing validation in the session engine, where the accepted next trading
+date is available. Preserve the existing same-ex and next-accepted-session paths:
+all286 explicit delayed listings in the frozen archive are exactly next session.
+A blanket listing-equals-ex requirement would wrongly reject that approved path.
+If a future listing has no known next calendar session, fail closed without guessing.
+Rights retain their independent policy; null legacy metadata remains unknown.
+
+Keep the real300155 action identities and old-to-new lineage, but label proof
+positions/prices/calendar/rules as synthetic. Preserve original source negatives,
+frozen reports and OOS.71new/659related tests and reproducible actual-term proof
+c9390065 establish this bounded fix, not tax-specific settlement, source-economic
+admission, actual after-start forward simulation or complete product acceptance.
+
+## v1.2 Derive successor dates without rewriting original events — 2026-10-13
+
+Use one versioned, pinned date inventory for both the materializer and auditor.
+The input selects original event checksums and source PDFs; it cannot declare
+replacement dates. Verify the actual issuer/title, record/ex dates and explicit
+cash-transfer or all-holder credit/listing statements. A quoted final title,
+tentative statement or holder-specific payment arrangement is insufficient.
+
+Replace only the missing payment/listing field and regenerate the event checksum.
+Retain the full original acceptance object under explicit lineage, including old
+metadata-gap flags. Do not change amounts, source-record identity, completeness,
+tradability or financial admission. Limit this path to the existing same-ex-date
+case; a later date does not establish delayed entitlement-accounting support.
+Require new verified price companions when their bound event hashes change,
+rather than silently re-signing old references.
+
+Independent review exposed permissive title/context matches; new negative cases
+now reject them. A broad holder-clause guard also rejected actual tax-rate text,
+so that guard now requires a dated payment statement rather than treating every
+cash amount as a conflicting schedule. Existing frozen research and unresolved
+source-economic findings remain authoritative historical evidence.
+
+## v1.2 Bind corrections without erasing negative evidence — 2026-10-13
+
+Extend the existing candidate-audit gap input with a complete immutable parent
+inventory and pinned original/correction PDFs plus official metadata. Derive the
+explanation from those bytes, not a sidecar's self-declared PASS. Keep the old
+negative findings and attach a separate source-text resolution. Every candidate
+cash/bonus leg must preserve identity, provenance and exact per-holder terms;
+all known explanations together can yield only NOT_EVIDENCED, never economic PASS.
+
+Support the reviewed full one-page correction layout only. Independent review
+demonstrated that stopping at the apology marker could hide a second material
+correction; whole-page matching now rejects this. Record official intraday
+publication, not midnight or download time. Original event hashes remain historical
+lineage, while separately proven date normalization may legitimately change new
+hashes. No frozen event, price-only companion, financial rule or approval changes.
+
+## v1.2 Accept an official cash text correction without rewriting history — 2026-10-13
+
+Use issuer2011-038 (CNINFO59352083, PDF SHA d36fe20a) to explain the specific
+300155 cash-total contradiction in2011-037. It corrects only the aggregate;
+base shares and gross8 CNY per10 shares remain unchanged. Do not alter the cash
+formula, manufacture an economic event or use a price-basis ORDINARY_REFERENCE.
+The narrow all-category official index found the correction missed by earlier
+implementation-title queries; this is not a restart of historical acquisition.
+
+Preserve CNINFO publication2011-04-27 15:53 Asia/Shanghai separately from issuer
+signature, original notice,2026 retrieval and retrospective December discovery.
+No decision before publication may use it. Retain the original three negative
+records and six affected legs; layer the verified explanation with exact source
+and lineage pins. Future date-normalized events need explicit old-to-new mapping,
+not forced equality with old checksums. Source300147/000425 and whole economic,
+lifecycle and runtime-admission requirements remain open. Local/full-product
+acceptance is not implied by this single official correction.
+
+## v1.2 Preserve journals during local PnL deployment — 2026-10-13
+
+Publish the tested exact-PnL and source-identity changes without rebuilding the
+original containers or rewriting old records. Verify current schema equals source
+head, terminal jobs/accounts and absent pending receipt intents; retain a private
+logical dump/product/frontend backup before the one backend restart. Observed
+post-restart HTTP values, statuses, event counts and product cache must match.
+This is selected-record preservation, not an all-table audit or lost-ledger repair.
+
+Frontend publication verifies assets before the atomic index switch and restores
+the retained index on post-switch failure even if diagnostic-file writing fails.
+Keep both asset sets. Prior backend replay is incompatible with newly versioned
+PnL journals: after new writes, frontend-only rollback with the compatible backend
+is the default safe boundary, never a silent old-database restore. Four mocked
+publication paths and real deployment passed; actual rollback was not exercised.
+New persistence cases cover JSONB/REST/ASGI JSON frames, not real-browser acceptance.
+The full product remains PARTIAL and source/rights/browser gates are unchanged.
+
+## v1.2 Version paper PnL without rewriting old journals — 2026-10-13
+
+Transport the portfolio engine's existing corporate-action and total PnL as exact
+strings under `PNL_BREAKDOWN_V1`; do not calculate them in React or change the
+domain methodology. Trading realized PnL remains before separately reported
+transaction costs. Missing old fields mean unknown, not zero or retrospective
+recalculation. Recovery compares kind/order/all payload fields and only strips
+the three newly emitted fields when the saved snapshot lacks all three. Partial
+or damaged versioned snapshots still fail replay matching before new append.
+Both providers, mixed histories and repeated resume have regression coverage.
+
+Command search must honor the same saved-source identity as watchlist inspection.
+Share the guard; retain unavailable results as visible disabled controls. Execution
+admission and read availability remain different: source-integrity restrictions
+are not removed. Scoped tests/review are not browser acceptance or source approval.
+The changes await live deployment/browser recheck; preserve all frozen assets,
+the genuine missing-ledger limitation and lawful forward-data gate.
+
+
+## v1.2 Historical workflow evidence is not current execution acceptance — 2026-10-08
+
+Reconcile the central acceptance matrix with the existing source/economic FAIL
+and deployed new-execution denial. U3-JOB is IN_PROGRESS, not PASS merely because
+an earlier job reached SUCCEEDED. Retain that job and the scoped synthetic
+idempotency evidence. U6/U7 retained historical records are readable, not an
+audited execution approval. Their prior IN_PROGRESS/FAIL states stay unchanged.
+Independent read-only review confirmed these three documentation contradictions.
+No source policy, financial result, frozen dataset, runtime or release gate changes.
+Do not repeat completed regressions or create speculative code for this correction.
+
+## v1.2 Stop unsupported timing attribution; verify locally during GitHub hold — 2026-10-08
+
+Native Long Tasks/Long Animation Frames plus bounded frame callbacks distinguish
+DOM completion from presentation scheduling. Approximately1Hz callbacks with
+empty script attribution and zero reported blocking do not justify speculative
+React memoization; nor do they prove a specific browser/tool/occlusion cause.
+Retain every old/new sample, do not pool different protocols into p95, and leave
+QA-PERF open until the actual foreground presentation context is established.
+Current tools expose viewport sizing only, not reduced-motion media simulation;
+do not spoof matchMedia or silently change Windows preferences for acceptance.
+
+GitHub unavailability does not prevent full local checks. Reuse cached test
+images and the existing isolated quant_test tmpfs;1730backendPASS/1explicitSKIP,
+848frontendPASS,static/buildPASS and latestmigration0017down/upPASS. No original
+database migration/restart or new financial job. Stop testPG after check handles
+are terminal, preserve all logs/containers, and never promote local green checks
+to remote CI, financial source approval or complete U1-U8/M0-M5 acceptance.
+
+## v1.2 Preserve independent source ambiguity and divergent timing — 2026-10-08
+
+Do not loosen a dates-only guard into source completeness.000425 pre-H-offering
+background is not an H-holder distribution, but the original share-table subtotal
+heading/unit is independently ambiguous. Record it in a new immutable negative
+inventory, preserving the old two facts and all original notices/frozen results.
+Reuse the existing complete-partition negative matcher: six related old legs now
+carry retained evidence, not a whole-security exclusion or an admission policy.
+The later300147 annual report cannot silently fix a2011 event-date table.
+
+For QA-PERF distinguish native first feedback, async DOM readiness and actual
+visible completion. Preserve all three first-filter samples, including3072ms;
+the simultaneous harness wait failure does not establish causality. Do not
+manufacture a p95 from the small mixed-protocol set or optimize speculative
+code. Temporary measurement belongs only on its opt-in local URL and must be
+removed byte-exact without restarting application/data services. Existing warm
+measurements remain scoped historical evidence, not a full performance pass.
+No production-code/financial-methodology change, frozen/OOS mutation or GitHub
+operation; the complete U1-U8/M0-M5 objective remains active and incomplete.
+
+## v1.2 Readable cache is not execution approval — 2026-10-08
+
+Use one existing-flow helper to interpret explicit dataset source findings and
+execution denial for both the wizard and data center. An absent/contradictory
+legacy boolean must not overrule a failed or unverified source. Preserve older
+no-finding compatibility and backend authority; do not create frontend financial
+policy or infer full approval from a readable/frozen archive. Saved drafts must
+revalidate admission before advancing/submitting. Old account/report reads remain.
+
+Remove unsupported audited claims from bilingual paper UI and guides. Actual
+Chrome confirms the original mislabel and revised view-only state. Reuse existing
+source projection rather than adding a duplicate findings endpoint. Publish only
+tested static assets into the verified existing frontend, preserving every old
+non-index asset and the old index outside Git; no backend/database restart.
+Local operation/tests continue independently of GitHub, but do not satisfy its
+release checks. Full product/financial scope remains PARTIAL; GitHub stays HOLD.
+
+## v1.2 Negative source evidence covers base events, never grants approval — 2026-10-08
+
+Treat the existing checksum-bound contradiction inventory as separate audit-only
+evidence. Match the full typed ordinary event set, not only newly proposed overlay
+rows. Retain all gaps, matched checksums, dates and source references; related
+identity changes are unresolved, not repaired facts. Missing/unmatched negative
+evidence remains NOT_EVIDENCED, never a clean economic certificate. Real old base
+contains four legs for the two known contradictory issuer notices; preserve them
+and all original frozen outputs. No whole-security exclusion or methodology change.
+
+Independent review reproduced transient input-symlink path misbinding and an outer
+RIGHTS_ISSUE label hiding a typed ordinary event. Resolve the gap input once and
+filter by typed economic action after parsing either supported container kind.
+Neither fix changes Portfolio or executes a strategy. Full source/lifecycle and
+genuine financial admission remain required; GitHub stays HOLD.
+
+## v1.2 Reuse execution preconditions in candidate audits — 2026-10-08
+
+Extract the existing holding-independent action checks into one pure function in
+the research engine; call it from production before mutation and from the actual
+candidate session scan. Do not instantiate a zero-holdings engine as accounting
+proof. A supported pass-through event plus a same-day raw bar previously escaped
+the audit's calendar/type checks; the synthetic real-builder counterexample now
+fails the new scoped gate. Preserve public chronological/calendar/ordinary/held
+reference error precedence and all financial application order and policies.
+
+No whole financial/lifecycle gate changes to PASS. Loader-provided holder classes
+prove metadata consistency only, not genuine account applicability. Keep source
+contradictions and incomplete full-event economics separate from this engineering
+check. GitHub remains HOLD; no original runtime, frozen data or research mutation.
+
+## v1.2 Candidate audit consumes actual bound bytes, not legacy PASS — 2026-10-08
+
+Use the same explicit successor specification for the existing materializer and
+auditor. Optional ordinary price-reference report is part of input selection;
+its exact event/source/date pairing never changes holder cash/share entitlements.
+Audit compares complete actual event rows to selected sources, parses all kinds,
+and scans real sessions with execution metadata, without a strategy or Portfolio.
+Unrun accounting/lifecycle/restart/order obligations remain NOT_EVIDENCED.
+Audit reports stay immutable outside inputs, repository and owned build roots.
+
+Independent review reproduced three read-binding defects: code fingerprint taken
+after slow input loading; transient A-B-A Parquet replacement; semantically equal
+but byte-different manifest digest. Capture code before loading, parse/hash the
+same partition/manifest bytes and recheck before publication. Shared catalog
+runtime uses the same verified-byte path; no alternative financial implementation.
+One partition buffer is the current memory ceiling, not full-archive performance
+acceptance. Tests remain isolated synthetic evidence; no real successor approved,
+no new human methodology gate, frozen/OOS unchanged. GitHub remains HOLD.
+
+## v1.2 Explicit independent successor inputs, not inherited approval — 2026-10-08
+
+Reuse the full materializer with --build-spec/whole-file SHA and an explicit
+new identity, stable UTC timestamp, 15 contracts, five reference pins, five
+auxiliaries and exact raw/meta selection. Existing v1.2 goal authorizes this
+engineering operation; it does not supply missing source/financial facts or
+create a new human gate. New preflight binds input selection excluding its own
+digest/output paths; inspection-only and copied R5 approval are rejected.
+
+Reuse catalog immutable/freeze/checksum helpers and the raw parser. Read/hash/
+parse the same bytes and bridge selected raw pins into the shared stage.
+Capture producer before expensive loading and compare before publication.
+Owned work/final directories are isolated; resume derives the whole report
+from verified output instead of trusting mutable status/count fields. A missing
+post-rename receipt can be restored without rebuilding a published dataset.
+
+New build output never means financial/audit/registration/freeze approval. Tests
+are explicitly synthetic; keep existing 239/24 and cost conventions unchanged.
+Next wire price-only companions and replace fixed-v1 audit assumptions with
+actual versioned evidence. No real materialization from the inspection bundle.
+No new framework/dependency, research-state mutation, strategy run or GitHub use.
+
+## v1.2 Bind raw checkpoints before version reuse — 2026-10-08
+
+Fix shared raw_stage, not only the planned successor caller. Bind sorted complete
+raw/meta byte hashes, full normalized security/ST intervals (retain duplicates),
+exchange/coverage/fields and explicit parser version. Verify before resume and
+recheck before publication. Legacy unbound receipt or changed input is an error,
+never authority to delete/rebuild published data. Receipt checksum protects all
+lineage/rejection fields; exact same-exchange partition paths and hashes required.
+
+Reuse catalog canonical hashes/freeze guard/immutable writer; no new dependency.
+Parse SZSE from verified bytes. Decimal unit conversion uses an independent context
+with enough digits for exact multiplication, not caller precision. Include metadata
+resolved paths in source/output overlap protection. Immutable receipt publication
+removes the predictable save() temp-file hardlink overwrite; other save callers
+are not changed. Three independent P2 hypotheses were reproduced before fixing.
+
+Unpublished owned .incomplete staging keeps its prior restart cleanup semantics;
+this is not evidence of legacy ownership or full pipeline crash recovery. New
+version inputs and owned work/final/report paths remain explicit next work. No
+real build/approval/freeze/financial PASS follows from synthetic fixture tests.
+
+## v1.2 Repair provenance in an inspection-only successor bundle — 2026-10-08
+
+Use scripts/inspect_source_reference_candidate.py with explicit repository,
+dataset,isolated output,input-proof path+fileSHA and optional evidence path+
+canonicalSHA pairs. Existing full15-source verifier/immutable writer are reused.
+The CLI does not call materialize/audit/freeze or copy the research authorization.
+It creates inspection-preflight/contracts/pins/report JSON,never a dataset manifest.
+
+Correct only the master reference and replacement preflight in a distinct bundle;
+13 other rows and every original byte remain exact. Retained status fields are
+historical source assertions,not new approval. A five-key pin bundle is not project
+state. All artifacts retain financialPARTIAL/noadmission. Whole retained reports
+are bound as historical observations,not reclassified as complete economics.
+
+Independent review exposed dictionary merge hiding a changed original file pin.
+Reproduce with a canonical-preserving P0 whitespace change; reject conflicting
+same-path pins BEFORE first publication,then recheck inputs after work.
+111 source tests and actual immutable repeat verify this correction.
+Successor dataset construction still needs explicit independent version inputs
+and genuine complete preflight;INSPECTION_ONLY must never authorize it.
+No new dependency,original-data mutation,methodology or remote operation.
+
+## v1.2 Preserve original reads during controlled local rollout — 2026-10-08
+
+After current0017/no-active/no-pending checks and retained backup, load existing
+bind-mounted backend with one exact-container restart. Startup recovery is real,
+not read-only; verify selected saved evidence without the denied44-table refresh.
+Publish tested assets first and rename index atomically; retain all old assets.
+This was performed and validated on original8000/5173, not only synthetic QA.
+323-entry proof preserves exact saved results/plans/accounts and independent
+version findings; no original new create/start or strategy run.
+
+Next new-version provenance repair must create separate inspection-only artifacts.
+Reuse full15 contracts and canonical verifier; preserve original65/frozen/.research.
+A valid checksum chain proves integrity, not legal/economic authority or approval.
+Do not copy accepted status from old preflight or run the fixed-v1 materializer.
+No new dependency, methodology/identity/OOS/GitHub change.
+
+## v1.2 Keep source findings separate from economic quality — 2026-10-08
+
+Reuse the existing registry boundary, parser/error map and note style. Exact known
+saved version gets SOURCE_CONTRACT_INTEGRITY_FAILED; other historical pins get
+UNVERIFIED, never optimistic PASS. Check expected SHA against the same registry
+item before execution admission; paper missing pins reject before STARTING.
+Readonly cache inspection and prior idempotent receipts remain legitimate reads.
+
+Project source findings from each saved record's ID+SHA; do not mutate stored
+summary/plan or borrow today's mounted version/plan SHA. One bilingual helper
+renders independent economic/source findings without duplicated note regions.
+Strict unknown-code rejection and source-only aria/plan tests protect UI boundaries.
+1579backend+1optionalSKIP/840frontend/static/type/build/Alembic PASS; independent
+readonly scoped review complete,124private byte bindings sealed02bebe0082.
+
+Isolated browser account/idle WS is explicitly synthetic. Original service health
+is not proof it has loaded these changes. Existing backend-only restart can be
+considered separately after0017/no-active/no-pending/ownership checks; startup is
+not read-only. Keep prior denied scratch/source-copy/44-table-refresh routes stopped.
+No new dependency, dataset approval, frozen/methodology/OOS/identity/GitHub change.
+
+## v1.2 Reuse exact-version quality across all market reads — 2026-10-08
+
+One dataset parser call validates existing metadata in catalog/search/bars.
+Existing bilingual explanation and notice style display it on source selection
+and actual bar detail. No new component/library/calculation or invented PASS.
+9RED→52focused829fullfrontend/static/build; real ENZH historical cache/dates/raw
+prices/watchlist/demo switch plus raw GET evidence confirm scoped behavior.
+Publish tested13 assets on the existing guarded nginx with backup/assets-first/
+atomicindex, not a service restart; old169backup/168nonindex retained. Native222
+byte proof twicePASS/checksum306e8db6; independent readonly no scoped P1/P2.
+
+Keep source-contract integrity independent: this warning neither fixes the65P0
+provenance nor permits new financial execution. Next use the existing shared
+registry for_execution boundary (including paper before STARTING) and exact saved
+version findings, retaining readonly history/idempotency. No hidden source-path
+remapping/new mount or Docker-time complete source validation claim. All original
+frozen/methodology/results/OOS/identity retained; GitHub HOLD/full goal ACTIVE.
+
+## v1.2 Fail closed once at full-dataset source boundaries — 2026-10-08
+
+Reuse existing canonical JSON/SHA helpers (array signature widened, serializer
+unchanged) and one shared contract guard for materializer fresh/resume, audit and
+freeze. Exact15 names, actual source bytes/canonical refs/P0 authority/state pins,
+catalog lineage and eight explicit preflight component references bind before
+build/checkpoints/publication. Two explicit file pins also bind; corporate-actions
+aggregate and raw-coverage report are not individual-ledger references.
+Replace freeze's faulty chained inequalities with four-way equality. Preserve
+legacy65 reference as FAIL and require separately verified future inputs; do not
+normalize frozen/.research or promote full financial admission.
+
+Actual8+4+6 REDs then155focused/1563backend+1existingoptionalSKIP PASS; final readonly
+independent review no scoped P1/P2. Initialfulltest4 failures were test-environment
+faults (one exact accepted policy mount and current child import path), repaired
+only in compose.test.yml. Assertions unchanged; first failed logs retained.
+Native SHA256SUMS verifies49 bytes bindings twice, checksumf5d0262c; no new proof
+framework/dependency. All20 original input hashes unchanged; only synthetic
+fixtures/tmpfs quant_test written. TestPG stopped0/no removal; originalservices
+IDs/starts/health, frozen/tag/OOS/methodology/Git identity preserved.
+
+This reduces an engineering defect, not completes U1–U8 or release. Older backend
+source-bound evidence remains historical. Next visible product fix reuses existing
+economic quality parser/explanations in markets/page/detail; source-integrity is
+a separate status and must not be erased by that notice. GitHub stays HOLD.
+
+## v1.2 Separate a valid official boundary from broken provenance references — 2026-10-08
+
+Do not retrieve002168 dates alreadyexplicit in accepted source candidates.
+Join exact issuer/PDF/URL/record/ex/effective/listing/ratio to existingraw/calendar/
+suspension/PITmaster,not simply replace oracleNOT_EVIDENCED or run a study.
+Newimmutable20payload proof9a3a58d7/c6f8c55a v2 repeats normal/reversed inputs,
+7RAM corruptions rejected;readonly review tightened join and full event-identity
+absence while v1/old7544rows/498candidates/frozen inputs remain unchanged.
+
+Retain genuinefailure:SecurityMastersourcefile/P0 canonicalarray valid,but old
+contract references65hex digest instead of actual64,propagated state→preflight→
+catalog/freeze. All15sourcebytes/14othercanonicalreferences verified independently.
+Not newmethodology or sourcepurchase;not silently normalize an immutable report.
+Newversion engineering must validate digest shape and exact canonical authority
+relationships before any publication/admission. Existingformal/OOS/registry/
+frozen/.research/identity unchanged;fullfinance/goal remainsPARTIAL/ACTIVE.
+GitHubHOLD not a local runtime dependency;sourcecontractFAIL does not mean Docker
+is down. Daily5173/API8000paper/Composehealthy retained;no push/merge/tag/release.
+
+## v1.2 Persist draft pagination at the existing refresh boundary — 2026-10-08
+
+Derived display clamps do not repair underlying offset:after21→20→21 regrowth
+both namedversion/recovery lists jump backpage2. Reproduce four actualENZH REDs,
+then reuse refresh for successful-read stored clamps and details-open;failed
+reads preserve prior page. No new paging/storage layer,dependency or financepath.
+16focused/815full/static/build and actualnativeENZH row/storage/focus boundaries
+pass;readonly reviewer strengthened exact row/old middle-state assertions.
+82payload7d52f070 twicecheckPASS. Publish exacttested API8000 staticfiles guarded/
+assetsfirst/atomicindex,retain161oldassets/index/no restart,13HTTP exactSHA;daily
+savedquery/watchlist intact. OwnedQA stopped/temporarytabsclosed/viewportreset.
+
+This completes the prior specific regrowth case, not fullproduct/AA/financial/
+release acceptance. GitHubHOLD/no requests/push. Frozen/backend/.research/OOS/
+identity unchanged and olderfrontend bindings immutable/historical. Prioritize
+source-to-economic state propagation next:002168 accepted candidate already has
+explicit official credit/list2011-03-28,while stale oracle NOT_EVIDENCED persists.
+Do not retrieve an already-cached clause or merely relabel it financialPASS;
+reconcile actualauthority/calendar/raw/suspension/PITmaster and allinput gaps in
+a new immutable result before any independent dataset execution admission.
+
+## v1.2 Repair cross-tab recovery pagination locally during CI HOLD — 2026-10-08
+
+GitHub CI is not required for the existing local frontend/API. Continue normal
+local checks without requests/push/release while outage HOLD persists. Actual
+recovery-list21→20 case leaves an empty final page; reuse the existing named
+version clamp for its slice and pager, not a new storage/paging abstraction.
+Two actual failing regressions then14focused/813full+static/build PASS; real
+EN/ZH native cross-tab events preserve shared/remaining draft bytes and pager
+focus. Independent review tightened evidence assertions before56payload seal.
+
+Publish the exact tested current-source API8000 static build to the existing
+frontend only:guardedoriginal identity/start/index, retain oldindex/oldassets,
+13actual HTTP SHA matches, no container restart/backend/DB change. Original
+daily query/watchlist preserved. No financial task/research/source replay;
+synthetic origin cannot write. Cleanup verifiedowned QAonly and resetviewport.
+
+This is scoped U3 recovery progress, not complete U3/AA200/performance/financial
+or release acceptance. Derived oldoffset regrowth remains a specific nextcase;
+do not hide it or rerun unchanged green cases. Keep older immutable frontend
+restore proofs historical after UI source changes. Frozen/OOS/methodology/
+identity protected, remote outage and lawfulfeed/genuineledger gates unchanged.
+
+## v1.2 Reconcile saved API identities offline during GitHub HOLD — 2026-10-08
+
+GitHub CI unavailability is not a local runtime prerequisite. Original frontend
+5173/API8000 are freshly HTTP200, Compose3healthy and RedisPONG. Do not restart
+the standalone frontend or run `make up` merely to answer the local-use question;
+that can introduce a5173 conflict. Local test targets use disposable PostgreSQL,
+not the live database; hosted exact-head CI/release remain distinct HOLD gates.
+
+The current-code restore/restart now passes its scoped gate. Its JSON-equality
+check did not establish accounting identities, so reuse its sealed actual API
+files for a separate Decimal reconciliation, without another restore or study.
+Both20date/40position/10fill/18decision captures agree on cash/MV/equity and
+per-date/summary cost50.34364/final equity97579.65636. Three RAM corruptions are
+rejected. Readonly independent review prompted binding both runtime backend
+trees to clean currentsource and documenting all-zero pending values, warmup,
+transaction-component costs and prior-date vs exact-next-session limitations.
+Final4payload proof03a0467a twicePASS; source/financial data unchanged.
+
+Retain known economic coverage gap/negative/null results, genuine missing-ledger
+and lawful-feed gates. This is saved-result projection/accounting consistency,
+not a new financial authority, product completion, OOS or release. No GitHub
+request/push/merge/tag/security or frozen/.research/identity change. Root sole
+checkpoint/privateproof writer; keep these coherent milestone changes local.
+
+## v1.2 Restore the current source against the existing backup, not an old image — 2026-10-08
+
+The recovered nativeWSL Docker bridge permits a distinct existing-host workflow:
+reuse owned tmpfsPG30b1/55471, new absent/empty testrestoreDB and existingWSLsource.
+No newcontainer/archive/sourcecopy or bypass of deniedscratch/original44refresh.
+Verify sealed27backup inputs, native transactionalpg_restore,44pre/43projected
+business fingerprints/18receiptfiles, test-only0016→0017 migration and normal
+currentlifespan. Terminal-only inputs/no journals avoid financial/research replay.
+Bind appprocess to maskedDBtarget/ownerlocks, restart exact ownedAPI, compare
+12REST bodies and reopen savedrecords through source-bound GET-only UIproxy.
+
+Readonly review required process/DB evidence, exactschema and savedHTTPchecks;
+all added. Preserve the first concurrentlog corruption/failed guard/locator/
+closed-tab attempt; Lock and returned fresh tab fix only future evidence. Stop
+ownedprocesses beforeseal;54payload1746a05e repeatedPASS, originalservices/data
+unchanged. This proves currentcode reads an Oct7 post-loss baseline, not latest
+liveequivalence/lostledgers/financial completeness/fullWS/disaster/release.
+Do not treat pastOctober1 as GHrecovery; remoteHOLD remains. Native29.8/socket
+is currently healthy; old missingbridge diagnosis is historical. Fullproduct
+goal persists with remaining financial/forward/quality/delivery gates.
+
+## v1.2 Native failure disclosure needs evidence, not another component — 2026-10-08
+
+Existing details/summary, namedlist and focus-visible worked in actual mobile
+EN/ZH100101 keyboard/AX. No apppatch or dependency: seal27rawframes/fourJPEGs,
+currentserved schema responses and immutable source/build parents. The private
+checker initially mishandled typed failurecontext; fix the checker, not the API.
+Independent review's optionalAX/unboundURL-script/text checks strengthened before
+seal15payloadc64a0b1a/twicerepeatPASS. Missing ZH100 auditframe, fullproviderlog,
+speech/native200/fullAA/financial remain explicit, not recreated after the fact.
+Stoponly fresh-owned QA725834/same30714; originalruntime/frozen/research unchanged.
+
+Advance to application-restore eligibility rather than another unchanged matrix.
+Readonly inspect shows existing Oct2 testcontainers terminal255/PGRedis tmpfs/
+historicalimages and RO oldinputs. Oldreplay cannot prove current0017/sourcebound
+restore. No start/import/sourcecopy/recreate/originalDB/migration performed, and
+no attempt to split/substitute the previously policy-denied newscratch/44table
+refresh operation. Retain historical restore evidence and current gap separately;
+continue other permitted mandatory work, never label wholeproduct/release PASS.
+
+## v1.2 Preserve the actual list URL at the shared Back boundary — 2026-10-08
+
+Real page2 return reproduction showed fixed `/experiments` skipped or replaced
+the nearer `/experiments?compare_from=…` entry after transient source-import failure.
+Reuse existing validated bounded ancestry with a pure nearest same-origin/path
+resolver; one shared Link href/click destination repairs all3 Back callers. Do not
+loosen navigateBack exact matching, add page-specific exceptions or mutate history
+while rendering. Explicit search/hash/external targets and malformed ancestry keep
+their fallback. Independent external-origin P2 addressed before final811 suite;
+RED evidence and all existing assertions retained, no dependency/policy/API change.
+
+Three synthetic paged/query returns and two actual original saved-study bilingual
+returns passed exact context/focus/scroll checks. Original12rows cannot establish
+realpage2; synthetic2031 is not financial/new-market proof. Seal32payload34cfa1cd
+preserves pre-deployment history; subsequent328payload9daca8c0 records localdeploy.
+Reuse owned no-mount Nginx:full old144files backup, retain old immutableassets,
+assets-first/atomicindex publication and actual old5fileSHA rollback→newforward.
+No backend/DB/Redis restart or migration;13 served newhashes/headers200 verified.
+Wrongcompose.yml command failed, corrected service check healthy;never call it an
+application failure. Static runtime override is not a new immutable release image.
+
+Readonly review supports saved endpoints/assets/rollback/service results, not a
+complete independent click trace or atomic-command reconstruction. Root actualtool
+transcript covers those steps;scope remains bounded. Oldcode checker is historical
+after intentional4file changes;oldpayloads not rewritten. No financial admission,
+strategy, frozen/.research/OOS or GitHub action;fullproductgoal staysACTIVE.
+Next run actual failed-detail summary Tab/Enter/Space and named100-IDlist semantics
+on existingGET-only ENZH100101 fixtures, not duplicate Market/content-onlymatrix or
+the known contaminated native-p95 method. All remaining mandatory gates retained.
+
+## v1.2 Seal bounded full-count diagnostics, then target a real paged-return gap — 2026-10-08
+
+Reuse existing parse/schema/detail branch;onlyfour ENZH100101 regression cases,
+not another errorcomponent or financial exception. Actual8unique IABcases show
+full affected count separately from100stableidentities and conditionaltruncation.
+Synthetic GET-only validatedRAM/2031fixtures/no originalSQL/engine/task/trade are
+strictly not real>100holdings/financial/native200/fullAA evidence. Viewport and
+JPEG sizes differ;one exploratoryduplicate is not another case. Independent
+review's evidence gaps closed with README, deterministiccase→JPEG existence
+checks andimmutable30payloadc2ccf215 seal twicePASS;format-onlyfailure retained.
+102focused/798fullfrontend/type/lint/isolatedbuildPASS,notfreshbackend/audit/p95.
+No productioncode/dependency/policy/migration/deploy/originalrestart change.
+
+Do not repeat previouslyaccepted1/nullcontext UI or unchanged contaminatednative
+timing expansion. NextUX-VIEWS requirement has a falsifiable coverage gap: current
+offset20 test returns samejob onbothpages andcannotprove same-row focus/scroll.
+Use22distinctmockIDs/20+2slice as smallestregression;actualrealDB12studies remains
+insufficient for pagedbrowserproof. Full objective unchanged/GitHubHOLD retained.
+
+The single bounded officialSSEdirectory query now identifies the precise missing
+60072520171201 resumptionnotice/PDF1000000000606348. Preserveofficialmetadata,
+snapshotSHA67b421ce andUTC221208,not inferred effective/reference/executionfacts.
+PriorwwwSSEdisclosurePDFroutebotSTOP remains. NewtargetPDFnotrequested;neverclaim
+target403 or usealternatehost/transport/identity. Exact-titleindexonlyderivative/
+earliersources. LegitimateauthenticPDFcopy is thespecificnextsourceinput;cached
+open2.85 isnotNULLpre_close. Wholefinancial andmandatoryproduct/releasegates open.
+
+## v1.2 Net restructuring allocation is not a ratio conflict or extra holder leg — 2026-10-08
+
+Close6007252016 sourcecomponents with the unchanged5-page implementation and
+2-page completion notices. Companytotal1 splitsoriginal-holder0.7/directcreditor-
+administrator0.3;all recipient amounts reconcile. Existingfrozenevent0.7 is not
+corrupt and must not be appended again. No additional0.3holderbonus, full1bonus
+plus original-basis surrender, zeroCASH, compensation or inventedrealizedloss.
+
+The source's special2.85 openingreference uses totalcirculating change1,not the
+holder0.7. Reuse existing Decimal arithmetic andPortfolio paths for bounded checks,
+not a new production model before temporal/execution evidence is complete. Four
+actualloader-to-Portfolio synthetic100/101 × precision6/50 witnesses andduplicate
+guard preservebasis/cash. Wrongtotal-as-holder fixture rejects;no fullruntimePASS.
+
+Preservepublication12-23/12-29,record12-27,ex12-28,scheduledlisting12-29 andreported
+registrycompletionasof12-28 separately. Laterpublication is not backdatedknowledge.
+Freshcachedraw/source comparison establishes a positive-volume2017-12-01 Bar,not
+officialresumption-at-open orpre_close. BothSSEstoppingendpoint11-30 uncertainty
+andmissingpre_close remain;never substituteopen2.85 forpre_close orinfernormalfrom
+missingbars. Nexttarget is the specific2017-11-30/12-01 officialresumption/reference
+evidence chain;do not refetch the historicalarchive or reopen acceptedauthorities.
+
+Immutablewhole7544 parent retained;only1annotation updated. FinancialPARTIAL,
+6583source/lifecycle gaps,1696pending/5711not-evidenced andall otherunknowns remain.
+PrivateV2 canonical919c1fde binds566inputs/57code. V1 retainedpreliminary after
+format-only sourcechange,no currentcodeacceptanceclaim. Repeat/reverse/negative/
+static checks andindependentreadonlyreviews passed;15payloade670084c twice sealed.
+No production/frozen/.research/OOS/SQL/runtime write;localcommit only/GitHubHOLD.
+All mandatory productquality/realforward/genuinelostledger/delivery gates remain.
+
+After sealing this unit, two bounded official-domain search batches (five
+queries) found no usable6007252017-11-30/12-01 terminalnotice. Reject wrongissuer
+index hits; earlierMarch2017 continued-stoppage notices are not resumption.
+No newPDF/source/event/date admitted. Preserve this failed discovery evidence;
+next source retrieval must target the official archive,not repeat loosequeries.
+
+## v1.2 Verify existing shared Market keyboard behavior, no duplicate patch — 2026-10-08
+
+Current sharedDialog/Pagination did not reproduce a new keyboard defect. Close
+the actual bounded IAB gate with16locale/theme/four-size cases,407raw frames and
+three full-loop scenarios;do not add another focus trap or a page workaround.
+40focusedtests plus fresh all13runtime/build byte matches/current10source hashes
+bind the evidence to64c529a/frontendtree744131. No originalSQL/deployment/restart.
+
+Keep exact limits:Back/Forward onlyEN390dark,20JPEGs soft/nonphysicalsize;not
+Chrome/native200/fullAA/p95/fullfinancial/product PASS. Preferences restored;
+independentread-only review no evidenced scopedP1/P2.41payload05ea4544 twice
+immutable;priorbody41/no-holder9 byte-intact. No old-runtime checker promotion.
+Existing report-download STOP remains:no IAB/CDP/alternate browser workaround.
+
+Localapp5173/API8000/3Composehealthy/PONG remains usable during GitHubHOLD.
+Remote recovery requires directhumanconfirmation,not the pastOct1 estimate.
+Preserve frozen693c0b81/v1.1tagf88b5c60 andall financial/source/lifecycle gates.
+Next600725 review separates source70/30allocation/ordinaryholder0.7 fromtotal1
+and specialtotal-ratio reference2.85;listing2016-12-29 is not actualtradability.
+Do not mint0.3ordinaryholder event or closewholefinancial gate byprice match.
+
+## v1.2 Positive holder components precede unrelated no-award terms — 2026-10-08
+
+The shared restructuring_holder_ratio incorrectly returned0 before inspecting
+its existing direct-positive branch when the same notice granted0.7 toordinary
+holders but sent other newshares elsewhere. Reproduce bothsentence orders red2;
+move only the generic no-award check afterdirectpositive/conflictchecks.9focused
+testsPASS. This is a parser rootfix, not a new economic policy or authority rerun.
+
+Close two date-specific official no-holder classifications:6004232018-12-18 and
+6005952021-10-08,total1/holder0/explicitcash0. Keep all originalsource/date/hash
+evidence andcase-independentotherhistory. Never createzero CASH/BONUS or assign
+creditor/investor newshares to the originalholder.4scoped syntheticseed checks
+load the actualemptycase eventlist andpreserveqty/basis/cash,notfullruntimePASS.
+Missingobservations6585→6583 plus2 explicitnegatives;whole7544 andorthogonal
+original1696pending/5711not-evidenced counts retained. Separate specialreference,
+actualtrading/close andfullfinancialgates remainOPEN;600725 component notclosed.
+
+Independentreview foundV1 omitted the importedcashguardmodulehash. RetainV1;
+publish separateV2 with explicitmodulebinding/localGitbytes/currentguards,
+without alteringcases/witnesses/counts. Preserve priorproofpayloads and verify
+the changedhelper's historicalbytes via local58780e8, not silent replacement or
+claimingold runtimecode checker currentPASS. FinalV26f3e0da7/9payload5edde298
+twiceverified,old10+7intact;no originalSQL/frozen/.research/OOS/GitHub mutation.
+GitHubHOLD andrealforward/genuine lost-ledger/currentquality requirements remain.
+Downloadgate alreadyhit chrome:// policydenial: no alternatebrowser/CDP/third
+unobservedclick without a permittedobservable path;work on independentquality.
+
+## v1.2 Full-source reconciliation is not financial coverage — 2026-10-08
+
+Reconstruct the whole42,792 frozen action objects from their six original censuses
+and all15 contracts;keep both merger-v4 execution and structural-v3 provenance,
+and recover actual old approvedpolicy bytes from localGit rather than overwrite.
+187 cash/bonus overlay legs already exist, so never append them.498 unmatched
+source candidates do not automatically create/admit a43,290-row product dataset.
+
+Preserve all7,544 observed oracle keys and the complete V1 report in immutableV2.
+Only38 official contemporaneous monthly B-name/200xxx observations receive
+outside-approved-A scope annotations after SHA/meta/URL/14-cell reparse agreement;
+no stableidentity/event/whole-security exclusion.000771 stays unresolved and its
+potentialalias200771 remains two original observations with differing totalshares.
+Observed keys are not proved independently distinct economic events.
+
+Keep lifecycle separate from economic matches:1,696 separate-listing and5,711
+not-evidenced original observations still require evidence. Two legacy no-holder-
+entitlement classifications need current verification, not synthesizedbonus.
+600725total1/ordinaryholder0.7 needs component review;8cashunknown,2contradictions,
+33supplementalsource gaps and000598 remain blocked. Correct scope counting cannot
+turn PARTIAL into financialPASS. New immutable full proof10payload3b5d05f9 is
+scoped verification only;no frozen/.research/study/OOS or GitHub mutation.
+
+
+## v1.2 Reconcile existing economic keys before candidate integration — 2026-10-08
+
+The new V30 overlay reuses approved cash/bonus/Portfolio paths for44 actual
+synthetic holding witnesses,21 positive pairs+1 explicit-zero BONUS-only. Preserve
+the previous72 full event/case objects and144 old checks without claiming rerun.
+Generic source-SHA/event-key gap lookup blocks300147/155; all8 unknown cash and
+33 source gaps stay visible. Do not create a fictional zero-cash dividend or
+derive payment dates. No new financial convention or production model change.
+
+The intended187 overlay legs are all already present in the frozen42792 actions
+with matching economic fields and source PDF SHA. Relative-to-old40353/498
+"new source" does not mean new frozen economic event. Future full product
+materialization must reconcile stable and economic identity, expose provenance/
+checksum differences, retain all kinds and all7407+137 oracle rows, and never
+append duplicates. Frozen base itself contains147/155 contradictions: gate that
+base as well, not only additions.498 other retained bonus candidates are pending
+full economics, not implicitly admitted by this supplemental check.
+
+419 actual bindings/two identical runs/reference-list reversal/negative-O/static
+and two independent readonly reviews PASS within scope; no remaining evidenced
+P1/P2. Four development failures and guard fixes retained before first publication.
+Candidate d10421c3 is private14.8MB; seven-payload f574198a seal verified twice,
+previous six-payload preflight seal intact. No full test/browser rerun, dataset
+registration/execution, original SQL/deployment, frozen/.research/OOS or GitHub
+request/push/merge/tag/release. All original U1–U8/M0–M5 remain required.
+
+## v1.2 Carry V30 into independent financial checks, not source-count admission — 2026-10-08
+
+Old cash overlay used78 source-pass rows. New immutable private preflight processes
+all104 V30 passes using existing financial/rule helpers and current production
+suspension-open index. Reject optimized Python, bind303 inputs/101 code/12 frozen
+partitions, reverse/repeat checks; all78 old outcomes exactly equal and original
+498/498/7407/137 whole rows preserved.26 new rows yield23 positive-cash reference
+relationships,1 explicit no-cash300142,2 missing explicit cash300053/090. Total104
+is95 cash-leg missing/1 explicitzero/8 cash-unknown; not104 admitted economic events.
+
+Do not interpret a capital-reserve-only notice as zero cash.300142 contains explicit
+no-cash prose, unlike300053/090. Known300147 unrestricted aggregate0 versus3100→6200
+and30015572000000*0.8 versus contradictory576000000 persist as event-specific,
+source-SHA-bound gap data. Price equality cannot clear them. Next overlay must
+block those exact evidence gaps generically, preserve old72 whole, and validate
+bonus-only accounting without inventing zero-cash dividends. No new policy/formula,
+whole-security exclusion or source correction. Financial/dataset/full-product false.
+
+Independent scoped readonly review verifies current bindings/whole outcomes; no
+reviewer tests/producer/SQL/network.6-payload7a099904 immutable seal twice preserves
+prior27 action-record proof; first verifier lintE731 corrected before execution.
+No original DB/provider/strategy/frozen/.research/OOS/GitHub action. Entire U1-U8/
+M0-M5 and real forward/ledger/quality/delivery/remote release gates remain required.
+
+## v1.2 Validate event carriers before point-in-time filtering — 2026-10-08
+
+Production FullDataset validated only price-only references, so wrong carrier
+dates/checksums in seven accounting kinds could be silently accepted or hidden
+after cutoff. Reuse each existing model's approved application boundary/checksum
+once in the shared loader before filtering. Preserve 600649 research/legal date
+distinction, future exclusion, reference error codes and financial formulas.
+28 RED cases plus37 final new regressions and1461 backend/optional1SKIP/static/
+Alembiccheck pass. No API/model/checksum/Portfolio/migration change.
+
+Actual42792 frozen records/all retained kinds load consistently under current code,
+but compatibility is not a new economic census. Complete570 bonus PIT/ex raw and
+suspension observations retain002549 blocked; non-suspension is not authorization.
+000598 original issuer/public-holder and exchange-summary fields remain distinct,
+with unresolved aggregate and displayed-rate contradictions; equal rounded10.82
+reference is not financial-input equality. Do not change cash/tolerance or old data.
+V3 repeated and independently checked57code10input73partition bindings;23-payload
+seal c624e775 preserves prior22; reviewed README108 assertion superseded by actual37
+receipt in new27-payload V2 seal72158689, with original23/seal unchanged. Private
+report V1/V2 are nonaccepted diagnostics, no lost producer
+repeatability claim. Wrong-path and test-namespace rejection preserved/corrected.
+Original services/frozen/tag unchanged; original SQL counts not freshly queried,
+backend rollout not yet proven. No research/OOS/remote write or dataset admission.
+
+Next integrate V30 through a NEW independent supplemental financial candidate:
+104 source-pass keys contain old72 plus32 new-to-overlay (26 newly source-cleared,
+6 still missing explicit gross cash), none in old498 bonus/40353 cash. Reuse existing
+financial/accounting helpers and preserve all action classes/full coverage oracle.
+Never substitute source-only counts for financial/event/dataset/user-flow acceptance.
+Full U1-U8/M0-M5, forward/lost-ledger/quality/delivery and remote gates remain intact.
+
+## v1.2 Prove committed diagnostic SQL without altering original failures — 2026-10-08
+
+Existingmanagerreopen was sameprocess;historicaltemporaryseed unavailable/tmpfs
+stop is not durable. Oneguardedrunnabletest reuses normalterminal/strictresponse
+andtwoindependentprocesses in ownedquant_test. Readonlyreview exposes assert-only
+CLIisolationP1: reuse nonassertconftestguard+runtimeargumentchecks beforeSQL;
+negative-Opaths validate andpositiveoptguard prevents silent assertion removal.
+Actual16709/16734opt0 preservecompleteJSON;readISNULL/jsonb_typeof separately rather
+thaninfer SQLstorage from API null. Actualfreshunknownrow SQLNULL,not proof ofold
+migratedrow; noproductionJSONB/accounting change orfake historical execution.
+Final1424backend1optionalSKIP/static/AlembiccheckPASS/22payloadd500a742twice/prior41
+retained. Originalcounts/schema/app/frozen/tag unchanged/testPGstopped0retained.
+Onlycommittedcontextacrosschildlifetimes whilePGalive accepted; precommitcrash,
+physicalDBloss/oldledger/fullfinancial/productquality remain distinct. Current
+fullgoal prioritiesreturntoeconomicallytrustworthyAshare/newversion andfulluser
+quality/delivery, not more tinyCSS or downloaded-source counts. GitHubhold retained.
+
+## v1.2 Inherit the existing body size across mode/help/actionable errors — 2026-10-08
+
+Actualroot15 versusmode/error13/help14 andallsharedcallers justify deleting7CSS
+lines, notaddingtokens/dependencies/changingbuttons orfinancialcontent. Source
+guard1RED andfinal794frontend/static/audit0 plusactualIAB16Help/4validmodal/cache
+error DOM close only this bounded readability defect. DesktopJPEGsoft stays a
+visual-proof limitation, not hidden PASS;452defaultphone-request mismatch retained
+andcorrected, AXcheckboxno-match retargetedfromfreshDOMbuttons. Restoreuserprefs.
+Keepfirstunsupportedcontainercpfailure;hoststagingassets/atomicindex/oldrollback
+closesdeployment withoutserviceDBrestart.41payload81cee057twice/prior170protected;
+original0017/selectedcounts/frozen/tag preserved, ownedidleNode137notOOM retained.
+Next useexistingstrictquant_test/normalterminaltransaction andtwoindependent
+processes forcommittederrorcontext SQLwitness;do not mutateoriginalfailedjobs or
+retrydenied44table/clean-demo/PSroutes. Fullproduct/financial/AA/forward/ledger/
+exactremoteCIrelease gates retained; no GitHub action whilehold remains.
+
+## v1.2 Synchronize comparison source navigation without a global router rewrite — 2026-10-08
+
+Actual same-path navigation leaves ExperimentsPage mounted. Imperatively reading
+compare_from only on retry misses query removal, batched A->B->A and saved clean
+history entries. Four original regressions and three independent review regressions
+reproduced these defects. Reuse local popstate/search pattern, a synchronous query
+ref plus revision, abort old reads and restore only explicitly owned selections.
+Successful/terminal URL cleanup retains its actual selection/error; locale/hash,
+filters and pagination are independent. No dependencies/global route abstraction.
+Two epoch hypothesis tests passed without another change: no RED, no invented
+defect or speculative epoch layer. Final793frontend/49comparison/static/audit PASS.
+
+Deploy only existing frontend assets then atomicindex, retain fullrollback/oldassets.
+Actual available IAB walked existing two-job selection/compare/BackForward and16
+corrected picker layouts; Chrome unavailable, no simulated latency/new task or
+whole AA/native200/p95/financial certification. Preserve stale observation/frame
+as chronology, not accepted replacement proof. Original0017/selectedcounts/health/
+frozen/tag remain;no originalbackend/PGRedisrestart/migration/OOS. Stop only exact
+owned idleNode7969 after fresh identity/top, retain dependencies/data. 170payload
+private seal2d4ea856 twice preserves prior6. Root solewriter/reviewerreadonly/no
+remaining evidenced scopedP1/P2. GitHub hold remains; fullU1-U8/M0-M5 unchanged.
+
+## v1.2 Separate historical source proof from actual runtime recovery — 2026-10-08
+
+Recover interruption without redoing accepted source/test work:8b6257c and V30
+104/137sourcePASS33unresolved are bound to existing23source/276batch checksums,
+165focused/1423backend1optionalSKIP and isolated reversible migration results.
+Original146147 effective dates remain independent; complete weekday/comma fields,
+page counters between complete fields and identical running margins only are shared
+syntax.156 raw typo/147 table contradiction not repaired or financially admitted.
+Readonly review/29payloadseal49052186d preserve prior45; full objective unchanged.
+
+Oct8 actual Desktop had exited, not the earlier AF_UNIX failure. Start the installed
+Desktop normally once; do not reinstall/reset/toggle security or delete data.
+NativeDocker/Compose and newnetworknoneROmount then PASS. Existing backend startup
+automatically upgraded0016→0017; record this actual production change separately
+from historical source receipt's no-migration flags. Original volumes, mounted
+source/archive SHA and selected7table counts retained; no claim full44-row integrity,
+lost-ledger restoration or current fullbrowser/financial acceptance. Old denied
+PowerShell fingerprint refresh is NOT retried through another interpreter.
+Runtime6payloadseala67e6857 preserves prior27backup; Docker bridge blocker resolved.
+Missing lawful forward authority/genuine old ledgers and full product gates remain.
+
+## v1.2 Share listing grammar with its tentative guard — 2026-10-07
+
+Full six-page review of existing155169 originals supports exact implementation
+metadata/bare截止/credit-heading/dotted-section syntax, not inferred economic dates.
+Independent review and RED checks exposed discussion-only listing being matched
+inside section prefixes, including optional titles and numeric chapters. Reuse the
+same listing_section and listing_term for matching and tentative rejection; do not
+maintain a second partial grammar. Reject a broad chapter guard because it changes
+existing credit diagnostics; old assertions untouched. Unsupported numeric/title
+combinations stay unsupported. Original155 contradictory cash total is retained
+explicitly, not silently repaired or admitted by the bonus syntax result.
+
+Final source d96daa3:161focused,1419backend/one optional archive skip,static checks
+and isolated migration cycle pass;scoped independentP2 closed. FINALV29 102/137
+source-onlyPASS35unresolved;old100 wholePASS/135whole rows preserved.45-payload
+private seal dad407da/prior23 preserved. Economic/event/dataset/product acceptance
+remain separate. Original0016/services/frozen/OOS/tag unchanged;GitHubhold and full
+product goal remain. Next146147156fulloriginalclassification before sharedrepair.
+
+## v1.2 A numbered ex-date chain preserves independent listing evidence — 2026-10-07
+
+Complete090original/all2pages states separate numbered record/除权日/unrestricted
+listing fields and full dated all-holder/direct-share-account credit. Add only
+the exact full heading and secondlabel to shared metadata; the listing field must
+still independently match ex-date. Missingrole/unknownmetadata/date-page/second
+listing conflict negatives remain.066all3pages only可流通metadata and structures:
+keep sourcegap unresolved; neither duplicated为 repair nor table inference allowed.
+2RED→141focused1399backend1optionalSKIP/static/test-onlymigration PASS;V25only090changes/
+old99PASS136wholeunchanged/276bindings. Source57a1318/23payloadseal0fb9bad1/prior24preserved.
+Original0016/services/frozen/tag untouched/GitHubhold/fullgoalACTIVE;no financialadmission.
+Next155169fulloriginal classification before boundedsharedgrammar,not per-symbol exceptions.
+
+## v1.2 Full scheme holder identity is a reviewed shared alias — 2026-10-07
+
+Original099103 notices/all7pages have complete effective-dated all-holder cutoff,
+direct share-account credit and independent unrestricted listing. The full
+利润分配及资本公积金转增股本方案 declaration/metadata/heading and 实施方法 heading
+are literal source syntax, not per-symbol exceptions or table-derived authority.
+Four bounded shared aliases close both sourceguards; date/page/conflicting-holder/
+account/independent listing/source SHA/ratio/lifecycle negatives remain.
+2RED→139focused1397backend1optionalSKIP/static/test-onlymigration PASS;V24only099103
+change/old97wholePASS135unchanged/276bindings. No economic/fullfinancial admission.
+Source1517e46/24payloadseala8ff3ebf preserveprior19;original0016/app/frozen/tag untouched.
+Next066090fulloriginal inspection before more grammar;known064080listinggaps/
+015yearconflict/121143missing日 retained. FullgoalACTIVE/GitHubhold/scope unchanged.
+
+## v1.2 Complete label syntax cannot replace source authority — 2026-10-07
+
+Reuse sharedholder grammar for complete explicit record labels, balanced date
+parentheses, literal bounded 收/page-counter/市后 and complete adjacent metadata.
+Raw 周 annotations must agree with full dates. RED revealed old holder prose
+swallowed 讨论次日; reject it in the shared root rather than individual callers.
+No arbitrary deletion/date-page join/missing日 or source-year correction.
+Prior13page fullsource review reused;V23closes171215source guards but080still lacks
+independent listing and064has syntax/source gaps.97/137sourcePASS is not financial
+admission. Keep them unresolved;next099103fulloriginal shared-family inspection.
+Full1395backend1optionalSKIP/static/test-onlymigration and readonly review pass;
+source85d4222/19payloadseal523d1c7f preserve previous23+25. Original0016/frozen/tag/
+services intact. GitHubhold remains; full U1–U8/M0–M5 scope/all remaining gates kept.
+
+## v1.2 First parser failure must not conceal another source gap — 2026-10-07
+
+Full4originalPDF13page review distinguishes syntax from genuinely missing evidence.
+064080parentheticalholder forms do not supply independent unrestricted listing;
+the only dated 可流通metadata/table is not accepted unrestricted boundary authority.
+Do not repair grammar then relabel them financialPASS.171215explicit complete
+roles support bounded shared date-label/paired-parenthesis/word-continuation
+experiments,including 周weekday conflicts and strict date/page/section guards.
+All4actualHOLDER_CUTOFF errors remain equalV21/all13795sourcePASS42unresolved;
+no parser edit/admission. Rootfullvisual/SHA/directcache29bindings/independentreadonly
+classification checks/repeat23payloadseal preservepreceding25payloads. Reuse this
+complete source review;next actionable repair171215,064080specificofficial evidence
+gap. Frozen/original data/fullgoal and GitHubhold preserved;no newtest claim.
+
+## v1.2 Closed-session wording is syntax, not inferred timing — 2026-10-07
+
+Both original300078/300113 PDFs/all6pages state a complete date followed by
+收市时, and separate sharecredit/unrestricted listing. Reuse exact sharedholder
+grammar rather than symbol branches or inferred boundary; beforeclose/time-span,
+unknown prose, cross-page date/term, conflict/weekday and missingrole negatives
+stay rejected. Adjacent page-start 转增流通股上市日 metadata never proves unrestricted
+listing; raw full-date guard also rejects third recognized label contradictions.
+4RED/152historicalrelated then126freshfocused/1384backend1optionalSKIP/static/
+test-onlymigrationPASS. Two resumed testcommand errors preserved and corrected
+after actual filename inspection; not test failures hidden as PASS. V21only078113
+advance95source-onlyPASS42unresolved/old93wholePASS135unchanged276bindings/repeat.
+Readonly no evidenced scopedP1P2;25payloadseal/prior36preserved. Original0016/
+frozen/tag/application preserved;ownedtestPGstopped retained,no GitHub/deployment/
+economicadmission/OOS action. Next full source layouts300064300080300171300215;
+fullU1-U8/M0-M5 financial/recovery/forward/quality/release remains ACTIVE.
+
+## v1.2 Recognized metadata must reject contradictions — 2026-10-07
+
+Full3PDF9pages show exactbare 本次权益分派对象:, adjacent numbered可流通上市日
+and 分配办法 syntax; minimal sharedaliases preserve independent financial roles.
+Initialall-rowcheck exposed furthercredit/header gates; do not stop at synthetic
+positive or infer a missing source character.121143literalcredit lacks日;remain
+unresolved.142completeindependentcredit/listing allows source-only PASS, notevent.
+IndependentreviewP2 correctly exposed known metadata dates consumed without
+checking conflict. Reproduce5RED (4old/new1), add shared raw full-date equality/
+calendar guard for both supported 可流通 labels. No metadata does not add a
+requirement; metadata agreement cannot supply independent unrestricted proof.
+Final148related1380backend1optionalSKIP/static/test-onlymigrationPASS;FINALV20
+93source-onlyPASS44unresolved/old92PASS134unchanged276bindings/repeat;V18V19 historical.
+FinalreadonlyP2closed/no remaining evidencedP1P2;36payloadseal/prior44 unchanged.
+Original0016/frozen/tag preserved/testPGstopped retained; no provider/GitHub/
+deployment/strategy/OOS action. Nextfull6pages300078300113literal收市时group;
+fullU1-U8/M0-M5 financial/recovery/forward/quality/release remains ACTIVE.
+
+## v1.2 Displaced boxes remain source text — 2026-10-07
+
+Full6PDF20pages show guarantee boxes above body, displaced by extraction to
+page tails inside holder prose. Global removal regressed accepted metadata;
+reject that approach. Shared holder-only exact complete declarations preserve
+raw text and independent date guards. Partial declarations must not be generic
+prose; fix the common grammar, not individual securities. Correct a no-op negative
+mutation and assert it changes the source. Existing131whole rows/87wholePASS remain.
+All-row recheck also changed300077 ordinary登/记 split; full original3pages
+independently reviewed/SHA/cache verified before accepting source-only PASS.
+Final144related1376backend1optionalSKIP/static/disposablemigrationPASS;V17
+92source-onlyPASS45unresolved, five newPASS and154onlylistinggap. No financial event
+admission or full product PASS;300171/300015 stay unresolved. Independent scoped
+readonly no evidencedP1/P2.44payload seal/prior20 preserved;testPGstopped retained,
+original0016/frozen/tag unchanged. No GitHub/deployment/OOS action.
+Next shared bare-object syntax group300121300142300143 requires full9PDFpages.
+Full U1-U8/M0-M5 remains the active objective, not a parser-only replacement.
+
+## v1.2 Complete numbered metadata and object heading — 2026-10-07
+
+Complete300055/300091 sourcePDFs/full6pages/cache/SHA reviewed. Prefer two exact
+aliases in existing same_day_listing to per-symbol handling or new parsers.
+Repeat 本次权益分派 ex-field prefix and heading 权益分派对象为 are syntax;
+independent record/ex/holder/sharecredit/unrestricted listing facts remain required.
+Existing repeated-title margins already handle continued holder prose; do not
+add another margin stripper. Source meeting-date/cash wording typos remain original
+and source-only bonus PASS does not grant cash or economic authority.
+2RED128focused1360backend1optionalSKIP/static/test-onlymigrationPASS;V16only055091
+changes87source-onlyPASS50unresolved/old85PASS135unchanged/276bindings/repeat.
+27-row cache triage preserves all first-failure holder rows and evidence; overlapping
+layout flags are leads, not full visual review or terminal financial classification.
+Next shared group: six guarantee-margin holder interruptions, full original pages
+first; no arbitrary prose deletion/date joins.300015source2010credit conflict and
+four missing-listing notices remain unresolved without inferred fixes.
+20privatepayloads/prior28preserved;readonly scoped review no evidencedP1/P2.
+Original0016/frozen/tag intact;owned testPG stopped retained. No deployment,
+GitHub/strategy/OOS;complete U1-U8/M0-M5 goal remains ACTIVE.
+
+## v1.2 Source-year conflict is not parser normalization — 2026-10-07
+
+Full original300015PDF/cache/rendered3pages show literal sharecredit2010-09-06
+beside record/ex/listing2011 dates. Do not silently repair the year or accept a
+later annual report as an effective2011 credit declaration. Existing46 cached
+implementation-query pages are not all issuer announcements; no absence claim.
+Only targeted independent official correction/execution evidence can close this gap.
+300062 complete original3page notice has all independent exact dates; shared
+holder metadata adds its literal adjacent fields, reusing already accepted EX_LABEL.
+No arbitrary text/date joins, per-symbol patch or independent-role weakening.
+1RED96focused1358backend1optionalSKIP/static/disposablemigrationPASS; V15only300062
+changes85source-onlyPASS52unresolved/old84wholePASS136unchanged/276bindings/repeat.
+Source-only validation is not full action/reference/lifecycle or dataset admission.
+Private initial seal retained with its empty pending search observation; final
+seal verifies terminal14836 actual receipt, all46 input hashes and prior payloads.
+Do not restart a yielded process or treat an empty observation as completed output.
+Original0016/frozen/tag intact, testPG stopped retained; no deployment/GitHub/OOS.
+
+## v1.2 Failed reads do not prove saved records survived — 2026-10-07
+
+apiRequest can fail on transport, invalidJSON or schema contracts; useApiResource
+then has no data and cannot verify persisted server records. Replace only the
+shared default ProductError copy in both languages with explicit uncertainty,
+local-service retry and safe Help. Browser-readable local drafts remain distinct
+from server record availability. Keep permission/timeout/offline/caller fallbacks
+and request/focus/storage/financial behavior unchanged; no new mechanism.
+8RED/73related/784fullfrontend/static/build/169bindings passed. Actual controlled
+eight Chrome error cases/two real GET keyboard recoveries/normal Help passed;
+zero writes and originals intact. Do not claim controlled errors are real outage
+or lost-ledger restoration. DOM localStorage is unavailable: use existing exact
+byte regression plus visible browser form, without an alternate access channel.
+An observation timeout did not restart any request.153payload private proof sealed,
+frontend-only atomic publication retains oldassets/backups; no DB/backend restart.
+Full product/financial/new-source/recovery/quality/remote release gates remain open.
+
+## v1.2 Local use is independent of remote CI — novice help, not gate bypass
+
+Actual Help lacked local-operation/recovery guidance raised by the user. Reuse
+productHelpTopics once for bilingual Help/search, with stable local-app fragment
+and existing focus behavior. Explain installed local services, safe menu recovery,
+same browser origin and data/financial/CI distinctions. No framework/API/worker.
+6RED65related776frontend/static/build/169bindings passed; scoped actualChrome
+16geometry cases and bilingualkeyboardsearch plus2settledimages. A stale batch
+image is rejected; mobile hides topbar Theme, so change theme at desktop before
+resizing. Preserved complete previous staticfrontend and4entryassets before atomic
+publication; no original service restart/DB migration or frozen/OOS change.
+Read-only independent no evidencedP1/P2; not novice satisfaction/fullAA/financial/
+performance/release acceptance. GitHub hold remains; local checks cannot replace
+remote CI/protected merge/release. Goal stays fullscopeACTIVE.
+
+## v1.2 Distribution metadata is not unrestricted-listing authority — 2026-10-07
+
+Complete four official PDFs/all17pages retain full-cache/SHA provenance. Shared
+complete date metadata and literal holder/credit aliases fix parser layouts,
+without arbitrary prose/date joins or independent-role weakening. FinalV14 still
+84source-onlyPASS53unresolved: four holder failures now expose actual missing
+unrestricted-listing evidence. No new sourcePASS or financial admission. Persist
+precise source/date/pages-searched/next-evidence gap records, not silent exclusions.
+Do not substitute 可流通, cash date or capital table for a dated unrestricted
+declaration; do not keep loosening parser for these four known authority gaps.
+113related/1357backend1optionalSKIP/static/testDB/review proofs preserved and
+39payloadseal reverified, originals/frozen/OOS untouched. WindowsDocker/services
+healthy despite missing WSLnativeCLI; local use/tests need not await GitHub, but
+local checks cannot satisfy remote CI/release gates. Next work rotates to an actual
+user-facing quality requirement rather than another PDF-only iteration; full
+product scope remains incomplete and ACTIVE, GitHub hold unchanged.
+
+## v1.2 Complete holder metadata, not loose section anchors - 2026-10-07
+
+Full300086/3001953pagePDFs rendered/read/SHAchecked and directpypdf/NFKCcache
+equality. Shared holder_metadata accepts omitted numbered list markers/explicit
+cash-redemption field and semicolon only between complete existing record/ex
+terms. Fullrawguards/§/date boundaries and independent share-credit/unrestricted
+listing preserved; no arbitraryskip/datejoin/cashborrow/可流通 inference.
+Original300195EPS-capital discrepancy retained/notaccounting authority.
+2RED107related1351backend+optionalSKIP/static/testDBmigrationPASS; independent
+readonly scoped noP1P2. V12all137/84source-onlyPASS53unresolved/onlytwochanged/
+old82wholePASS135unchanged/276bindings/19payloadc440a303seal. Not economic event,
+lifecycle/newversion or product admission. Original0016/frozen/tag retained,
+owned testPGstopped/retained;no runtime/frontend/browser/GitHub/strategy/OOS.
+Continue remaining32holder layouts and full required user/product gates; keep
+source evidence separate from financial and full product PASS.
+
+## v1.2 Batch holder-layout triage rather than per-security patches — 2026-10-07
+
+Reuse V11 all137 and full sourcecache/provenance for remaining34HOLDER_CUTOFF.
+Literal31收市后/2收市时/1NONE is triage only; all34 remain unresolved. Five-payload
+immutable proof/repeat checks preserve V11seal+276bindings, no reacquisition.
+Next inspect repeated metadata/holder layouts and test a shared exact boundary
+fix; first-role improvement must not hide later credit/unrestricted gaps.
+Actual existingpersonal-result ENZH invalidrange/recovery recheck passed scoped
+focus/ARIA/inputpreservation/clear/summary checks. Not new implementation or broad
+financial/product acceptance. Original ENdarkWorkbench/draft restored; no business
+task/account/order, deployment/provider/GitHub/strategy/OOS or denied-path retry.
+
+## v1.2 Exact whole issuer/notice first line, not arbitrary page text — 2026-10-07
+
+Full cached300126 PDF SHA checked/rendered/read; direct pypdf/NFKC equals cache.
+Repeated extracted code/name/notice-ID line confirmed; rendered header visible
+page1 only. Shared same_day_listing strips it only for expected issuer and an
+identical complete first line including newline on ALL pages. This avoids ID
+014/0141 prefix equivalence; full raw source guards precede strip, § retained.
+Complete2011-04-28 holder/record and2011-04-29 credit/unrestricted listing remain
+required; unrelated2010 meeting date not repaired/inferred. No stock exception,
+arbitrary body skipping/cash borrowing/date join.1RED→105related/1349fullbackend
++optionalSKIP/static/testDBmigrationPASS. Read-only independent scoped noP1P2.
+V11 source-only82PASS55unresolved/only300126/old81wholePASS+136unchanged;
+not financial/event/lifecycle admission. Original0016/frozen/tag unchanged,
+testPG stopped/retained; no deployment/frontend/browser/GitHub/strategy/OOS.
+Continue all required product gates; source evidence is not full product PASS.
+
+## v1.2 Credit account word crosses a page, not its date — 2026-10-07
+
+Complete300198 cachedPDF3pages rendered/read. Permit only 账/帐→page_counter→户
+continuation. Strip identical declared title/company margin only if every extracted
+page begins with the exact prefix. Raw deny guards still inspect full source;
+§ retained, no date/page synthesis or arbitrary section/prose skipping. Three
+RED→87 relatedPASS;1348fullbackend+1optionalSKIP/static/testDBmigrationcyclePASS.
+Independent read-only guards/source/all137/276bindings review no scopedP1/P2.
+V10 source-only81PASS56unresolved,only300198 changed;old80wholePASS/136unchanged,
+ratios/source/identity untouched. Not event or financial admission. Original0016/
+frozen/tag/services preserved,testPGstopped retained,no runtime deployment/new
+browser/currentCI/GitHub/formal/OOS action; all mandatory product gates retained.
+
+## v1.2 Contiguous equity dates and literal capital-credit prefix — 2026-10-07
+
+Complete cached300051 official PDF rendered/read. Reuse existing exact numbered
+metadata chain with 权益分派日期 alias and literal 资本公积所 credit prefix;
+not arbitrary heading skips or inferred dates. Record/cutoff, credit and explicitly
+unrestricted listing remain separate complete dated terms. Three RED then84
+relatedPASS;1345fullbackend/1optionalSKIP/static/testDBmigrationcycle PASS.
+Formatter failure retained/corrected, no originalDB substitution. Independent
+read-only no evidenced scopedP1/P2. V9 source-only80PASS57unresolved,old79wholePASS
+and136wholeunchanged;no ratio/identity/source change or economic event admission.
+Original0016/services/frozen/tag unchanged;testPGstopped retained;no deployment/
+frontend/browser/GitHub/strategy/formal/OOS action. All product gates retained.
+
+## v1.2 Explicit capital-transfer holder object — 2026-10-07
+
+Reuse cached final300053 evidence; full three-page PDF rendered/read, not new
+archive acquisition. Shared same_day_listing adds exact 转增股本对象 heading
+and 本次转增股本对象为 prefix. Complete final issuer/all-holder cutoff/credit/
+unrestricted dates remain mandatory; no 可流通 inference or date repair.
+2RED→81 focused PASS;1342 full backend PASS/one optional archive SKIP, static
+and owned tmpfs testDB migration cycle PASS. Readiness/auth/line-length failures
+retained and corrected, never fallback to originalDB. Independent read-only
+source/276bindings/137rows review no evidenced scopedP1/P2. V8 source-only
+79PASS/58unresolved;old78wholePASS and136wholeunchanged, no ratio or source change.
+Prior V7 closure of300028 remains accepted; old residual-source diagnosis is
+superseded rather than repeated. Source-only is not financial/event admission.
+OriginalDB0016/frozen/tag/services preserved, scratch stopped retained; no
+frontend/backend deployment or new browser/CI claim. GitHub hold continues.
+
+## v1.2 Explain saved universes without rewriting snapshots — 2026-10-07
+
+Actual restore preview leaked ALL/SSE/SZSE as novice-facing values. Reuse
+experiment copy in the common named-version/browser-recovery preview, preserve
+unknown codes rather than guessing ALL, and keep advanced raw metadata exact.
+No new helper/dependency, financial recalculation, storage rewrite or broader
+restore authority. Three bilingual regressions failed on old raw-code output;
+31 focused/770 full frontend tests, 169 source hashes and static/build checks
+pass. Independent read-only review no evidenced scopedP1/P2, unknown fallback
+static-only. No current backend/DB/CI pass inferred from this UI change.
+
+Actual Chrome four paired locale/theme/size previews plus English desktop and
+Chinese mobile save/exit/resume close the previously unobserved caller paths.
+Do not call this the complete cross-product or native200/AA/performance gate.
+Only the pre-existing QA draft was saved; its timestamp may advance, values and
+nine immutable versions remain, no restore or business task was submitted.
+Use settled, visually checked desktop/mobile captures, not generated mockups.
+
+Publish frontend-only through retained complete static snapshots and atomic index
+replacement, keep old assets. Existing owned isolated Node runtime is used for
+frontend verification only; no clean-demo command recreation or forbidden
+container/network/native/browser-policy workaround. Original services/data,
+frozen/formal/OOS assets, Git identity and GitHub hold unchanged. All mandatory
+financial/source/forward/recovery/release work remains in the full goal.
+
+## v1.2 Native dialog edges and current GitHub hold — 2026-10-07
+
+Actual Chrome native modal footer Tab escaped to BODY. Reuse the shared Dialog;
+intercept only unhandled, unmodified Tab at the first/last current visible enabled
+non-inert sequential control. Preserve native interior navigation, child Esc,
+cancel and live trigger restore. No new library or six caller-specific traps.
+Seven focused regressions plus 767 full frontend tests/169 source bindings/static
+checks/build/audit0 PASS. Independent bounded code review found no evidenced
+P1/P2; root performed actual Chrome16 guide combinations and search/strategy
+sibling keyboard/history rechecks. Do not equate this with full AA/native200.
+
+Publish only owned loopback5173 frontend files: back up complete static tree to
+host and container, add current hashed assets, then atomically replace index.
+Keep old assets for open tabs and rollback; no restart of original database or
+backend. Settled screenshots replace lagging batch images as visual evidence,
+without deleting the failed observations.
+
+Latest user reports CI/CD unavailable until October1; current date October7, so
+the estimate does not prove recovery. Earlier successful Actions remain historical.
+Continue local commits and verification, with no GitHub request/push/merge/tag or
+release until availability is established. No billing/security/protection bypass.
+Full product/financial/forward/persistence/release requirements are unchanged.
+
+Post-commit bbc5cc1 independent proof/pixel/doc review complete without evidenced
+scoped P1/P2. Current clean-demo environment attempt hit exhausted Docker default
+network pools, then execution-policy denial before scratch create/copy/start.
+Do not prune networks/change global pools, split the denied command, change tool
+or substitute original DB for clean-install proof. Archive only retained; no new
+containers, migration or jobs. Fresh native Sky inventory is unavailable because
+Trusted RPC is unconfigured; no native input or security configuration workaround.
+Request actual app exports and Chrome200 screenshot from user, then pursue other
+permitted full-scope tasks. These are NOT_RUN, not product or CI PASS. Original
+four services retained; idle Node cleanup137/OOMfalse is not a failed test.
+
+## v1.2 Reference authority is price-only and fail-closed — 2026-10-07
+
+Reuse the existing checksum-bound corporate-actions partition and shared Decimal
+reference helper; do not create a second ledger or accounting engine. A separate
+ORDINARY_REFERENCE model links exact dated cash/share checksums to the final
+issuer's explicit repurchase-excluded price basis. It is not a cash entitlement,
+share quantity or execution-admission marker. Unknown, duplicate, source/date
+mismatched records reject, and original event serialization remains unchanged.
+
+Seven runtime RED cases exposed missing support; low caller Decimal context then
+exposed instability in both adjusted-close views. Preserve normal 28-digit output
+in their shared helper. Independent review found a missing-bar carryover/rights
+bypass; root2RED/2legacyPASS followed by the shared mixed-boundary rejection and
+four regressions. Do not relax no-reference legacy behavior or hide unknown gaps.
+
+Final76focused/1340backendPASS1optionalarchiveSKIP/full Ruff-format-mypy PASS;
+owned tmpfs55471 downgrade/read/reupgrade0017PASS. First invalid revision and
+verifier self-hash failures preserved as harness errors, not relabeled successes.
+Seven actual-source/raw projections/14 synthetic Portfolio checks and four
+negative/compatibility fixtures bind436inputs/code/11frozenpartitions to a new
+immutable V2 proof, canonical4e02463e; V1 remains pre-review only.
+
+No original app restart/migration, dataset registration/freeze, strategy/OOS,
+financial admission or GitHub request. Runtime support reduces a real defect;
+sixcash/59source/000598/300048 and whole economic/lifecycle gates stay open.
+Proceed with the complete U1–U8/M0–M5 quality and delivery loop, not another
+undirected PDF pass or a narrowed definition of product completion.
+
+## v1.2 Whole ordinary composition and price-only basis boundary — 2026-10-07
+
+Preserve all40353cash/498bonus parent events;72newcash/72bonus compose40995
+ordinary events with existing support/uniqueness/order checks. New current-code
+financial proof found7 generic-reference mismatches among570bonus candidates.
+Existing official final issuer formulas explain these as repurchase-excluded
+total-capital **price** bases, not smaller ordinary shareholder entitlements.
+Reusing the strict source parser/reference helper and unchanged Portfolio yields
+569 scoped reference/accounting relationships/1138 synthetic holding cases.
+Keep seven current runtime-support failures and original000598 reference gap;
+do not transform scoped explanatory evidence into financial/data admission.
+
+002549@2015-06-03 has an accepted distribution while suspended and rawvolume0.
+It may have an entitlement but must not become tradeable. Current interval
+index verifies all570ex-days; sixcash/59source/300048 gaps remain, unchanged.
+Historical code bindings stay tied to1da55ad; originals/frozen/formal untouched.
+Next actual engineering work: independent effective-dated checksum-bound
+reference companion authority in a NEW candidate dataset, preserving event
+checksums/holder cash/share ratio/default rejection and old datasets. Do not
+infer a price-only formula from observed prices or treat missing cash aszero.
+No new fullsuite/CI/browser/release claim. Private immutable producer F401 is a
+recorded style diagnostic, not a passed lint gate. Independent read-only review
+found no evidenced scopedP1/P2; separately verified source notices, price bases,
+holding cases, complete payload retention and historical/current bindings.
+Eight-payload evidence seal16c6a7da retains the negative report, not a runtime fix.
+
+## v1.2 Shared complete suspension intervals — 2026-10-07
+
+Actual loader fixture reproduction:10 cases gave8 failures/2 passes on the old
+start-only index. Move existing inspection semantics into `app.data.suspensions`;
+both callers reuse it without a data-to-application import. Index normalized
+intervals only within accepted loaded calendar sessions, not raw timestamp string
+comparisons. Preserve SSE end-date uncertainty and SZSE boundary meanings;
+overlap priority blocked > unknown > open. Unknown opens are explicitly retained
+and conservatively non-executable, never guessed NORMAL.
+
+Root targeted105 tests, full1317/1 existing optional archive skip, Ruff557 and
+mypy146 passed. Owned tmpfs quant_test55471 only: head→base→head/check passed.
+Read-only frozen census38470 event rows/3886 sessions, blocked index16207→459424,
+including5057 unknown opens;443217 additional indexed security-days/3223 IDs.
+These counts do not prove raw bars or actual past illegal fills. Original inputs,
+reports/OOS and source-bound historical candidate diagnostics are unchanged;
+current economic admission remains incomplete. Independent read-only review
+verified code/input/producer/legacy/canonical bindings, no evidenced scopedP1/P2.
+Running application backend has not been replaced or migrated. Local checks are
+not remote CI, which is deferred under the user's GitHub-unavailable notice.
+Evidence: product-evidence/v1.2/m4/20261007-suspension-intervals/README.md.
+
+Fullfrontend compatibility revealed5 existing formatter failures; use only
+the locked Prettier on those files, then repeat760 tests/lint/types/build/full
+format/audit0 and verify168 source-copy SHAs. Keep formatting in a separate
+coherent local commit. Independent read-only review found no behavioral changes.
+Current served frontend remains priorD28; package-size warning is still open.
+Owned tests stop/retain only after terminal handles; original services stayup.
+
+## v1.2 Supplemental cash/reference remains candidate-only — 2026-10-07
+
+Reuse approved cash_event/source-ratio/whole-position fraction accounting; no
+new policy, missing-to-zero substitution or invented payment date. Batch78
+strict source rows:72 exact issuer/raw reference relationships and6 unknown
+cash. Independent review required full same-security suspension intervals and
+current financial code hashes; V2 preserved NON-ACCEPTED, immutable V3 closes
+both evidence defects. Separate source, numeric reference, cash integration and
+financial admission statuses. No official monthly ex-price evidence invented.
+
+Private72 cash+72 companion bonus overlay,144 synthetic holding checks and57
+targeted tests pass; old40353 cash parent/498 bonus/498 reference/7407 coverage/
+137 source preserved. Overlay not a replacement complete ledger or recovered
+real paper accounts. No dataset registration/admission, study or frozen rewrite.
+Full product scope remains; next reproduce actual FullDataset start-only halt
+indexing with bounded fixtures and reuse shared interval semantics if defective.
+
+Orientation16 measured layouts contrast/Enter/Escape pass only. Complete final
+Tab cycle remains unknown at native browser boundary; no speculative custom
+trap.13px text not claimed15px. No current fullAA/native200/performance approval.
+Keep private payloads outside Git and record pointers/hashes in product ledger.
+No GitHub polling/push/merge/release in this local checkpoint; historical exact
+1da55ad CI remains source-parent evidence, not a guarantee of current availability.
+
+## v1.2 Saved versus temporary views — 2026-10-07
+
+Keep existing history-over-saved precedence: unsaved currentlist settings survive
+same-entry refresh/Back. Actualreload after chip removal disproved the initial
+assumption it would reload explicit saved settings; genuinelyfreshentry proved
+the savedview independently. No code change to erase intended temporary context.
+Bothlocale/dark390 threechipEnter removals focussettings/preserveotherconditions;
+defaultsreset atQAend. Bilingual guides describe the distinction and resetscope.
+Exact1da55adCI37557042316all3jobs/every stepSUCCESS;1302backend+optionalSKIP/
+760frontend/static/isolatedmigration/ComposePASS,watch87339terminal0.
+4privatepayloadseal f6d7a1a5 verified; fullgoal not achieved. Guide/checkpoint
+docs staylocal untilnextmeaningfulmilestone, not another tinyCI-onlypush.
+Originaldata/services/frozen/OOS preserved;ownedidleNode stopped137retained.
+
+## v1.2 Research list return and consumed-token lifecycle — 2026-10-07
+
+Reuse existing history/view/page/scroll machinery, not a new router/framework.
+Actual saved detail/Back lacked originating Name/Open focus; primary unmodified
+click now records exact entry kind and both axes. Validate context, wait for rows,
+respect external focus and visible missing/error fallback. Clear on query change.
+Independent readonly review found stale token could survive later non-row
+navigation: clear each owned history token at consumption in BOTH list pages,
+preserving ancestry and all other entry fields.3RED->37focusedPASS; final760
+frontend/static/build/formatPASS.13newresearch regressions retain trust boundaries.
+
+CurrentD28 Chrome EN/ZH mobile four returns and ZH desktop both task streams
+prove exact link/context only, not fullAA/native200/performance/financial admission.
+41privatepayloadseal e1a92f67 verified; stale paints and wrong selector explicitly
+NON-ACCEPTED. Olde7CI37555553960all3SUCCESS not proof of uncommitted diff.
+Independent final source/evidence/checkpoint review P2 closed and41payload/
+seal/4SHA/37focused760full/static/parentCI verified; newexactheadCI pending.
+Supplemental CAPTION.md corrects locale: finaldesktopimageEN, ZHsmokeDOMonly,
+notZHvisualPASS. Originalsealedpayloads unchanged; reviewerexecutionnotclaimed.
+No financial/schema/data/methodology/dependency/security change;original0016
+and5/417/12/4 counts/frozen/tag/OOS preserved. FullU1-U8/M0-M5 still active.
+
+## v1.2 Task Center return context and panel reuse — 2026-10-07
+
+Actual mobile review found zero panel padding; reuse existing experimentPanel,
+not new CSS/dependency. Existing saved detail/Back then exposed lost task focus
+and scroll after rows loaded. Store validated return href/scroll and independent
+pages in the existing history entry, preserving navigation ancestry; wait both
+streams, consume once, do not steal focus after a user leaves main. This one
+shared handler serves research and raw-data links. Modified clicks remain native.
+Independent read-only review caught obsolete saved-scroll hiding missing/error
+fallback: exact task only uses preventScroll+saved scroll; fallback normal focus.
+Both streams×missing/error produced4RED before fix;24focused/747full frontend,
+lint/types/build/formatPASS. No weakened tests, no custom framework/dependency.
+
+Actual16 layout geometry/screenshot cases and final mobile EN/ZH research/raw
+Enter→detail→Back prove readable padding/exact focus/click-time scroll only,
+not full AA/performance/native200 or economic product acceptance. Stale ENlight
+1440 and enraw-after paint observations retained NON-ACCEPTED/replacements used.
+34 private proof payloads sealed7e79fbec, all hashes verified.523.64kB main chunk
+warning persists. Exact new-head CI and final evidence review pending. Existing
+parent37552485964 fresh green is historical to this diff, not a reason to skip CI.
+Original DB0016/counts5/417/12/4/services/data/tag/OOS preserved; no task start,
+provider retrieval, migration/restart, merge/tag/release. Full goal stays active.
+
+Final independent read-only review verified34payloadseal/source/test/build/frozen
+bindings and terminal receipts; no remaining evidenced scopedP1/P2. No reviewer
+test execution/native fallback injection; exact new-head CI remains pending.
+
+## v1.2 direct-dated holder heading — 2026-10-07
+
+Post-commit exactd0428d6 CI37552485964 all3jobs/every stepSUCCESS00:34:17Z;
+1302backend+optionalSKIP/735frontend/static/migration/ComposePASS. Samewatch83608
+terminal0/7proofseal7fe22207;fresh admission not futurequota guarantee.
+Final18sourcepayloadseal9b5574a2 independently checked;pending text chronology.
+Fullcached300048primary/correction read supports guarded explicitold-new chain
+work only, not blanket yearfix or unrestricted-listing inference. No event or
+fullproduct acceptance. NativeUbuntuintegration persists;no destructive repair.
+
+Complete cached300028 three-page official implementation notice supplies a
+numbered 权益分派对象 heading immediately before the complete all-holder cutoff.
+Reuse same_day_listing with that exact heading alternative (also 分派对象);
+do not make all prefixes optional or infer any missing date. Actual terminal
+2RED/76deselected before source edit;79same-day/ratio tests and1302fullbackend+
+one existing optional archiveSKIP20.44s. Ruff556/mypy145 and ownedtmpfs
+quant_test55471 head-base-head-checkPASS; originalDB0016/services retained.
+V7all137/276bindings/78source-onlyPASS/59unresolved; old77wholePASS preserved,
+136whole rows unchanged, only300028change/allratio-source-identity preserved.
+Reverse ordering/immutable repeatPASS; no event/dataset/strategy admission.
+Independent reviewer caught output filenameP2;first new-dirv6artifact retained
+NON-ACCEPTED, producer corrected/newV7canonical6ce30731 generated twice. No
+remaining evidencedscopedP1P2.18payloadseal9b5574a2 verified twice; reviewer
+did not run tests or verify finalseal. ExactnewheadCI pending;
+parent6525520CI is historical, not new-diff evidence. Full U1-U8/M0-M5 required.
+
+## v1.2 listing CI, current orientation and next source boundary — 2026-10-07
+
+Exact6525520 CI37550587482 all3jobs/every stepSUCCESS00:12:35Z;1300backend+
+optionalSKIP/735frontend/static/migration/ComposePASS.5CIproofdd293/source17
+proof5ddb retained. Fresh acceptedrun is not futurequota guarantee;no rerun.
+Use nativeDialog, no speculative customtrap: actualENZHdark390Enter/firstTab/
+Escape and40pxcontrols match UI; final/reverseTab returns outside-dialog/null/
+wholebodytext and remainsUNRESOLVED nativebrowserboundary, not productbugproof.
+Read-only hasFocus unavailable in toolscope;do not bypass tool/security policy.
+Independent2JPEG/source/CIreview no evidencedscopedP1P2, not fullAA/financial.
+6UIproofc03a;localeEN/defaultviewport restored/QAclosed/exporthandoff re-marked.
+All60residual diagnosis4proof500d preserves56roles+1guard+3no-check. Full300028
+3pages support next exactholder-heading hypothesis, requiringRED/sharedguards;
+no date inference, financialadmission or sourceacquisitionrestart. FreshUbuntu
+Dockerwrapper stillintegrationfailure;Windowsengine/apphealthy0016/staticfallback.
+PostCI docs saved locally for next coherent milestone;fullgoalACTIVE/no release.
+
+
+## v1.2 explicit unrestricted listing wording — 2026-10-07
+
+Reuse shared same_day_listing: accept literal 上市日 and 无限售流通股 only
+after complete cached300088/300144notices. No issuerexception/newdependency,
+ratio/date inference, pagejoin or capital-table-derived unrestricted date.
+Initial supposedRED98235 was delayed until after fix and passed7cases: reject
+as fail-before-fix evidence. Temporarily restore only our2lines to exactHEAD,
+await terminal2RED/5PASS/69deselected, restore fix and94relatedPASS. Add可流通
+negative;existing missing/conflicting/tentative/date/holder/page guards retained.
+Full1300PASS+1optionalarchiveSKIP20.66s/static/migrationPASS on ownedtmpfs
+quant_test only;initialpgready noresponse retained, thenmigration+explicitready.
+OriginalDB0016 untouched;ownscratchstopped0otherclients, retainedcontainer.
+V6all137/276bindings/77source-onlyPASS/60unresolved;old75wholePASS/135unchanged,
+only2rowschange/allsource-ratio-identity preserved/reversedrepeat. Independent
+readonly review no evidencedscopedP1P2;17payloadseal5ddb3d54. Not economic event,
+financial or fullproduct acceptance. Frontendunchanged/no newbrowserclaim;
+exactnewCI required. FullU1-U8/M0-M5 active;no frozen/OOS/merge/tag/release.
+
+
+## v1.2 cached explicit credit wording — 2026-10-07
+
+Post-commit exact26eb11a8 CI37549281120 all3jobs/every stepSUCCESS completed
+23:59:08Z/samewatch47158terminal0.1298backend+optionalarchiveSKIP38.16s/
+735frontend45files/static/isolatedmigration/productionCompose smokePASS.
+HEADoriginOPEN-DRAFTPR32agree,9payload seal d8506c6d, original14proof unchanged.
+Fresh CI admission not futurecapacity guarantee; precommitpending text below
+is chronology. No merge/tag/release. Next62source-only residual split retained:
+58roles+1guard+3no-matchingchecks, including rawBshare000771 and300048existing
+correctionchain. Read full300088cache; literal上市日 is next tested hypothesis,
+not newevent admission. PostCI checkpointdocs remain local until coherent slice.
+
+Reuse same_day_listing after reading complete cached official300021/300071/
+300132/300162 notices. Exact optional shareholder 的, 送转股份, 公司本次
+credit/listing and identical company/year 实施的公告 running-header variants;
+no issuer special case, dependency, date inference or cross-page date repair.
+Four RED regressions then93related PASS; 137source rows retained, old71wholePASS
+preserved,75source-onlyPASS/62unresolved,133whole rows unchanged,276bindings and
+reverse ordering checked. Source-only terms are not financial event admission.
+
+Initial full suite failed against freshly restarted tmpfs testDB with absent
+schema; readiness also initially failed. Retain failure excerpt (1149passed/
+149errors/1failed), confirm ready and migrate ONLY ownedquant_test55471.
+Final1298passed/1optionalarchiveSKIP20.63s, head-base-head-check/Ruff556/mypy145
+PASS. Two initial long test lines fixed by normal formatter. OriginalDBreadonly
+0016, runtime4services retained/PONG/frontend+API200; ownedidlePGstoppedretained.
+Frontend/UI unchanged; earlier735frontend/currentChrome evidence not a new run.
+Independentreadonly source/hash/preservation review no evidencedscopedP1P2;
+14payloadseal199188ca. Exact new-head CI required; no event/dataset,
+formal/OOS, originalrestart/migration, merge/tag/release. FullU1-U8/M0-M5 active.
+
+## v1.2 current formal range/table validation — 2026-10-07
+
+Reuse existing BenchmarkChart/ResearchRunPage/native inputs/tables; no new chart
+library, component or source/test edit was needed. Current actual Chrome closes
+the scoped four-date range/benchmark/keyboard/exact-table/empty-invalid-recovery
+flow, with4x22raw metric reads now retained for independent comparison.16DOM
+geometry cases are not a full visual or AA claim. Reviewer confirmed numeric
+consistency but caught an EN-labelled mobile screenshot with staleZHpaint; retain
+original immutable10payloads, explicitly reject that and2desktop frames, and
+separately observe/capture trueENmobile in a2payload erratum. First filename-based
+PNG check failed on genuineJPEG bytes; correct format without modifying bytes.
+No original service/DB/financial/research writes or CI rerun. Continue required
+financial/reference-cash-lifecycle reconciliation and remaining AA/performance/
+runtime/delivery gates, not repeated chart implementation or prematurely release.
+
+## v1.2 current exact CI and saved chart-date recheck — 2026-10-07
+
+Newa694f224 CI37546062465 actually admitted and completedSUCCESS/all3jobs/every
+step23:23:43Z; samewatch47283terminal0, no rerun.1294backend+1SKIP/735frontend/
+static/isolated0017cycle/check/productionCompose smoke. This supersedes this
+slice's pendingCI but not remaining fullproduct/runtime/financial gates or
+future billing availability. No workflow/security/identity modification.
+
+Read actual current BenchmarkChart/ResearchRunPage rather than repeat the old
+claim that precise date linking is missing: already implemented. RealChrome
+preservedDevelopment recheck uses keyboard date/activity/clear/paging plus an
+observed real20110223 trade date, exact curve strings and22fullmetrics unchanged.
+ZH preserves financial fields/dates. No new code/test abstraction was needed;
+do not modify stable components solely to create more work. Pointer/fullinterval/
+wholeAA/economic gates remain unproven. New7payloadseal7ebe19d5 includes own CI;
+previous99proof intact. PostCI checkpoint docs remain local until next milestone.
+
+## v1.2 comparison economic warnings before values — 2026-10-07
+
+Actual three-study page placed two known coverage warnings at2251px, after
+metrics at767px. Reuse shared explainExperimentCode/runLabel/experimentNotice
+before money; retain existing later cards. No financial calculation, payload,
+quality inference, dependency or API changes. Four ENZH RED regressions now pass,
+null/undefined do not become approval.735frontend/40focused/static checks PASS;
+one formatter failure fixed with standard whitespace only. Independent readonly
+review no evidenced scopedP1P2; no reviewer execution/financial acceptance.
+
+16 actualChrome cases preserve exact numeric cells and six conditions without
+page overflow. Missing mobile theme selector handled through existing desktop
+control, not a fake selector. Immediate scroll0 precedes settled40px; main-locator
+refocus jumps are failed observation method, not whole keyboard PASS. Retain raw
+failed frames; no identical retry. Only backed-up ownedloopback static frontend
+changed, originalservices/data/research untouched. Private99payload seal1d7a59b2;
+new exactcommit CI remains required, fullproduct goal active/no release.
+
+## v1.2 fresh logical backup before WSL integration repair — 2026-10-07
+
+Reuse native pg_dump/pg_restore, existing full-table fingerprint method and
+ReceiptCache.read; no new backup service/dependency. Fresh dump570465bytes/
+SHA256c5c6c039 matches native original artifact. Three completed44-table snapshots
+equal;18 productfiles match original,6 DBreferences/bundles/raw/Parquet/logical-row
+checks pass. Scope is current post-loss baseline, not missing-ledger recovery,
+independent disaster protection, old-tag rollback or full restored product.
+
+Retain failed docker cp into tmpfs (returned0/file absent), failed pg_restore and
+initial scratch fingerprint. Guarded direct binary stdin restore succeeded; no
+live restore/--clean/migration. Additional final .ps1 refresh was refused by
+Windows script execution policy; stop route, no policy change/bypass/alternate
+interpreter/equivalent table-refresh replacement. Earlier snapshots remain actual
+point-in-time evidence, not a new final check. This denial is not a Docker error.
+
+After exact identity/owner/isolation/idle checks, stop only owned0774e721 scratch,
+exit0/container retained. Its ephemeral tmpfs testDB is discarded; retained dump,
+receipts and all original volumes/data untouched. OriginalPGRedisbackend remain
+healthy/starttimesunchanged/PONG/API+frontend200paper/revision0016. Private27payload
+seal77cab530; independent readonly reviewer checks hashes/bounds, noP1P2.
+
+Desktop running/configUbuntu enabled is not bridge recovery: nativecli/socket
+absent, cached mount-service errorubuntu.sock remains. Ask once for actual Desktop
+Settings>Resources>WSLIntegration screenshot only, before anyApplyRestart/toggle.
+Do not restart original bind containers, inject helper or repeat emptymount probe.
+Existing app stays usable through loopback staticfallback. ActualChrome existing
+failed record reopens by keyboard and reload with ENZH source-gap/unknown-context
+guidance/no fullresult; no retry/submission. Preserve pendingexporttab/no download
+policy workaround. FullU1-U8/M0-M5 remains active/incomplete, no merge/release.
+
+## v1.2 report preparation cannot be promoted to file landing — 2026-10-07
+
+CurrentnativeChrome3/exactaa4efrontend saved0cdfb0e5 historical result: automatic
+JSONdownloadlistener20stimeout; realuser-activated preparedlink15stimeout; page
+prepared/no consoleerror/defaultDownloads no namedmatch. Productfailure unproven,
+filelanding unverified. Do not change exportcode without a demonstratedrootcause.
+One internaldownloadspage inspection denied by URLpolicy; stop thatroute, no
+alternatebrowser/native/CDP/security/FS workaround. Askuseronce manuallyverify
+namedfile/path/failure, keepownedtab1661329767handoff. No newstudy/account/order/
+provider action, CSVnotrun, no fakeexportPASS. Fourpayloadseale3d1a288 includes
+actualpreparedstate JPEG. Continue independent fullobjective gates, goalACTIVE.
+
+Bilingualguide independentreadonlyreview found no evidencedP1P2; CI5/prior127/
+167sourcebindings consistent. GuidespostdateCI/no executablecodechange, no new
+runtime restart, migration, financial/fullAA/fullproduct acceptance or release.
+
+## v1.2 exact account-quality CI and honest recovery instructions — 2026-10-07
+
+Ownaa4eCI37541093320 all3jobs/every stepSUCCESS22:33:36Z; samewatch79166
+terminal0/no rerun.1294backend+optionalarchiveSKIP/729frontend/static/isolated0017
+migration/Compose release smokePASS. HEADoriginOPEN-DRAFTPR32agree. Separate five
+CIpayloads sealedb34f7762; previous127UIframe payloads/167source bindings intact.
+This closes the slice's pendingCI, not financial or whole-product acceptance.
+
+Update both user guides rather than add a second startup/release system. Current
+portfolio authority is saved backend state, not validated economic coverage; a
+current quality warning is not past-day proof and no marker is not PASS. Preserve
+old amounts/results/plans. Document navigation-only async fragment behavior.
+Replace stale current-startup wording with actualOct7 loopback staticfallback:
+unless-stopped/no binds configured, realrestart notverified; newUbuntu mounts
+remain broken. Keep historicalOct1/Oct2 evidence and prevent unsafe original
+container recreation. OriginalDBreadonly0016/serviceshealthy, no restart/migration.
+
+Manual/checkpoint changes stay local for the next coherent milestone, no tiny
+receipt-onlypush. FullU1-U8/M0-M5 remains active, not merged/released; lawfulforward,
+genuine lostledgers and financial/AA/performance/runtime/restore/delivery remain.
+
+## v1.2 historical account advice and deferred fragment target — 2026-10-07
+
+Keep backend exact ledger authority distinct from economic validation: show the
+existing current-quality explanation before historical account money, and retain
+the plan-local warning for direct readers. No rewritten old values/results/plans.
+Reuse shared ExperimentPlan for async fragment readiness on mount; avoid a global
+observer, focus steal, dependency or ordinary-update scroll replay. 8+2RED/final729
+frontend/staticPASS; independent readonly review no scopedP1/P2. DevStrictMode
+single-effect semantics are not claimed by production unit tests.
+
+Actual16 DOM cases+ENZH390 reload/exact originals validated. Two first light1440
+screenshots were stale mobile frames; retain/reject originals, supersede with fresh
+desktop JPG from separate observation/capture calls. 122proof8b97afb5 +5correction
+50cc110f sealed. Correct format is JPEG even where historical filename says PNG.
+Do not promote geometry or dimensional evidence to full WCAG/visual acceptance.
+
+Original state138 byte-identical, applicationDB0016 readonly, ownedNodeSTOPPED,
+original services untouched, fallbackpublic backups retained. Current167/163
+sourcecopy and prior14/276source proof preserved;71/66source status unchanged.
+No frozen/formal/OOS/account-order/provider action or release. Keep full goal active;
+new exactCI pending; advance independent remaining UX/runtime/restore/delivery gates.
+
+## v1.2 credit-layout own CI and next source boundaries — 2026-10-07
+
+fffa93a==origin==OPEN/DRAFTPR32head;37537837278all3jobs/every stepSUCCESS22:03:46Z,
+samewatch21697terminal0. Hosted1294backend+optionalarchiveSKIP/715frontend/static/
+disposablemigration/Compose release smokePASS. NinepayloadCI/contextproofseal
+6e33b8498f9ef5d8c6cefe4689739669356351b575429f66f9954946c76f2d77 preserves14
+sourceproof/276bindings. Seven remainingcredit fullsources reviewed:literal
+optional的/送转股份/companyprefix/exactrunningheaders can be next test hypotheses,
+not accepted evidence. Actualmissing日300036,AGMyearwording300126 andaccountword
+pageheader300198 remain unmodified.71sourcePASS/66unresolved, notfinancial/product.
+No rerun/merge/release; retainlocalbroaderPrettierFAIL3oldfiles. Next work must also
+advance mandatorynon-source userflow/quality/runtime/restore/delivery gates.
+
+## v1.2 credit grammar uses existing boundaries, not inferred dates — 2026-10-07
+
+Reuse shared holder page boundary for credit; exact reviewed股本方法/所送(转)股
+layouts only.5RED→5PASS/94focused.137source rows65→71PASS/72→66unresolved;
+6new complete officialsourcePASS/5stillUNRESTRICTED_LISTING rejected;allold65PASS,
+ratios/identity/provenance retained,276bindings/reversedinput/old11proofunchanged.
+Independent readonly6notice review no scopedP1P2;not economic/financial admission.
+1294backend+optionalarchiveSKIP/715frontend/CIstatic/disposablemigrationPASS.
+BroaderPrettierFAIL3existingfiles is separate from CI checks, no cosmetic rewrite
+in this parser slice or altered acceptance. Root only writer;ownedscratchstopped,
+originalDB0016/runtime/frozen/tag/OOS untouched. New exactCI pending.14proofseal
+edd06c0012377ec512a435f243b97a0094235622b5e6d5bc58c7f29aa1b7caf1.
+Continue entireU1-U8/M0-M5, not just sourcecount; no originalrestart/newbind risk,
+fake forward/recoveredledger/native200/performance/financialPASS or release.
+
+## v1.2 exact holder-layout CI and preserved next-role diagnosis — 2026-10-07
+
+ea7155cdb25c043d11d9e0edfa65f44795316aa0==origin==OPEN/DRAFTPR32head;
+own37535999546 all3jobs/every stepSUCCESS21:46:27Z/samewatch46350terminal0.
+1289backend+optionalarchiveSKIP/715frontend/fullstatic/disposablemigration/
+Compose release smokePASS. No rerun/merge/tag/release. Separate8postCI/18gap
+source-context payloads sealed16667a9d9dcaf95f57a5ebca764352f0b4903f4cb75f4885b2d59cac17ee1a97;
+earlier11sourceproof immutable. All18 SHARE_CREDIT gaps remain unresolved despite
+some complete-looking excerpts. Next tested hypotheses must preserve boundary/
+complete dates/allholders/listing/conflicts; do not borrow300036cash date or
+repair300015year by inference. No financial/event/dataset admission, original
+appDB0017 migration or existingservice restart. PostCI docs intentionally local
+until next coherent milestone; fullproductgoal ACTIVE, not narrowed or achieved.
+
+## v1.2 explicit holder-object and contiguous current metadata — 2026-10-07
+
+Bounded cached source inspection proved a shared parser-layout gap, not missing
+economic dates. Recognize optional 的 in the declared current holder object,
+the exact利润分配、转增股本的对象 heading, and anchored current-distribution
+metadata with two complete dates. No issuer special-case/global year correction,
+source finality downgrade, guessed date or page-spliced date. Existing all-holder,
+credit/unrestricted listing/conflict checks and default next-session policy retained.
+3newRED→3PASS/95focused; all137rows retained54→65strictsource-onlyPASS/83→72unresolved;
+11newPASS/300036onlynextmissingrole/125whole rows exact.300015actual2010credit
+vs2011ex remains unresolved. Financial event admission, new dataset, full action
+coverage and application DB rollout are NOT established by this source gate.
+
+276currentbindings/reverse/immutable repeat and17oldproofpayloads verified;
+11payload9672e2472ff49a98b6f219ffb71b78dca0344fe9824ae86b364760e4504f3b72.
+Independent readonly no evidenced scopedP1P2; no reviewer test/DB/network writes.
+Full1289backend+optionalSKIP/715frontend/staticchecks/disposablequant_test
+head-base-head/checkPASS; originalDBreadonly0016/servicesnotrestarted.
+ScratchNode/PGSTOPPEDretained; frozenmanifest/v1.1tag/.research unchanged.
+Current65/72supersedes prior54/83 for source-only status, not historical code bindings.
+Continue full U1–U8/M0–M5 and remaining financial/runtime/accessibility/forward/
+restore/delivery gates; no merge/tag/release. New source commit/ownCI next.
+
+## v1.2 distinguish surviving mounts from safe new mounts — 2026-10-07
+
+Current cd108 exactCI37532781861 all3jobs/every stepPASS1286backend+optionalSKIP/
+715frontend/fullchecks/disposablemigration/releaseimage smoke. Actual compiled
+wizard controlledGET403/408/offline ENZH/retry-focus/precision/no-write check closes
+this browser error scope only; not fullquality/finance/forward/release. Preserve
+all failures/proofs, postCI checkpoint local for next coherentmilestone.
+
+Do not use existing running-container readable code/data to approve a restart:
+fresh unique cachedimage/networknone/read-only-root/inherited-mountsRO probe exited1,
+newapp empty/research absent, though existingbackend main/frozenhashmatch and0017
+fileexists. Read-only liveDBversion0016; deployed migration0017 remains NOT_DONE.
+Evidence4sealbe2e7da3, stoppedprobec970 retained, originalfour services healthy/200
+and no DB/job action. Requires genuine integration/freshROmountPASS/backups before
+original backend migration/recreation. No reset/manualhelper/security bypass or
+emptybind retry. Fullgoal ACTIVE with original mandatoryscope, not a scopedrelease.
+
+## v1.2 durability wording is conditional; native timing needs a control — 2026-10-07
+
+Actual English pre-submit wizard claimed task already saved server-side; Chinese
+and POST/commit semantics only promise persistence once created. Correct sole shared
+copy caller, add ENZH notice/no-create/unacknowledged-disabled regressions. No API,
+storage/finance or dependency change.86focused/715full/staticchecks/independent scoped
+readonly review and actual after-copy Chrome screenshot/DOM pass.16-case wizard
+geometry/text/no-submit checks are not fullAA/native200/product acceptance.
+
+Do not optimize from unproven timing causes: tool-inclusive DOM Enter is fast but
+pointer/native presentation failed. Preserve incomplete19gesture receipt after actual
+oldtab disappearance, not a timeout-based restart. Changed hypothesis: same-build
+plain-native button control.18trusted visible/focused inputs/63native entries/no
+longtasks show baseline pointer264–312ms too, while handlers0.1–0.2ms and wizard
+handlers4–7ms. Keyboard native wizard up to1376ms despite secondRAF≤22.4ms. This
+rules out exclusively attributing delay to React work; does not exonerate product
+paint or replace native duration with RAF/DOM. Target remains NOT_MET/CAUSE_UNPROVEN,
+no imputedzeros/looser thresholds or speculative code. Actual200 manual request
+stillpending after toolpolicydenial; no workaround. Bound QAHTML retained outside
+Git and recoverably moved out owned webroot; normalindex/draft2/EN/dark restored,
+viewportreset/tabclosed and scratchPG/node stopped. Original app/data untouched.
+116payload seal9024a068, exact prior8caCI alljobsPASS separately10seal900e6c76;
+new copy commit CI required. Fullgoal remains ACTIVE/no merge/tag/release.
+
+## v1.2 wait for persistence, not just a rendered heading — 2026-10-07
+
+3674329 exact hostedCI failed one fresh-draft assertion while backend/Compose
+passed. Trace confirms wizard useEffect queues storage save after DOM creation;
+a heading is not a persistence barrier. Reuse waitFor around the unchanged
+saved-object assertion. Do not alter production scheduling, delete tests, widen
+timeouts or hide CI failure. All URL/strategy/precision/locale/no-create assertions
+remain;84focused/713full/localchecks pass, independent readonly review agrees.
+Exact8caCI37528782163 completed all3jobs/every stepSUCCESS20:47:25Z, samewatch12079
+exit0 and freshAPIverified; original failure retained. New copyfix needs its ownCI.
+ActualChrome current draft keyboard/back/locale/mobile
+check preserves configuration; no job or account operation. Fullgoal stays open.
+
+## v1.2 date-only amendments consume all substantive text — 2026-10-07
+
+Matching a date table/two quotes plus a keyword blacklist was insufficient:
+independent review found ignored extra cash/ratio/holder revisions. Reproduced
+3 failing cases, then require complete standard introduction, every item and
+same-company fixed signature/footer, with six prefix/suffix negative cases.
+Unknown layouts reject; no issuer exception or global year replacement. Derived
+300048 dates now correct, original terms unchanged; unrestricted listing remains
+unresolved and financial admission is forbidden.
+
+Fix repeated page titles once in shared same_day_listing, after full raw risk/date
+guards and without deleting page boundaries. Native error notes expose the failed
+role rather than widening acceptance. All137 supplemental rows stay; only300072
+and300123 guards change52→54 source-only pass,83 unresolved. Separate v2 binds
+current parsers; preserve v1 evidence without falsely claiming current bindings.
+Independent final review verifies all raw rows and285 per-report inputs, scoped
+no remaining evidencedP1/P2. Full backend1286+optional skip/frontend713/static
+checks and disposable migration pass;17payload seal61974954. No frozen/formal/OOS,
+application DB migration/restart or release. After coherent commit/CI, prioritize
+actual Chrome mandatory quality too; source archaeology cannot replace U1–U8.
+
+## v1.2 completeness oracle must retain omitted identities — 2026-10-07
+
+An independently recovered official300048 correction proves that closing only
+the prior7407 bonus identities cannot establish full action coverage. Reuse
+cached192 monthly files/23682rows and targeted contemporaneous originals; this
+surface has no2011ChiNext rows. Add one official2011 retrospective CSDCC yearbook
+as coverage oracle only, never as effective-date/holder/unrestricted/PIT authority.
+All484 rows parsed fail-closed; preserve137 absent raw code-shaped candidates.
+
+Actual original/correction PDFs explicitly fix2010 typos to2011. Do not globally
+replace years, mix before/after text, weaken publication guards or infer from prices.
+134 cached date-matching leads are not accepted events;1 correction still awaits
+chain integration and2 dates remain unresolved. Prefix labels cannot establish
+instrument identity: v4 binds136 accepted PITmaster intervals and explicitly
+retains raw000771杭汽轮B unresolved, with no code correction or exclusion.
+
+Three reviewedP2s repaired centrally,16module tests and1268backend+1optionalSKIP/
+713frontend/fullchecks pass; independent final review scoped no evidencedP1P2.
+External40payload seal16b13392/486bindings; oldv1-v3/frozen/.research preserved.
+No financial admission, formal study, appDBmigration/restart, merge/tag/release.
+Resume source-chain/reference/holder/fullaction reconciliation in separate version;
+do not replace remaining product U1-U8/M0-M5 with a narrower oracle pass.
+Ownb3efca7 CI37523966642 all3jobs/every stepSUCCESS20:08:30Z, exacthead==origin
+and OPEN/DRAFTPR32; GitHub Actions now demonstrably runs. Separate4receipt seal
+aa15ea61 preserves prior40sourceproof. No merge/release, postCI docs remain local
+for next coherent source integration rather than a receipt-only commit/push loop.
+
+## v1.2 preserve observed failure context, never infer old facts — 2026-10-07
+
+The shared guard previously retained only a stable error code. Add actual session
+date and sorted held stable IDs without changing which holdings fail or relaxing
+accounting. Carry typed allowlisted metadata through runner and manager's pending
+terminal tuple, then nullable JSONB in the same FAILED transaction. Summary/result
+semantics remain unchanged; arbitrary exception text, paths and traces are excluded.
+First 100 IDs bound collection payloads with full count and explicit truncation.
+Old null/absent context stays unknown; no original job retry or backfill.
+
+1252 backend + one existing optional archive skip / 713 frontend and checks passed.
+0017 upgrade/down/up and synthetic browser receipts use disposable quant_test only;
+actual graceful QA API restart proves already committed context survives, not the
+uncommitted crash gap. Read-only reviewer found no evidenced scoped P1/P2.
+Compatible UI is served at local5173; original backend/app database not migrated or
+restarted while WSL bind is broken. Source evidence and financial acceptance remain
+distinct. Own97f8 CI37518515391 all jobs/steps SUCCESS; PR32 OPEN/DRAFT, no merge
+or release. Further real failed-detail16-case responsive evidence is scoped to
+this route, not full AA/native200/p95/financial coverage. v1.1/frozen/formal/OOS
+untouched, goal remains active. Continue cached300048 contemporaneous source
+closure toward separate new-version financial admission, never old-date inference.
+
+## v1.2 exact own CI is not WSL or financial completion — 2026-10-07
+
+7ab ownCI37513352731 all3jobs/stepsSUCCESS2026-10-06T18:45:02Z; PR32OPEN/DRAFT.
+Continuefullgoal ratherthanmerge/release. Owned verifiedstaticfrontend survives
+itsownrestart withsamechecksums/HTTP200; originalPG/Redis/backendnotrestarted,
+originalfrontendretainedSTOPPED. ActualUbuntu CLItools/sockets empty/brokenlink/
+nohelper: askforGUI integrationpageevidence, no manual mount/helper/security
+bypass or blindDockerreset/restart. Sixpayloadcheckpointseal9fe79cfbb1dcc4ae6e093c2b8570523957afe0521b08a488c057b6a10b393e60.
+Readonlyerror-flowdiagnosis: engineguard/runner/jobpreserve onlycode/no exact
+securitydate. Do not inventoldfailedcontext from290/297progress, rerunstrategy
+for cosmeticproof, or relaxfinancialguard. No diagnosticsimplementation/schema
+or businessDB change inthisunit. Keepfullsource/newversionfinancial/API/quality/
+actual lawfulforward/restoration requirements and priorfrozen/formal/OOS intact.
+
+## v1.2 compatible transitive patch and non-destructive local recovery — 2026-10-07
+
+Fresh actual dev audit1HIGH source-map-js1.2.1; official GHSA-68fv-2mgg-jv7q
+patched1.2.2. Change only3lockfields with npmregistry SRI, compatibleexisting
+css-tree/postcss ^1.2.1. No broad audit-fix/override/newdependency/applicationcode.
+Clean independentnpmci/full+prod audits0/709frontend/lint/type/build PASS;
+backend58pinnedentries audit0/pipcheckPASS. Reused independent readonlyreview
+no evidenced boundedP1/P2; parent0d CI37510822018 all3jobsSUCCESS is earlier
+parser proof, not newsecuritycommit. Separate13-payload proofsealed
+ ebfadaeceb671cbadadddbf3118ad0cd8a9521af10d4e9c9664940a9b4eea647.
+
+Only originalfrontend restart revealed absent/app package+lock/existingWSLbind
+and npmciEUSAGE. Stopthatloop, preservecontainer/dependencyvolume. Do not repeatedly
+restart, resetDocker, deletevolumes/images/data/WSL, altersettings/securityor
+restartoriginalbackend. NativeUbuntuCLIintegration actuallyunavailable despite
+configureddefault/Ubuntu true. Safe alternative: existing exact Nginxreleaseimage
+with only verifiedscratchdist in owned no-mount container onloopback5173.
+Currentfrontend/API200/threeoriginaldependentserviceshealthy and Chrome
+bilingualhome/strategy/list readbackPASS; originalfrontendstopped/integrationnot
+repaired. Data/formal/frozen/OOS/failedQA untouched; fullreleasegates remain.
+
+## v1.2 complete option condition is not an actual consolidation — 2026-10-07
+
+Recognize the complete fixed quoted-plan pre-exercise option-adjustment sentence
+in the shared same-day keyword guard, not a security-specific exemption or removal
+of the incentive section. Every date/holder/credit/listing check keeps full text;
+actual nonstandard actions and conflicting/missing dates still reject. No dependency,
+numeric fit, source-effective-date inference, policy or holder-accounting changes.
+2RED→67focusedPASS/full1249backend+709frontend/migrations PASS; independent
+readonly code review no boundedP1/P2. Full498source/reference audit preserves
+old497events/496PASS and7406other source/queue rows; only002014 new candidate,
+not financial admission. Full7407bonus oracle alone is not complete economic
+coverage.300048 needs separate contemporaneous official execution evidence;
+2015 legal-history search lead cannot leak into2011 PIT information. No strategy
+retry, frozen/research/formal/OOS or appDB mutation. Prior evidence unchanged.
+Initial CRLF/JS/migration-cwd/baseline-lineage mistakes failed before producer or
+publication; corrected exact lineage and backend cwd, never weaken checks or
+restart a live process. Scratch testDB stopped; original four services retained.
+Independent batch proof review completed no boundedP1/P2; sealed nine-payload
+index11363250a022ebeff1bcb2af4b7f830cb7601df980ef565aa1b0b2eb2d671935.
+Own source CI required before code gate; full product gates
+remain, no merge/tag/release or goal completion.
+
+## v1.2 own CI is not oracle completeness or native zoom — 2026-10-07
+
+Exact34a source milestone CI37506137137 backend/frontend/Compose allSUCCESS;
+fresh jobs/steps and PR32OPEN/DRAFThead verified. Local frontend/APIHTTP200 can
+run independently of GitHub Actions; no hosted-runner replacement or security
+change needed. Preserve later local checkpoint docs for next coherent code slice.
+002014's only缩股 token is hypothetical stock-option adjustment, not ordinary
+distribution; review narrowly scoped grammar before changing a failclosed guard.
+300048's dated actual marker has zero rows in7407oracle/date-links/candidate/cash/
+official cachedMarch surface. Do not equate the7407 bonus oracle with complete
+economic-action coverage, infer missing terms from price, or cosmetically retry
+the FAILED strategy job. Seek separate official dated evidence and wider coverage.
+Changed Chrome hypothesis removed viewport override before ctrlplus but actual
+zoom stayed100percent; record NOT_VERIFIED, no CSS/native/security bypass. Inline
+screenshot is not a saved file or200percent proof. Five-payload sealed checkpoint
+95fdeefe7bd7bd2dd92f39e4979cd62433d38ace2ae7dac33cf49a4bfefee5d7 retained.
+No frozen/research/OOS/appDB/account/source-admission/merge/tag/release changes;
+full U1-U8/M0-M5 remain, goalACTIVE rather than completion or forced blocker.
+Initial diagnostic guessed compose.yaml, which does not exist; rg identified the
+existing docker-compose.yml. Correct read-only compose ps showed all4original
+services up/postgres-redis-backend healthy, and redis-cli PONG. No service restart.
+
+## v1.2 final implemented total-capital reference is not holder entitlement — 2026-10-07
+
+Use already cached official final002972/301080 notices, not new acquisition or price
+fitting. Extend shared strict grammar for explicit current-basis repurchase exclusion,
+current distribution record-day price and total-capital folded symbolic cash/share
+formula; keep full numeric declaration/finality/issuer/dates/conflict/page boundaries.
+Holder cash/share continues through separate accepted source checks; folded values
+only validate the official ex-price input relation. No entitlement or accounting
+policy changes, security-specific allowlist, dependency or engine/API rewrites.
+2RED then65focused/full1247backend+709frontend/migrations PASS; two independent
+readonly source/batch reviews no boundedP1/P2.497sourceevents/494oldPASS payloads
+exact; only2reference failures close. Full7407queue remains,7405whole rows exact;
+496NOT_ADMITTED/1referenceUNRESOLVED/288oldfacts/6622source gaps, not financePASS.
+Retain initial environment/readbackcwd/formatter/testDB readiness observations;
+correct producing cwd and safe test env, never weaken checks or restart batch.
+Original4services/applicationDB/frozen/.research/formal/OOS/failedjob intact.
+Parent9f3 ownCI nowPASS; this later diff needs ownCI. No merge/tag/release before
+fullU1-U8/M0-M5 acceptance. All mandatory user flows and external source/ledger
+gates remain, goalACTIVE; no cosmetic strategy retry or fake dataset admission.
+
+## v1.2 implemented future-tense credit is not a guessed boundary — 2026-10-07
+
+Exact cached final000850/002161 notices state dated“将于” credit and same-day
+unrestricted listing for all holders. Recognize that literal and“送股份” once
+in shared parser, not exchange-date inference or a security-specific exception.
+Keep issuer/final/holder/date/listing/tentative/conflict/page guards and RED cases.
+Rerun all16years/all7407 rather than only those two stocks:21newsourcecandidates,
+whole476old preserved;19newlimitedreferencePASS/2newUNRESOLVED, no admission.
+Completequeue keepsall7407/other7386whole rows exact/288oldfacts unpromoted.
+Original job FAILED and frozen assets retained; no new backtest for a cosmeticPASS.
+WSL missing mount-service blocks newbinds, not original running services; use pure
+readonly existing loader for diagnosis and actualinstalledWSLvenv for source work.
+Old/proof preservation mapping keeps exact checksums; queue uses producingbackend
+cwd. NewtestDB tmpfs/loopback only, stopped after tests; appDB never test target.
+Parent e0b ownCI now verified SUCCESS; not new parserdiff CI or product completion.
+
+## v1.2 novice failure and truthful recent-job status — 2026-10-07
+
+Actual separate Chrome QA c3d38 fails closed on unexplained held reference change,
+no result. Preserve exact configuration and FAILED record; no retry/cash-tuning or
+guard relaxation to claim success. Last290/297 is a checkpoint, not exact failed
+date/security. Current ENZH failure explanation already correct. Restore original
+browser draft from exact16:36:48Z immutable backup via normal backup-first UI.
+Homepage lacked lifecycle state; reuse existing bilingual status mapping beside
+dates, preserve mode/URL/payload/request semantics. SixRED→32focused/709fullPASS,
+16actualChrome DOM cases and independent readonly review scoped, not financePASS.
+Stop redundant known-failure job demonstrations and prioritize complete source/
+economic/new-version closure plus remaining required product gates. GoalACTIVE,
+all U1-U8/M0-M5 retained, no frozen/formal/OOS/merge/release changes.
+
+## v1.2 chart exact CI and Chrome evidence boundary — 2026-10-07
+
+Own d850CI37494535320SUCCESS closes the chart source code gate, not product
+acceptance. Supported Chrome extension, now available, provides actual16 geometry
+and16 accessible record/metric cases plus keyboard restore proof. Do not infer
+native200 from ineffectiveCtrlplus under viewport override, or file landing from
+prepared-report status/download-observer timeouts. Denied internal downloads page
+is not bypassed. Preserve wrongly timed screenshots as NOT_ACCEPTED rather than
+mislabeling their locale/theme; separately inspect settled frames. Continue full
+mandatory U1-U8/M0-M5 independently, no source/financial/release promotion.
+
+## v1.2 single-date geometry — 2026-10-07
+
+Correct the actual shared experiment chart, not per-job data: one-vertex SVG
+polylines do not provide a visible trace. Native benchmark/drawdown circles and
+the existing equity point share centered x450 for one date; multi-date lines,
+exact strings and existing null/zero/benchmark/date/paging semantics stay intact.
+No dependency, CSS framework, financial calculation or API mutation. Preserve
+RED assertions and repair the remaining single-equity-polyline source condition.
+29focused/703fullfrontend and actual16IABcases PASS_SCOPED; independent readonly
+review no P1/P2. Own laterCI required; earlier help48 CI37490580136 nowPASS in a
+separate sealed checkpoint. No source/financial/fullgoal promotion or release.
+
+## v1.2 searchable beginner help and modal navigation — 2026-10-07
+
+Reuse the existing four bilingual questions once for both Help and command search.
+No new help corpus, search service, dependency or financial/data mutation. Safe
+topic links reveal actual rendered answers, not arbitrary code or selectors.
+Independent review exposed locale reopening, samefragment noop and dialog cleanup
+focus race. Keep locale independent of navigation, cancel pending focus on unknown
+topic/unmount, and focus one frame after modal cleanup. Samefragment re-selection
+notifies existing navigation listeners without history writes; same nonfragment
+URL remainsnoop, guarded path/query changes unchanged. Add real Dialog lifecycle
+regressions rather than removing assertions or restoring only the search trigger.
+Final74focused/696frontend/fullchecks and actual16IABcases PASS_SCOPED; independent
+review closed boundedP1/P2. New exactCI required. Signedreturns ed3CI verifiedPASS,
+not coverage of this latercode. Fullgoal/source/financial/native/delivery/forward/
+genuine missingledgers and UbuntuGUIintegration remain; no merge/release.
+
+## v1.2 signed result direction and safe runtime recovery — 2026-10-07
+
+Use existing exact decimal-string percentage formatting plus strict positive-value
+validation once, shared by detail and comparison. Add directional + only to valid
+positive returns; do not change costs, weights, drawdowns, persisted financial values
+or API payloads. Bilingual precise/null/zero/tiny sign regressions and actual saved
+result browser checks cover this root fix; do not rank incomparable experiments.
+Readonly reload is not a failed-study retry: actual failed comparison retains all
+requested studies and explains missing results; Enter reload keeps heading focus,
+detail explains source gap, and same-data retry cannot repair that source gap.
+Current API equality proves four selected records only, not financial validity.
+
+Docker Desktop was not running at resume. Start the existing official4.92.0 once;
+original containers auto-resume, Windows engine reachable, application HTTP200.
+Ubuntu proxy integration separately fails absent backend.sock. Stop repeating the
+same WSL command, use the already installed Windows client for original-container
+frontend checks, and request official GUI integration restart once. Never reset,
+delete/prune volumes, rewrite Docker settings/security or fabricate WSL recovery.
+674frontend/lint/types/build/format pass, independent readonly review noP1/P2;
+new slice requires its own CI, not base8c green. No frozen/research/OOS/DB/merge/
+release change; full economic/newversion/financial/user-flow/native/delivery and
+lawful-forward/genuine missing-ledger gates remain unchanged, goal ACTIVE.
+
+## v1.2 composite-cash conflict and restored-step labeling — 2026-10-06
+
+Cached000598 final composite allocation cannot be replaced with monthlyDPS.101.
+Retain actual public-holder cash.102064 and explicit issuer/monthly aggregates:
+58302883.33 versus58866764, difference563880.67; printed legacy per-share rate
+and declared total also differ by-1.271168. Exact Decimal diagnostic independently
+binds PDF/extraction/date links/monthly row and existing cash/share/date receipts;
+repeat immutable report succeeds. No fitted prices, weighted-input authority,
+new holder-eligibility approval, financial promotion or relaxed assertion.
+Selected reference remainsUNRESOLVED;475+1/7407queue byte-identical. Next source
+action requires independent official implemented composite-reference evidence,
+not repeating the rejected same-cache arithmetic hypothesis.
+
+Continue independent visible product quality: actual restored-step UI incorrectly
+saidChoose a strategy despite capital step. Delete fixed duplicate header label,
+reuse correct existing aria-current/h2 rather than duplicate wizard state.
+Three restored-step bilingual/request-key/no-create regressions RED->GREEN;
+full671frontendPASS/lint/types/build; actual16IABcases and forward/back/reload
+preserve config/quality warning/unchecked submission. Scoped independent review
+noP1/P2. Do not equate IAB with Chrome/native200/p95/AA/full product acceptance.
+No backend/frozen/.research/formal/OOS/originalDB change or remoteCI rerun; source
+slice and UI slice remain local, no merge/release until all required gates pass.
+
+## v1.2 holder cash versus official ex-price inputs — 2026-10-06
+
+Reuse strict cash/share parsers and Decimal reference helper. Cached final notices
+for five repurchase-excluded distributions explicitly distinguish actual public
+holder entitlement from total-capital-folded reference cash/share inputs. Bind both
+independently; never replace holder cash/share legs with folded ratios or infer a
+ratio from observed prices. Source parser requires positive final implemented
+declaration grammar and rejects conflicting numeric equations, wrong issuer/date,
+page-manufactured numbers and nonstandard events. Independent source-semantic P2
+fixed and regressions pass. Original .research/frozen data/policies/results untouched.
+New limited reference475+1 and all7407queueV4 retain470priorPASS/old114+1/288oldfacts;
+000598composite public cash .102064 vs monthly .101 stays referenceUNRESOLVED.
+New version/allaction/fullfinancial/product gates remain, not a sourcecount release.
+Local1243backendPASS/1archiveSKIP and668frontendPASS; isolated disposable testDB only.
+Do not use719historicalCI as proof for this new local source slice. User reports
+GitHub availability delay; local development/checks/commits continue, no retries or
+protection bypass/merge/tag/release before required current gates actually pass.
+
+## v1.2 approved fraction batch and strict reference checks — 2026-10-06
+
+Reuse approved exact revision3 policy/shared terms/official same-day boundaries,
+not inferred registry dates or a new engine. Per-year source-pool binding enables
+cached2023-2025; no downloads/dependencies. Independently found P2 policy-term
+substitution and duplicate/wrong-year overwrite fixed once with negative tests.
+All7407assessed ->476source candidates/6931unresolved, old115whole receipts exact.
+FrozenPITsymbol000043, not successor001914 tail, fixes one auditor false failure;
+reference470scopedPASS+6unresolved, old114+1 unchanged. Five exact reference
+mismatches and old000598cash remain failures, no tolerance/admission.
+Actualsource seeded engine checks are not real financial/userflow acceptance.
+
+Fullbackend/frontend/lint/types/build/reversible scratchDB PASS; separate realarchive
+paperpause/resume test PASS. Docker addresspool exhausted: use networknone/tmpfs PG
+and sharednamespace, no prune/network deletion/applicationDB. TemporaryPG stopped.
+31payload seal35b57f04... and immutable reports outside Git; no dataset/freeze/
+formal/OOS/merge/release. Continue wholeeconomic/U1-U8 gates, preserve old proofs.
+
+## v1.2 cross-year reference closure and full bonus queue — 2026-10-06
+
+Reuse the sealed reference auditor, not a new accounting engine. Verify all24
+candidateinputbytes/6manifests, preserve strictgrosscash/Decimal/official/raw/rules
+and old82PASS+1UNRESOLVED assertions. Actual115 gives114scopedPASS+1same000598;
+new32relations are not financialexecution or admitted data. Initial installedimage
+import failure preserved; explicit currentrepoPYTHONPATH corrects environment.
+
+Index whole7407bonusoracle with actual frozen corporate-actions/checksum and
+legacy ledgers/all16datedyears/37boundinputfiles. Keep independently visible
+presence/source/reference/ordinaryholder/component/cash facts; no presence-to-PASS
+or missing-to-NORMAL/excluded conversion. QueueV1 mistakenly called total-vs-holder
+ratio difference a conflict;600725legacy explicitly distinguishes1total vs0.7
+ordinaryholder with fractionalpolicy. PreserveV1PRE-REVIEW; immutableV2 includes
+component/source/policy/textbindings and requiresreview, not corruption/acceptance.
+
+Independent read-only source/receipt reviews no boundedP1/P2. Externalproof12payloads
+sealed2bbd30e72400a332edae6144edbcd95cbf16d56cf489634f598afdf4e0d38b43;
+parent4588exactCI37444185690SUCCESS/15payloadseal7de12d15... retained. No appcode,
+frozen/research/strategy/OOS/productionDB/admission/policy/merge/release changes.
+Next batched fullqueue holder/fraction/deferred and cached2023-2025 closure plus
+allactionclasses/newversion/financial/API/userflow acceptance; full U1-U8 intact.
+
+## v1.2 replace single-year count progression with broader cache audit — 2026-10-06
+
+Actual retained7407bonus-oracle rows cover2010-2025, whileV21source83/142 only
+assesses integer2011cases. Preserve its accepted scoped receipts but do not
+substitute them for the required complete economic/financial data version.
+Reuse13cached date/source manifests2010-2022 offline, unchanged parser/policy:
+1369assessed,115sourcelegs/1254unresolved/6038not assessed by this ledger.
+Allold83whole receipts exact;4dependencies/inputhashes/32newsourcebindings pass.
+Reversedargument repeat yields same immutablev2/stdout/bytes. No new financialPASS.
+IndependentP2 firstpreservation checker did not compare approved extractionSHA;
+resolve exactsymbol/record/ex/URL/PDF in verified date-links and assert byteSHA.
+Changed-pages fixture retainsPDFinnerSHA but is rejected; no realcache mutation or
+assertion relaxation. Pre-reviewreceipt retained, finalapproved receipt supersedes.
+First standalone helper import lackedPydantic, reused pure repo helper via runpy;
+first batchv1 container-onlypolicy path retained, actualpathmount separatev2
+changes onlyinputs/manifest. No install or dates/terms/oldreceipt edits.
+Ownedcontainers lockedexistingimage/networknone/read-onlyroot/repo+staging/noDB;
+only newowned output writable. Allterminal0/originalfourhealthy/up/no deletion.
+Next external reference auditor must cover checksum-bound manifests acrossyears,
+not its old single2011sourcefile; preserve82+1 baseline/strictcash assertions.
+Broaderfull7407cross-ledger/fraction/deferred/2023-2025 queue remains required,
+as do allU1-U8/M0-M5, lawful genuine forward and original lost-ledger gates.
+No new full dataset/registration/admission/freeze/strategy/OOS/merge/release.
+
+## v1.2 disclose source quality before running — 2026-10-06
+
+Actual IAB restored historical draft shows a known economic-coverage gap in its
+capabilities but no explanation before Run. Fix the shared four-step wizard once:
+reuse existing translated quality codes at source selection/final confirmation;
+associate the select with existing version and new quality note. No new dependency,
+financial calculation, dataset admission, API or acknowledgement semantics.
+The note does not repair economic coverage or validate old returns/quantities.
+No-metadata/synthetic selection removes the note and its description association.
+
+Two RED cases prove omission; first green2FAIL/97PASS identified a stale test
+select after Back remounted it. Fresh semantic query, unchanged assertions:
+99focusedPASS; full668frontendPASS/44files13.72s/lint/types/PrettierPASS.
+WSLlogin initially lacked npm; reused installed miseNode24, no install. First full
+command subsequently failed because shell expansion emptied the build outDir;
+explicit newtmpdir buildPASS145ms/519.40kB advisory retained. No old dist overwritten.
+
+Four distinct actual IAB confirmation cases cover required widths and both locales/
+themes, not full16/native200/Chrome/p95/AA. Back/locale/accessibility-description
+targets checked. Original IAB draft100000/date/cost/risk retained and saved at
+step1; ZH/system/home/defaultviewport restored, owned tab closed. No businessPOST.
+Chrome binding unavailable; no alternate security bypass. Mobile theme selector
+is intentionally hidden; visible desktop selector used before narrow observation.
+Independent source/artifact reviewer found no bounded codeP1/P2; broken relative
+proof links corrected to actual external Windows files. Exact newCI/seal pending.
+Full product acceptance and lawful forward/genuine missing-ledger gaps unchanged.
+
+## v1.2 holder account/prose continuation and preservation repair — 2026-10-06
+
+Full cached002304/002368/002425/002436/002573 final notices supply explicit same-day
+credit/listing and complete all-holder record dates. Recognize numbered cutoff,
+share-credit股东账户 and bounded prose page continuation; never complete any date
+across pages or infer listing from cash/credit. Preserve002436printed2010AGM typo
+as a source caveat, separately from explicit2011 implementation dates.
+V18=79/63; V19draft=74/68 drops9old records despite52focusedPASS: NOT ACCEPTED.
+Read full9sources; require exact contiguous dated metadata and reviewed headings,
+identical running header derived from firstpage, explicit heading-counter handoff.
+7newRED then1proposedmetadata RED; shared guard correction, no deleted tests or
+relaxed assertions. IndependentV20P2 Arabic section swallowed by prose reproduced
+2RED/2PASS;shared numbered-boundary guard closes root cause. V20 NOT ACCEPTED.
+FinalV21=83/59 out of142;old78fields/receipts unchanged except
+opt-inversion/checksum/fourdependencies/default unchanged.5newPDF/extraction/URL
+bindings validated;immutable repeatPASS.44rawdate failures remain diagnosis only.
+Unchanged reference auditor82scopedPASS/1UNRESOLVED000598 cash mismatch/repeat/
+reversed equal.Final1238backendPASS/1optionalarchiveSKIP19.74s/static/reversible owned
+tmpfs testDBPASS;checkerexited0/ownedPGstopped, original4healthy/up200/PONG.
+Frontend unchanged;historical666/static/build and exactc2379CI reused honestly.
+Independent finalV21 source/allcallers/tests/candidate/docs/proof review found no
+boundedP1P2 or scope overclaim;no tests/network/DB/writes by reviewer.
+New exactCI/seal pending. No full financial/product acceptance,
+new dataset, frozen mutation, OfficialOOS rerun, lost-ledger fabrication or release.
+U1-U8/M0-M5 and lawful forward/genuine lost-record external gates remain.
+
+## v1.2 numbered metadata and explicit long holder declarations — 2026-10-06
+
+Read full cached official002479/002493/002503/002519 notices; accept lexical
+equivalence only with complete effective dates, all-holder scope, explicit
+unrestricted listing and existing issuer/lifecycle/integral/source guards.
+DraftV15 arbitrary preceding-date anchors matched inside拟将 fields (actual
+1RED/3PASS). Bind declaration boundary and complete contiguous numbered metadata
+chain instead of a keyword-only blacklist. V16 dropped old002093 short heading;
+read full cached source and explicitly preserve分红派息日期 alongside the exact
+long metadata heading. FinalV17 separate immutableledger-v4:78sourcelegs,
+64unresolved/142,7265outside. Old74event fields/receipts unchanged except opt-in
+version/checksum, four dependencies and default next-session unchanged.
+V14/V15/V16 ledgers retained as non-accepted chronology, not rewritten.
+45focusedPASS; first full1224 tests passed but format check failed, corrected test
+format and repeated full1224/one optional archiveSKIP19.59s/Ruff548/mypy145/
+disposable tmpfsDB head-base-head-checkPASS. No productionDB touched.
+Reference77scopedPASS/1UNRESOLVED000598 strictcash mismatch remains; no tolerance
+or assertion relaxation. Immutable/stdout-repeat/reversed equality verified.
+Also repair duplicate product checkpoint key: newfb27 parenthetic gate distinct
+from old655 cutoff gate; stdlib validator preserves both and forbids nested
+duplicate keys. Existing sealed proofs and frozen research unchanged.
+Independent final source/docs/proof review no boundedP1P2/overclaim; newexactCI
+and seal pending.
+Frontend unchanged; reuse historical666/static/build/exactfb27CI honestly, no
+new local frontend/browser or full product/financial certification. Full U1-U8/
+M0-M5 remain, including lawful after-start forward and genuine absent ledgers.
+
+## v1.2 explicit cutoff/parenthetic credit and root declaration boundaries — 2026-10-06
+
+Full cached002357 final notice explicitly states截至 record-date allholders,
+(转增)的股份 complete credit and unrestricted listing dates. Lexical equivalents
+only; do not derive dates from undated order or another clause. Initial3RED then
+26focusedPASS/V12 candidate is chronology, not accepted after independent拟将
+counterexample.9RED establishes all shared本次 credit branches could match inside
+proposed/discussion text. Require sentence/page boundary, reviewed exact method
+heading and optional numberedfield, rather than another keyword-only blacklist.
+Read complete cached000523/002132/002168/002011/002080/002163/002497 notices before
+preserving their exact headings.40focusedPASS; separate immutableV13ledger-v2
+preserves all old73fields exceptversion/checksum,4dependencies/default unchanged;
+74sourcelegs/142,68unresolved,7265outside. V12ledger-v1 NON-ACCEPTED.
+73referencePASS/1UNRESOLVED000598 strictcash mismatch remains; repeat/reversed
+agree.1219backend/one optional archiveSKIP20.20s/lint/types/reversibletmpfsDBPASS.
+Same owned stoppedchecker/readiness verified; failed inspect template corrected
+before checker start; PGstopped after terminal0. No originaldata/queue/provider/
+frozen/OOS changes or financial admission. Frontend unchanged, prior666/static/
+build/exact2332CI reused; not a new frontend/browser run. Independent V13 source
+and final source/docs/proof review no boundedP1P2/overclaim; exactCI pending.
+Full mandatory product remains.
+
+## v1.2 explicit parenthetic listing aliases and declaration boundaries — 2026-10-06
+
+Full cached final002379/002396/002481 sources have complete all-holder credit
+and explicit unrestricted listing dates under 起始交易时间, (转增)股 and 送(转).
+Expand shared opt-in lexical alternatives only; default next-session unchanged.
+2RED then20focusedPASS. Independent planned-parenthetic P2 reproduced1RED;
+bound all 本次 listing declarations and reject parenthetic planned-action prefixes.
+First stricter boundary dropped2old valid exact-heading clauses; preservation
+assertion failed and remains evidence. Read full002342/002344 cached notices,
+test exact 新增股份起始交易日/转增流通股上市日 headings without unbounded gaps.
+FinalV11 23focusedPASS; V9/V10 candidates NON-ACCEPTED. Immutable ledger-v3
+73sourcelegs/142,69unresolved,7265outside;old70fields exact exceptV8->V11/checksum,
+4dependencies unchanged. Five complete dates/issuer/source/class/lifecycle/
+integral/page/conflict guards retained; no inferred missing002299日.
+72referencePASS/1UNRESOLVED000598 strict cash mismatch remains; unchanged
+auditor/repeat bytes/reversed input. No financial census/dataset admission.
+1202backend/1existing optional archiveSKIP20.00s/lint/types/reversible tmpfs
+testDBPASS. Fresh ownership checks, readiness before same checker restart,
+PGstopped afterward; no original businessDB, deletion/config/security changes.
+Frontend unchanged; prior666/lint/types/independentbuild/exact291CI reused,
+not a new local frontend or browser run. Final independent read-only source/
+caller/docs/proof review no boundedP1P2; exact newCI pending.
+Full U1-U8/M0-M5, economic admission and external lawful-forward/lostledger remain.
+
+## v1.2 explicit legacy headings and tentative-date refusal — 2026-10-06
+
+Full cached002341/002093/002132 official text has complete explicit holder
+dates under权益分配 or numbered sections, standalone capital-credit and
+unrestricted listing-table date. Shared opt-in aliases only, five dates/source/
+scope/lifecycle/integral/page/conflict guards/default next-session preserved.
+3RED, test-harness duplicate-date split failure kept/fixed rsplit last occurrence.
+Independent P2预计 listing false-definiteness reproduced3RED; shared guard now
+rejects预计/预期/拟新增/拟上市/拟转增/拟送. Second计划 prefix P2 reproduced3RED;
+standalone fields now require sentence/page/numbered-field or exact method
+heading boundaries plus shared planned-action refusal.18focusedPASS.
+IntermediateV6ledger-v1/V7ledger-v2 retained NON-ACCEPTED; finalV8ledger-v3
+immutable70source/72unresolved/7265outside;
+old67 exact exceptversion/checksums,4dependencies unchanged.69referencePASS/
+1UNRESOLVED000598 strict mismatch remains, no financial census/admission PASS.
+FinalV8 1197backend/1optionalarchiveSKIP19.22s/lint/types/reversible tmpfs testDBPASS.
+Startup-race failure preserved; sameexactownedtestcontainer restarted after
+PGhealthy. TestPG stopped afterward;no cleanup/config/security/businessdata changes.
+Frontend unchanged, prior666/fullchecks/exact8dCI reused honestly, no newUI claim.
+Full U1-U8/M0-M5/sourceadmission/forward/lostledger requirements remain.
+
+## v1.2 explicit weekday and capital-reserve listing clauses — 2026-10-06
+
+Full cached official002102/002212 notices show complete credit dates followed
+by weekdays and exact新增资本公积金转增股本 unrestricted listing. Shared opt-in
+same-day parser accepts those lexical forms only; recognized adjacent explicit
+(星期...) annotations must agree with calendar, not every weekday notation.
+Five complete dates,
+holder/unrestricted listing, issuer/source/lifecycle/integral/page/conflict
+guards remain. Default next-session unchanged; immutable opt-inV5 receipt.
+3targetedRED then15focusedPASS, negative assertions retained.67sourcelegs/142,
+75unresolved/7265outside;old65 exact except version/checksums.66referencePASS/
+1UNRESOLVED000598 strict cash difference;002006 missing listing remains.
+Not complete economic census, dataset or financial admission.
+
+New Docker scratch network refused address-pool exhaustion. No prune/reset/
+network deletion/config/security changes. Reused freshly inspected own previous
+stopped tmpfs quant_test PG/no mounts/noports/empty owned network.1194backend/
+1optional archiveSKIP/reversible testDB/lint/types and666frontend/lint/types/
+independent-output buildPASS. Existing regular-dist failure not reclassified;
+testPG stopped afterward without cleanup. Original services/data untouched.
+Independent read-only source review noP1P2;full raw58residual date diagnosis
+saved,47holder/3credit/6listing/2record-ex. Diagnosis is not event acceptance.
+Full U1-U8/M0-M5 and external lawful forward/missing-ledger gates remain.
+
+## v1.2 batch explicit holder/credit aliases — 2026-10-06
+
+Cached final002080/002101/002164 sources show a longer exact holder heading,
+送红股/直接计入 and 资本公积金转增股份 credit wording. Expand these lexical
+alternatives in the shared opt-in same-day parser only; retain five complete
+dates, all-holder/unrestricted-listing, conflict/page/source/issuer/lifecycle and
+integral-component checks. Extend six parameter variants with all old negative
+assertions and new cross-page rejection. Default next-session unchanged;V4
+provenance in a new immutable candidate, never overwrite prior/frozen receipts.
+
+65 accepted share legs/142,77 unresolved,7265outside. Old60 event fields equal
+except source version;new002080/002101/002164/002351/002416 source bindings
+verified.64 scoped reference relationshipsPASS/1UNRESOLVED000598 remains;
+reuse accepted full cashv32 without amount/assertion/policy changes. This is not
+full financial census, new dataset or execution admission.002006 still no listing.
+
+3newRED/3oldPASS then17focusedPASS.1191backend/one optional private-archive
+skip, lint/types and owned tmpfs testDB reversible migrationsPASS;666frontend/
+lint/types/independent-output buildPASS. Known root-owned regulardist failure not
+retried, no permission changes. Independent read-only review noP1P2.
+Diagnostic-only categorization bug preserved: old summary matched literal记入,
+not new[记计]regex, so mislabeled4credit failures. Correct bounded summary uses
+unique account clause:60date failures47holder/4credit/7listing/2record-ex;
+underlying evidence/failed patterns and candidate acceptance are unchanged.
+All U1-U8/M0-M5, external lawful forward/genuine missing ledgers remain.
+
+## v1.2 explicit cutoff and credit wording, separate cash scope — 2026-10-06
+
+Recognize only observed optional 截止 before the complete holder date and
+转增的股份 credit wording. Retain five independent explicit dates, final issuer,
+all-holder/unrestricted-listing/source/lifecycle/integral-component guards.
+Opt-in same-day source version V3; default next-session branch unchanged.
+Initial3RED retained;14 focusedPASS. New immutable source candidate60/142,
+82 unresolved,7265outside. Prior55 event fields equal except source version.
+002006 still has no explicit unrestricted-listing date; never infer from credit.
+
+Reuse accepted full cash authority rather than re-acquire/re-approve it:000598
+already has ordinary public old-share gross0.102064 in cash-full-coverage-v32.
+Official exchange table DPS0.101 differs. Strict reference audit59PASS/1unresolved
+is retained. Both values round to10.82 in this case; that is not evidence of
+identical cash entitlement/reference basis or complete accounting support.
+No strategy, dataset promotion, cash-policy edit or lowered assertion.
+
+1188 backend/one optional private-archive skip, Ruff/mypy and fresh isolated
+tmpfs testDB reversible migrationsPASS.666 frontend/lint/typesPASS; regular
+build failed on existing root-owned dist/assets. Fresh independent mktemp outDir
+buildPASS without changing permissions or existing runtime build directory.
+Read-only independent review noP1P2. No new UI/financial/full product acceptance.
+Keep all required U1-U8/M0-M5 and external lawful-forward/lost-ledger gates.
+
+## v1.2 reuse retained notice wording and published cash policy — 2026-10-06
+
+Expand only observed final same-day notice spellings (所转增股份, 所(转增)股,
+所送(转增)股, 分派对象 and 帐户). Keep all five explicit date/holder/listing
+checks, issuer/final-title/source/lifecycle and integral-component guards.
+Opt-in candidate source version is V2; default next-session policy unchanged.
+Existing cash parser reads missing002376 gross0.30. Its CLI failed on a stale
+policy checksum: allow only original exact bytes and published v1.1 revision3
+exact SHA, independently verified against the tag. Frozen policy unchanged.
+
+New external immutable candidate:55 accepted share legs/142,87 unresolved,
+7265 outside. Cash recheck reuses916 rows and preserves916 event objects
+exactly;214 newly parsed,57 unresolved. Initial reference54/1 retained;
+new cash input closes55 scoped relationships with repeat/reversed equality.
+Not full financial execution/census/dataset admission/release.1185 backend/
+one optional skip, lint/types and scratch reversible migrations pass; final
+independent read-only source/evidence review noP1P2. Full product scope and
+external rights/genuine lost-ledger requirements remain.
+
+## v1.2 keep selected dataset identity readable on mobile — 2026-10-06
+
+Actual settled Chrome showed the native 390px data-source select truncating the
+selected version ID. Reuse the existing wrapping technical-text class and
+translated label beneath it, and associate that caption as an accessible
+description alongside any validation error. No new component/dependency, money
+calculation or execution admission. Two pre-fix failures are retained; final
+666 frontend tests, static/build and 81 focused tests pass, including unavailable
+restored-version error/focus checks in both languages. Settled EN/ZH screenshots
+are evidence for the caption only; rapid stale/cropped frames remain nonproof.
+
+The existing Docker Desktop was safely started after it was found stopped;
+original services resumed, saved32 API bodies match and capabilities have only
+expected inspection-admission additions. Exact13a CI37090369827 is successful,
+separate from this uncommitted fix. No reset, data deletion, financial job,
+frozen research change or broad recovery/product PASS. Continue the full product
+goal and real data-admission work; forward rights and genuine lost-ledger evidence
+remain external gaps, not reasons to repeat accepted source work.
+
+## v1.2 register inspection identity without inventing financial admission — 2026-10-03
+
+Extend the existing registry and reuse catalogue containment/product storage;
+no directory scan, new table, dependency, environment variable or self-approved
+financial boolean. New explicit ID/SHA entries are inspectable only with the U5
+reader layout, actual selected roots and isolated caches. All new execution
+remains refused at shared admission/loader and research default/validation.
+An arbitrary freeze marker cannot repair coverage or approve a version. Keep
+legacy/demo and saved receipt/idempotency behavior. U6's full selected-ID flow
+must change coherently after real economic admission, not only its schema literal.
+
+Review found and fixed bad-index interference with demo and missing fixed-reader
+table advertising. Full1181backend/one optional skip and662frontend/static/build
+pass; retain type-narrowing and Compose/Alembic harness failures. Actual EN/ZH
+Chrome preserves existing exact draft configuration and shows IDs, not a new
+version financial result. No real new dataset or publication. This prerequisite
+must not substitute for full economic closure or U1–U8/M0–M5 completion.
+
+## v1.2 validate ordinary economic groups once before mutation — 2026-10-03
+
+Reproduced19 regression failures: valid rights could mask malformed ordinary legs,
+and a direct session could bypass raw-reference observation guards. Reuse the
+shared corporate-action supporter, reject combined carriers/duplicate economic
+identities/two share kinds, and validate the whole ordinary group before engine
+activation. Receipt hashes are provenance, not duplicate economic identity.
+Preserve existing two-rights policy, explicit structural accounting and originals.
+One pure tick-exact gross-cash/aggregate-share formula reconciles the two cached
+official reference rows; no factors, symbol exemption or full coverage inference.
+
+Only typed OrdinaryDistributionInputError exposes one fixed code through research
+and persisted paper; unknown diagnostics remain opaque. Reuse shared EN/ZH advice,
+no new schema or exception-string allowlist. Final1164backend/one optional skip,
+659frontend/static/build/Ruff547/mypy145/migration reversal pass. Actual scratch
+schema and mocked socket precondition failures are retained separately and fixed
+without deleting assertions. Current portfolio/session atomicity is asserted.
+Real Chrome existing failed-task compatibility, no new strategy/queue/business
+DB writes or service restart. The two-row source audit is not full financial PASS;
+new dataset/version admission and selectable U3/U5/U6 remain next. Independent
+source/artifact review no newP1P2. Exactfe6431c CI37088102932SUCCESS01:59:54Z:
+1164backend/one existing skip31.47s,659frontend44files/static/build/Compose smoke.
+After live active0/PID checks, only backend reloaded02:07:30Z; original durable
+services/frontend remain.33 saved API response bodies are byte-equal; original
+manifest/five partitions/.research/v1.1 unchanged. Prior no-restart notes are
+pre-commit scope. New catalogue must not auto-register old backup IDs or pilot
+partition shapes by freeze-marker presence; source-only2/140 cannot certify a
+repaired executable version. Keep receipt-only edits for next meaningful milestone.
+Never mutate frozen v1,
+historical results or consumed Official OOS. Goal remains active, no release.
+
+## v1.2 correct CLI provenance paths, not CI coverage — 2026-10-03
+
+Exact15a7035 hostedCI37084967922 actually ran and failed1/1123pass/one existing
+optional skip: two sibling parser SHA paths depended on caller cwd. Frontend656,
+static/build and isolated Compose release smoke passed. Reproduce from tmp_path,
+reuse pathlib source-relative siblings in the shared CLI; do not weaken tests,
+change workflow cwd or blame quota.99 focused from repo root/Ruff547/mypy145 pass.
+Independent read-only follow-up finds no newP1P2. Immutable v5 canonicalSHA
+24a1028c11eccc7a8f2be25d3b87419fc6c5cde8c6e7cc09b1098728bfe838fc
+changes only main parser/manifest hashes versus v4; events/results still2/140.
+Preserve earlier ledgers and all failure logs. Exact repair29f8909 CI37085538373
+completedSUCCESS2026-10-03T01:20:18Z:1124backend/1existing optional skip/656frontend/
+static/build/reversible migration/Compose isolated release smoke.
+Local frontend5173/backend8000 return200, PGhealthy/RedisPONG without restarts;
+GitHub availability is not a prerequisite for local application execution.
+No dataset promotion/freeze, financial PASS, formal/OOS rerun, merge or release.
+Checkpoint-only receipt is saved for the next meaningful milestone, not another
+tiny docs-only push. Continue independently bounded mixed-leg/reference inputs.
+
+## v1.2 accept explicit same-day issuer terms separately — 2026-10-03
+
+Cached002168 final issuer PDF proves record03-25 and ex/credit/unrestricted legal
+first-listing03-28; the old next-session selector excluded it before reading terms.
+Reuse retained ratio/title/date/lifecycle helpers, add an opt-in same-day source
+subset and independent immutable ledger; do not rewrite old oracle NULL dates,
+ledger-v32, frozen actions or financial outputs. All-holder, integer-components,
+exact dates, source hashes and actual selector dependencies remain mandatory.
+Independent P2 proposal-title/positive+UNKNOWN or cancelled coexistence controls
+are tightened only here; preserve failed tests/iteration ledgers. V4 accepts2 bonus
+legs from142 candidates,140unresolved;002477 additionally retains its separately
+accepted0.45 cash leg. No ratio/factor-based entitlement or blanket financial PASS.
+99final focused/Ruff547/mypy145 and earlier1124/656 full/local migration pass;
+final independent readonly review no remainingP1P2; exact source CI pending.
+Original services stayed up; testPG stopped.
+Continue independent mixed-leg/reference/new-version input audit and actual new
+ID/SHA selectable product path. Old authorizations are not new dataset acceptance;
+rights and genuine lost-ledger evidence remain external, all U1-U8/M0-M5 mandatory.
+
+## v1.2 preserve originals while disclosing later input-version gaps — 2026-10-03
+
+Reuse one pure saved-ID/canonical-SHA classifier and existing bilingual notices;
+no persistent field, dependency, mutable plan metadata or financial recalculation.
+Read advice is distinct from historical authority/readiness/freeze. Never let
+latest mounted SHA, undated name history, factors, candidate S0/S1 or a different
+universe silently certify economic completeness. Formal records use their own
+checksum; unknown account SHA wins even when its plan claims a reviewed version.
+Archive readiness labels retain their original value alongside the later warning.
+
+Real no-latest-portfolio parent regression showed saved plans/advice were hidden;
+historical account plan now safely uses saved preview, optional portfolio or null.
+1122backend/one optional skip/656frontend/static/build pass, independent scoped
+source reviews noP1P2.32API pairs and8SQLtable counts/content digests unchanged;
+5frozenSHA preserved. Original backend-only reload after active0/PID checks,
+PG/Redis/frontend unchanged, testPG stopped.121payload packet is immutable with
+SHA256SUMS0015092a60ffee2ca67d5406c42085919bfbfe5f4ffdf0edd426bb754d403a64;
+failed test/harness logs and projection fixture limits retained. No source repair,
+strategy/account execution, formal/OOS rerun, merge/release or financial PASS.
+Independent121payload/source32/API32/SQL8/frozen5 review passes scoped but finds
+PNG-description P2. Keep the packet immutable; explicitly withdraw Loading,
+wrong-page/locale and overbroad precision/viewport claims in the separate
+20261003-dataset-quality-advisory-review/README.md, with loaded recaptures.
+Correct DOM proves disclosure, not a matching screenshot at the same instant.
+Separate correction review found no remainingP1P2. Coherent advice sourceca9d986
+pushed to same draftPR32; exact CI37083540461 SUCCESS1122/656/static/build/Compose.
+This is a safety source milestone, not a repair or full financial/product release.
+Read-time notices are a safety improvement, not a replacement for new-version
+economic remediation and the complete mandatory product acceptance matrix.
+
+## v1.2 stop held-reference contradictions once in the shared engine — 2026-10-03
+
+Reuse existing accepted input/engine/runner paths. Observe only previous raw close
+and already-reached boundaries; cash-only events explain only their actual sum
+rounded to the effective price tick in fixed Decimal context. Independent review
+identified cash0.1 hiding000788's additional bonus and cash0.20 hiding002230's;
+new failing regressions close this loophole. Do not infer bonus ratios or invent
+execution dates. Reject current held contradictions before any today's mutation.
+Leave missing-reference/first-observation/noncash-mixed/pending-conversion coverage
+explicitly incomplete; guard is not full financial/data acceptance.
+
+97focused/1107backend+one optional skip/643frontend/static/build pass; final8-source
+review noP1P2. Actual independent originalChrome task `a1205675` fails with stable
+code/no summary/no persisted result rows; EN/ZH explains unchanged retry cannot fix
+source gaps. Root restores original exact-cash draft;10metadata/8results/formal/
+paper lists unchanged. Backend alone restarted after fresh terminal/PID checks;
+owned test PG stopped, original durable/frozen/OOS untouched.73-file proof sealed,
+artifact review and new exact CI pending. No full product/financial/forward PASS.
+
+Separate58-file review correction narrows unsaved230/297 wording to actual saved
+70/290UI and210API, and notes independent names/legacy evidence hash limits. Never
+rewrite sealed originals. Later current_dataset_quality belongs in read-response
+copies/export metadata/state envelopes, not persisted summary/plan/journal/frozen
+manifest. All accepted mandatory U1-U8/M0-M5 and external gates remain required.
+
+## v1.2 retain unvalidated economics, guard observed contradictions — 2026-10-02 23:51 UTC
+
+Actual SZSE exploration exposes a source-input defect, not an arithmetic error:
+official cached002168 ratio1.000/ex-date2011-03-28 evidence exists but was not
+accepted into frozen corporate-actions; first-tradability evidence remains open.
+The saved100-share position did not receive that distribution. Record financial
+PARTIAL, preserve the original output and never derive entitlement from a factor
+step or price fall. Root verified the oracle row and retained HTML checksum;
+independent Decimal replay of saved rows establishes arithmetic consistency only.
+
+Prefer a shared observed-reference contradiction guard over a single-security
+special case or an entire historical-source disable. A guard is not proof of
+complete corporate-action coverage. Existing accepted action chains and uncertain
+activation boundaries require separate validation; current-quality advisories
+must also reach saved results/exports/plans without rewriting old summaries,
+ledgers or frozen manifests. New economic repair belongs to independently audited
+new data/experiment versions, never an in-place formal/OOS rewrite. All product
+requirements remain intact; no merge/release/goal-complete claim.
+
+## v1.2 validate the corrected path independently; never manufacture execution references — 2026-10-02 23:42 UTC
+
+Reuse existing notice blocks/shared copy for honest old-engine disclosure on the
+actual results users read, not only the manuals. Keep originals/frozen facts/OOS
+unchanged; missing/malformed source metadata is uncertainty. Independent review
+caught array-to-string candidate coercion; strict identity plus focused regression
+closes it. Preserve RED and first-green failures and distinguish EN DOM positive
+proof from archive/configuration-only screenshots. Final49focused/642frontend
+and independent53-file review pass locally; new exactCI remains separate.
+
+The accepted objective permits independently named known-history validation.
+Actual UI submitted one SSE and one SZSE2011Mar task, not a formal rerun or
+unseen/OOS research. Their identical parameters except universe are engineering
+controls, not a performance optimization. SSE's20 orders correctly cannot fill:
+the official frozen kline source has no exchange pre-close, and the accepted
+convention expressly forbids substituting yesterday raw close. Targeted raw
+statistics and both partition/manifest SHAs verify this source gap without
+reacquisition or mutation. SZSE has official references and10 constrained fills;
+retain its negative result and separately inspect accounting/source evidence.
+Different universes/other historic code changes cannot identify old-report impact.
+
+Original8job metadata/6result HTTP bodies/formal-list/paper-list remain equal
+within the saved scope; only the2declared personal IDs are added. Root restores
+the original123456.789000000000001 draft through its immutable backup and leaves
+old browser versions intact. No provider acquisition, account start, service
+restart, security-policy change, dataset/methodology/freeze or formal/OOS write.
+Whole mandatory product acceptance/current lawful forward/real missing-ledger
+evidence/quality/delivery obligations remain; keep goal active, no merge/release.
+
+## v1.2 fix shared trust boundaries without rewriting old evidence — 2026-10-02 23:03 UTC
+
+Keep four label fixes in existing shared controls and observation ownership/date
+checks in the existing HTTP parser, not per-page filters/new dependencies.
+Snapshot dispatched dates; reject an entire mismatching body. Existing backend
+receipt/SQL authority remains unchanged. Real-cache browser reads remain labeled
+candidate-only, never promoted to lawful execution/forward evidence.
+
+The loader cache omitted a resolver input: one-price status. Add that bit once
+for every execution=True caller. Normal securities can previously be falsely
+rejected; flat securities retain the independent convention veto, so illegal
+fills are not established. Old executed formal/personal results may be affected,
+but particular-report impact is unquantified; preserve originals and disclose
+the known defect in both manuals. S0/S1 execution=False do not use this cache.
+Do not rerun formal studies/OOS or mutate frozen facts to erase the defect.
+
+1096backend/one optional skip and626frontend/fullchecks pass, independent source
+review passes. Independent artifact review found a real prior-paint cropped mobile
+JPEG; preserve it, capture genuinely settled mobile layout, and distinguish the
+two selector RED failures from two actual name RED failures. New41/27/25-file
+bundles are sealed; external logs/failed paths remain outside Git. Reuse the old
+read-only ledger verifier only through a NEW copy/output directory. Fresh active0
+guard permits backend-only reload; exact five snapshots and5/417/8/4/3/66 unchanged,
+other service PID/starts untouched. No security policy/data source/financial API
+change, original writes, durable deletion or optimistic whole-product claim.
+
+Root remains sole Git/docs/service/UI writer; implementers are frozen and final
+artifact reviews read-only. Commit coherent code/checkpoint slices then one
+meaningful existingPR32 push/exactCI; no checkpoint-only CI churn. Full mandatory
+U1–U8/M0–M5/current lawful authorities/genuine after-start forward/lost-ledger
+truth/native zoom/p95/release evidence remain, not deleted from acceptance.
+
+## v1.2 close the exact bounded-read milestone, then audit the next real gap — 2026-10-02 22:38 UTC
+
+Exact21b8a29CI37072960258 and independent65-file artifact review both pass
+within their scope. Keep hosted raw logs/review in a separate sibling so the
+sealed parent remains unchanged. Hosted616frontend now covers the final
+source/check ordering; the earlier local result still is a tool-output record.
+Preserve failed a3CI and nonproof intermediate artifacts. No tiny checkpoint-only
+push/CI loop and no rerun of accepted1094/616/bounded-browser gates just for
+status. Root remains sole repository/Git writer; independent next-gap reviews
+are read-only. Next action is an actual unresolved M3/M4 mandatory capability,
+not another passing mock/demo presented as lawful forward acceptance. Whole
+objective, financial/data/source boundaries, frozen history and OOS lock remain.
+
+## v1.2 preserve bounded paper pages and monotonic state — 2026-10-02 22:29 UTC
+
+Reuse typed `/state`, one100-event page per saved financial collection and the
+existing Pagination, not a new cache/grid or truncated ledger. A financial WS
+invalidation stays last-verified until REST watermark/page reads cover it.
+Late REST must not regress the accepted sequence; preserve that floor even
+after a failed read/reconnect. Status notifications/explicit commands replace
+blocked hydration, while financial bursts coalesce.403/401/404 clear prior pages
+and stop automatic access until explicit Retry; other errors can show marked
+last-verified data. No front-end finance calculation or identity normalization.
+
+Review/focused RED found real rollback and typed-payload bugs; common guards fix
+all callers. Split the expensive201-row test without weakening assertions or
+raising timeout.616frontend/1094backend checks and finite205/204-record Chrome
+rawAPI/DOM/money/locale/focus/mobile/account proof PASS_SCOPED; frontend logs are
+tool-output records, not fabricated rawstdout. New65-file evidence is sealed,
+independent saved-bundle/new hostedCI pending. Retain intermediate paint/count
+diagnostic failures honestly. Source promotion/forward receipt/lost-ledger/AA/
+native200/p95/full U1-U8 and release remain mandatory and incomplete.
+
+## v1.2 read the saved paper journal by fixed watermark — 2026-10-02 22:07 UTC
+
+Keep full audit/resume interfaces, but add SQL bounded saved collections instead
+of truncating finance history in React. Shared writer-row lock captures state
+and W; reject future W, then old pages stay immutable. Canonical UUID grouping
+preserves first order appearance/latest state; risk and fills never deduplicate.
+SQL scanning is still a ceiling, not O(1)/p95/continuous-provider certification.
+
+Review found generic payload union could accept a status-only corrupt order.
+Reproduce first, then fix shared event-type/schema validation for all read
+callers; opaque500 prevents invented normal rows.1094backend/fullchecks and
+five original ledger/state/page exact field comparisons pass; frontend/browser
+still pending. Safe backend-only reload required fresh activecount0; no data
+service restart/deletion. Old CI frontend timeout is retained; tests will keep
+assertions while splitting the expensive case, not raising timeout. No release.
+
+## v1.2 paper table DOM ceiling without hiding the payload defect — 2026-10-02 21:49 UTC
+
+Reuse the existing Pagination once in shared PaperTable, no new dependency or
+per-caller special case.100 rendered rows; exact strings preserved.113focused/
+583frontend/full checks, actual205/204-record Chrome pages and16 responsive
+cases PASS_SCOPED. Declared ceiling: legacy snapshot and client arrays still
+unbounded; next work must address saved collection retrieval, not discard ledger
+history or claim p95 from DOM counts. Full mandatory scope remains unchanged.
+
+Owned clean-install18176/18018 quant_test only. Old18175 browser receipts from
+released synthetic tmpfs fail closed; preserve the receipt refusal. Saved DOM
+does not itself prove unsaved GET404/noPOST transport or storage-byte equality;
+the separate sibling proof-boundaries note states this. A new isolated test
+origin is NOT old-ledger recovery/user bypass.
+Finite input sizing uses existing registry/CSV/registered strategy/risk/OMS/
+portfolio; no new authority, US product expansion, performance study or OOS.
+Raw API snapshots unchanged after UI; originals5/417/8/runtime identities kept.
+47-file external proof/root and independent review PASS_SCOPED, no new P1/P2;
+exact source-batch CI pending. Parent sealed bytes unchanged.
+Prior-paint screenshot, hidden mobile control and diagnostic/verifier failures
+remain non-proof. No security policy or strict assertion was weakened. Only
+owned QA services stopped; no durable data deletion, frozen mutation or release.
+
+## v1.2 async input lifecycle without a fake forward mode — 2026-10-02 21:23 UTC
+
+Reuse existing provider and stdlib asyncio: one owned pending read raced against
+the existing stop event, cancel/await both, close returned iterator, preserve
+handler completion and original failure/cancellation. Independent cleanup P2
+was fixed in that common path, not special-case callers.66 focused/1091backend
+plus optional archive skip/582frontend/full checks PASS. No schema/dependency,
+unlicensed adapter/public forward mode, financial semantics or frozen mutation.
+
+Actual Chrome and isolated PostgreSQL prove upstream waiting Pause→PAUSED,
+graceful restart byte equality, Resume fresh source/dedup→Stop and second-account
+graceful shutdown→INTERRUPTED. Only synthetic calendar input, no price/session/
+plan/order/fill.71-file independent saved/sourcehash review PASS_SCOPED;
+exact newCI pending before meaningful source milestone push on existingPR32.
+Separate shell invocation note records a new powershell execution-policy refusal
+and permitted current-shell & calls passing; no security setting changed or
+sealed byte rewritten. Saved review is not a live/full-database check. Original
+services/counts preserved, owned tmpfs QA stopped; no durable deletion. Keep
+lawful current authority/after-start receipt/plan/constrained forward mandatory.
+
+Persist previous10-file export/17-file long-work+separate viewport/encoding
+errata/8-file zoom observations, each independently scoped reviewed. CSV server
+parity is not browser landing; one136ms old-code sample is not currentp95/paint
+and cannot erase2552ms negative. Static/actual viewport mismatch and mislabeled
+JPEGs are retained, not resealed. The zoom attempt repeated an already-rejected
+shortcut: record the mistake and change method, no more identical accelerators,
+download timeouts or favorable-only native sampling. No speculative performance
+patch without app root cause; no security/disabled-native-surface bypass.
+Full U1–U8/M0–M5 scope and genuine lost-ledger fact remain; no merge/release.
+
+## v1.2 close exact-date deployment checkpoint, continue broad quality — 2026-10-02 20:41 UTC
+
+Exact9dfa CI37060637944 allSUCCESS and independent104/31-file saved reviews
+close the scoped pending actions. Fresh terminal queues allowed only original
+backend restart; original5173 now performs bounded dates/activity with unchanged
+full metrics/statuses/counts/migration and frontend/PG/Redis identities. Native
+keyboard table pagination/local scrolling and explicit motion-off work on the
+original instance; EN/dark/system restored. No new component or dependency was
+needed. Do not rerun that completed flow or trigger a docs-only push/CI cycle.
+
+Persist the104-bundle inventory error as separate erratum, never rewrite sealed
+bytes. Keep actual late/native2552ms observation, unverified running Chrome
+version and all broad AA/native200/p95/user-flow/delivery requirements. Saved
+reviews are not fresh runtime/full-product proof. Continue a concrete remaining
+safe M4/M5 gap while lawful after-start forward and genuine missing-ledger
+resolution stay mandatory. No frozen/.research/OOS/provider bypass/merge/release.
+
+## v1.2 formal dates before paging, explicit activity query — 2026-10-02 20:24 UTC
+
+Reuse shared SQL row helper with optional inclusive date bounds, Shanghai trade
+date cast, existing native date inputs/selects/copy and controlled chart props.
+No new chart library/schema/storage or browser-only partial-history filter.
+Separate draft range, chart preview and confirmed activity day: only explicit
+activity action queries records, resets offsets and moves focus; later preview
+does not mislabel saved records. Full metrics/monthly remain untouched.
+
+Isolated13focused/1073full backend plus19focused/582full frontend checks PASS;
+source/padding reviews PASS_SCOPED. Actual Chrome301-point two-page/raw-metric/
+keyboard/trade-date/empty/reversed/responsive evidence and104-file verifier PASS.
+Initial card padding defect fixed by existing experimentPanel, not new CSS.
+Retain earlier screenshots, loading capture, stale-tab helper failure, fresh-shell
+variable failure and evidence-parser DateTime correction as explicit non-proof.
+Eight personal tasks versus three formal reports are distinct tables, not loss.
+Restore owned backend/frontend to exact baseline, preserve other six runtimes,
+counts and frozen assets. New exact CI/artifact review and original backend
+reload remain pending. No full product/AA/native200/p95/forward/release claim.
+Continue existing draftPR32/full goal; lawful after-start data and genuinely
+absent ledgers remain real requirements, not synthetic substitutes.
+
+## v1.2 precise formal point values, keep real date linkage required — 2026-10-02 19:48 UTC
+
+Reuse native SVG titles/date select/raw readout in both existing BenchmarkChart
+callers; no tooltip dependency or financial Number roundtrip. New14focused and
+580full frontend checks, real Chrome point click/Home/ArrowDown and16 responsive
+DOM cases passed narrowly. Hidden benchmark removes visual hitpoints/readout,
+not original table data; null rolling value stays unknown.51-file saved verifier
+passed; source and independent51-file saved-artifact reviewsPASS_SCOPED. Exact
+new CI remains pending; saved runtime captures are not a live service check.
+Original/restored ledger counts/metric bytes and other seven runtime identities
+unchanged; owned frontend restored exact e328/healthy/no mounts. Native tooltip
+pixels, broad chart linkage/AA/200%/p95/forward/release remain unproved. Next add
+server SQL date filtering before count/paging, with Shanghai trade dates and
+unchanged full-run metrics, then actual UI linkage. Do not fake whole-history
+filtering over the currently loaded200 rows or issue APIs on every hover.
+
+## v1.2 exact chart-batch CI, retain full required chart scope — 2026-10-02 19:28 UTC
+
+Exactb020bb7/CI37054020278 backend/frontend/Compose allSUCCESS, draftPR32 matches;
+later checkpoint documentation is not implicitly covered. Keep independent
+source/69-file artifact plus browser-version erratum reviews scoped. Original
+data/frozen assets/OOS untouched. Do not merge or release from this local slice.
+Continue formal exact hover via existing native title/readout semantics; full
+equity/drawdown/trade-date linkage must use bounded server-date filtering, not
+partial-page filtering presented as whole history. Native2552ms failure,
+running ChromeversionUNVERIFIED, lawful forward and genuinely lost ledgers
+remain unchanged. Save checkpoint without a documentation-only push/CI loop.
+
+## v1.2 formal benchmark display and shared mobile root fixes — 2026-10-02 19:20 UTC
+
+Reuse native localized checkbox and page-level display state; do not fetch,
+recompute formal metrics, hide exact table records or disable rolling drawdown
+when the equity benchmark is hidden. Preserve preference across page/locale,
+bounded requests and the default visible second series in other callers.
+Existing report only read, never rerun to demonstrate a UI control.
+
+Actual375/533 mobile negative identifies two roots: column header cross-axis
+max-content and long grid-child exact numbers. Shared max-width100% plus monthly
+min-width0/overflow-wrap:anywhere fixes all corresponding callers without
+ellipsis, rounding or new JS/library.14 focused and579 full frontend checks,
+actual Chrome16 scoped DOM cases/settled images and source reviewPASS_SCOPED;
+69-file evidence SHA bf3c3fd3…fc5e4c4 sealed, artifact/erratum reviewPASS_SCOPED. A separate
+browser-version erratum supersedes inheritedChrome153 without editing sealed
+bytes: installed154 verified, exact running-tab version unverified; restricted
+scope/URL denial respected, no workaround or performance/version promotion. Retain old
+fixture failure, source RED and stale screenshots as explicit non-proof.
+Native200/p95/fullWCAG/fullUX-CHART are not promoted. Original/restored5/417/8/4,
+metrics byte-identical; restore only ownedfrontend exact baseline/healthy.
+Coherent milestone push existing draftPR32, exact newCI then next required
+formal-hover/date-linkage work. Full legal forward and genuine lost-record
+requirements remain; no merge/tag/release, OOS or authority modification.
+
+## v1.2 preserve late native failures and resume independent chart work — 2026-10-02 18:57 UTC
+
+Keep immutable2500ms snapshots and separate6000ms tails. Late matching native
+events prove censoring, not a <=200ms pass: actual saved route2552ms; app/static
+80ms controls3136/2584ms. Empty takeRecords rejects already-buffered-at-deadline
+as the demonstrated cause. Static noReact/API weakens app-only calculation;
+split input/read protocol still fails native sampling. Don't inflate to30
+identical runs, discard long entries or infer physical foreground from DOM focus.
+Optional foreground/manual-input comparison is separate and unconfirmed.
+
+Independent27-file saved-artifact review PASS_SCOPED with manifest4c0d1933…ba6ec;
+restore exact owned frontend/no mounts, leave backend/DB/Redis/original data alone.
+Exacta71023e runtime CI37048395908 passed all jobs; later documentation is not
+implicitly covered. Save checkpoint locally without a documentation-only push
+loop. The next independently actionable mandatory defect is missing benchmark
+visibility control in formal archive equity charts. Reuse native checkbox and
+existing display semantics, preserve exact tables/full metrics/rolling charts
+and bounded requests; no new chart library, financial change or OOS run.
+
+## v1.2 remove core saved-result mount delay, retain native-timing failure — 2026-10-02 18:31 UTC
+
+The actual request timeline placed the300ms gap before the first job GET, not
+inside the data fetch or financial computation. Same-document cold/warm control
+and installed React19.2.8 retry-throttle source support the causal inference,
+without claiming a directly instrumented internal lane/branch. Use the
+existing ExperimentDetailPage as an eager import rather than modify React,
+introduce a preload abstraction/dependency or patch multiple request callers.
+Lock initial route-commit GET with one regression. No financial/API change.
+
+Three actual fixed cold documents remove the pre-request delay but do not
+repair missing native timing/about1s rAF. Preserve failure, reject background
+visibility as unsupported, and do not repeat the same method30times. DOM metric
+availability is not pixel paint or complete equity/collection readiness.
+Keep p95<=200ms target, entry+25.31kB/+6.07kB gzip tradeoff and unchanged500kB
+warning. Next measurement requires a changed falsifiable hypothesis, not a
+zero for absent native entries or a fabricated full performance pass.
+
+Reuse owned restored frontend/backend and saved293-session report read-only.
+Restore exact frontend image/no mounts; don't restart DB/backend or original
+services. Retain40 hashed external artifacts, true failed verifier assumptions
+and corrected strict assertions. Existing exact3e6b11d CI succeeds separately;
+new runtime slice needs its own exact CI. Full product/source/forward requirements
+and genuine missing-ledger facts remain unchanged, with no merge/tag/release.
+
+## v1.2 prove actual browser recovery without changing finance — 2026-10-02 17:56 UTC
+
+Reuse the real paper API/journal/hub/runtime and frontend in an owned
+`APP_ENV=test`/`quant_test` tmpfs stack. Keep finite input pacing and
+transport fault injection in an external guarded harness, never a public
+provider/API or mocked browser financial payload. PAUSED process restart is
+the unchanged-ledger test; RUNNING crash intentionally has different lifecycle
+semantics and must not be mislabeled.
+
+Separate transport trace from actual UI consumption: a control-only6→7 event
+changed the newer-saved-log cue while the rendered6–1 page and financial state
+remained unchanged. Offline final-session fill then recovered through REST
+exactly once, matching the accepted fixture's financial projection. Scope the
+result to synthetic QA; retain uncaptured transient warning, send-before-await
+trace, screenshot/off-screen, retry/duplicate-packet and auxiliary failure
+limits. Saved-artifact verification is repeatability evidence, not a rerun.
+
+Keep51 external per-file hashes and the canonical manifest hash in the product
+checkpoint; local WSL-host links are not portable GitHub attachments. Stop only
+owned test services after both synthetic accounts terminate. Original ledger/
+frozen/OOS/source authorities stay unchanged. Guide additions explain calendar
+knowledge, UTC versus trading date,2030 synthetic dates and manual log Refresh.
+No new dependency, migration, financial code, merge or release.
+
+With bounded calendar transport/restart proof complete, the next independent
+required M4 slice is production-packaged saved-result click feedback: first
+verify a bounded native-timing method, then measure cold-document samples.
+Do not report missing samples as0ms, clear user browser privacy/security, rerun
+research or replace the full U1–U8/M0–M5 objective with this QA subset.
+
+## v1.2 calendar batch exact CI, no product release — 2026-10-02 17:20 UTC
+
+Normal milestone push `036e53b` passed backend/frontend/Compose in
+CI37039670325, verified against exact PR32 head. Record this separately from
+the earlier pending state and from any later local documentation-only commit;
+do not use an old green run as new-code evidence. Existing draft PR remains
+open/unmerged; all forward-rights/current-authority/real-arrival requirements
+and genuine pre-loss evidence remain unchanged. No billing, identity,
+protection, visibility, merge, tag or release change.
+
+## v1.2 journal calendar knowledge at its causal boundary — 2026-10-02 17:12 UTC
+
+Use one typed `calendar.observed` control in the existing paper event journal,
+not a second table, provider framework or financial event. Full calendar/hash,
+actual UTC, consumed-session count and last trading date are persisted before
+apply/publish. Reconstruct from the stored initial observation and reapply each
+extension after the corresponding original financial batch/strict saved plan.
+Count alone is insufficient for invisible warmup: bind the actual trading date
+as well. Validate immutable full prefixes, hashes, strict dates/booleans and
+version; refuse unanchored legacy retrofit rather than rewriting old knowledge.
+The registered static providers do not gain observations or new behavior.
+
+Normal user pause/stop may legitimately stop before all old controls have been
+replayed. Under the existing lifecycle lock, only RUNNING source exhaustion is
+a failure; PAUSING/STOPPING retain their normal outcome. Independent review's
+three P2s were reproduced/fixed; final scoped review found no remaining P1/P2.
+Frontend treats controls as sequence-only, with bilingual explicit non-market/
+non-fill descriptions; server remains authoritative for checksum/financials.
+No dependencies, migration, raw-data provider authorization or frozen changes.
+
+1065 backend tests (one optional unmounted-archive skip),576 frontend tests,
+lint/types/build and disposable reversible migration passed. Real SQL manager
+resume, backend-process restart and Chrome saved-log/mobile local-scroll proof
+are offline synthetic integration only. Do not promote lawful forward use from
+2030 fixtures, REST hydration or tests. Preserve genuine missing-ledger facts,
+U1–U8/M0–M5 scope and exact-head CI attribution. Auxiliary runner errors and
+the unchanged whole-frontend formatting differences are explicitly retained.
+
+## v1.2 fixed-tag before media without database downgrade — 2026-10-02 16:01 UTC
+
+Use cached `v1.1.0` frontend tree ab93b4eca4c7873df6fb5aaf13551ac54e2f9cd9
+and original lockfile for explicitly labeled Oct3 reconstruction on the existing
+restored backend. Keep main checkout/backend/database untouched; fixed old assets
+use a separate nginx root. Temporary server-level GET/HEAD-only guard rejects
+all non-read methods before proxying and preserves the actual18173 WebSocket
+origin. Five write-method probes and before/after44-table/41-GET checks passed.
+Restore exact e328748 frontend with no guard mount afterward; no original service
+restart, research/provider request, account command, downgrade or migration.
+
+Capture loaded old strategy, saved formal validation report and existing STOPPED
+synthetic04301 account; current frontend reads the same strategy/account. Never
+filter/forge current historical responses to satisfy the incompatible old parser.
+Old formal report is not a running personal study; old v1.1 has no personal
+comparison/tasks, so use its real entry context and explicitly state absence.
+Preserve original screenshots and both lost-ledger facts. Old npm's two high
+vulnerabilities are retained as immutable-baseline limits, not hidden or deployed
+publicly. These are real browser artifacts, not complete M5/forward/release proof.
+Independent read-only artifact/docs review passed. Preserve the initial restore
+inspect's starting health; add a separate final healthy/exact-image/no-mount
+observation instead of rewriting it. Keep all32 file hashes and exact CI-head
+attribution; normal viewport and original presentation settings were restored.
+
+## v1.2 exact batch CI confirmed — 2026-10-02 15:44 UTC
+
+Normal meaningful-batch push `f7f3c6a` passed backend/frontend/Compose in
+CI37028749727, verified against the same PR32 head. This includes separately
+reviewed calendar/focus slices and accurately scoped media/docs. Hosted CI is
+available again; local application execution never depended on it. PR32 remains
+draft/open; no merge, tag/release or billing/protection/identity/visibility change.
+Do not attribute later evidence-only local documentation to this exact run.
+
+## v1.2 append-only calendar and shared sticky-focus root cause — 2026-10-02 15:37 UTC
+
+Keep current/forward calendar acceptance at the application/source-authority
+boundary. The engine may append an immutable accepted session prefix, but may
+not revise old date/open/source facts, move precommitted execution dates or
+create past orders after discovering a later date. Reuse its next-session map in
+paper runtime. Future durable forward work must journal the extension timeline
+and replay it at the original application time. This tested offline foundation
+is not source authorization, forward provider or U7 acceptance.
+
+Actual390 Chrome proved that native reverse Tab can hide a whole date button
+behind a responsive sticky header. Fix once at the document scroll container:
+native CSS scroll-padding with measured header height/ResizeObserver, not
+hardcoded68px, per-date patches or a focus handler. Remove duplicated header
+margins from existing pagination/deep-link code. Actual same-date390, eleven
+1024/EN targets, native modal paging/Escape and stored-task direct-link recheck
+passed; independent review found no critical regression. Existing financial
+state, original services and frozen/OOS assets were untouched.
+
+Consolidate real M5 captures rather than rerecord every passing flow. Mark absent
+old loaded detail/run/comparison/account as NOT_CAPTURED; sampled lifecycle is
+not continuous, synthetic jobs are not market evidence, current-baseline restore
+does not recover missing ledgers. The bilingual guide now distinguishes dated
+plan-time cash from the latest account balance. No new mandatory physical-backup
+gate, strategy run, authority promotion, merge or release is inferred.
+
+## v1.2 reuse verified gates; hosted CI recovered — 2026-10-02 14:40 UTC
+
+Exact pushed `b17650d` CI37018861446 passed backend/frontend/Compose. Local
+execution remains independent of hosted CI; the original services and HTTP200
+were rechecked without restart or data writes. Record completed push/CI rather
+than repeatedly scheduling it. Keep historical native200%, CSV/JSON downloads
+and Sep26 production Event Timing as scoped passes, not never-run.
+
+Current market-modal terminal paging/Escape and existing STOPPED historical
+account-native EN/ZH plan checks are bounded passes. BODY at native Tab boundaries
+does not prove background focus escape; the supported DOM scope cannot expose
+document.hasFocus(), so do not add a speculative custom trap. The new CSV media
+transfer timeout is an unverified current observation, not an inferred app defect
+or a reason to erase older successful downloads. Preserve genuine forward,
+lost-ledger and remaining relevant M4/M5 requirements; no merge/release.
+
+## v1.2 completion gates follow the accepted product objective — 2026-10-02
+
+Rechecked the original U1–U8/M0–M5 mandate against the accumulated checkpoint.
+Independent physical backup media, a real novice satisfaction test, unattended
+Windows-login launch and rerecording all media after each commit were not
+explicit mandatory requirements. Keep these as additional assurance, not
+invented release blockers. Restore/durability, terminal-free use, a read-only
+independent review, relevant AA/live status and actual user-flow/media evidence
+remain mandatory; no requirement or failing financial result is removed.
+
+Preserve the two genuinely missing old paper ledgers and their incident as an
+unresolved data-integrity fact. A new current-baseline restore is not their
+recovery. The current populated logical restore passed 44/44 table fingerprints,
+all six receipt bundles and 41 GET comparisons in a separate scratch stack;
+same-host copies are not independent disaster protection. Sep23/24 scoped native
+200% and later scoped performance passes remain valid historical evidence,
+not blanket current AA/visual/performance acceptance. Public SDK access still
+does not establish lawful forward-feed use; the true U5→U6→U7 forward path is
+required and remains incomplete. Do not merge/tag/release v1.2 on these partial
+passes. The earlier Oct1 paragraph's physical-media release-blocker wording is
+superseded by this scope audit; its missing-ledger warning is not superseded.
+
+## v1.2 clear transient fill announcements on locale change — 2026-10-02
+
+The shared paper stream retained a translated fill announcement after all other
+UI text switched language. Clear its temporary value in the existing identity
+reset when its language differs, rather than relabeling an old fill as new or
+merely hiding it (which revives it on a roundtrip). Keep financial snapshots,
+sequence de-duplication and the existing socket lifecycle unchanged. Red/green
+regression and actual packaged Chrome verify empty ZH/EN roundtrips after a
+real streamed historical fill, including terminal state and unchanged ledger.
+This is DOM live-region evidence, not recorded screen-reader speech.
+
+## v1.2 U3 isolation is separate from M4 disaster recovery — 2026-10-01
+
+Accept U3-ISOLATE only as a scoped local product-workflow gate against the
+post-recovery baseline: independent personal tables, read-only formal HTTP
+archive, read-only frozen-data mount, consumed OOS lock and inspected-history
+labels. Exact code-head CI and an independent read-only review support the
+scope. The 2026-09-23 database incident did not become harmless: missing
+post-backup paper ledgers, possible unrecorded rows and lack of an independent
+physical backup remain M4-DATA-INTEGRITY FAIL. Never infer that U3 isolation
+restores lost history or authorizes U7 forward execution, merge or release.
+
+## v1.2 formal archive API is read-only — 2026-10-01
+
+Keep the saved formal research GET endpoints, but reject the legacy
+`POST /api/research/runs` with `FORMAL_RESEARCH_READ_ONLY`. Even with OOS
+rejected, that route could append DEVELOPMENT or VALIDATION rows to the
+published formal ledger; product exploration already has separate durable
+`/api/experiments` storage and does not need it. Preserve existing records and
+operator publication scripts; do not infer that closing one HTTP write path
+restores missing pre-loss paper ledgers or completes U3/M4 acceptance.
+
+## v1.2 market-update identity after confirmed submission — 2026-10-01
+
+Keep the saved idempotency key after an uncertain response or when the form is
+unmounted before its response can open the task. Once the active form receives
+and displays a confirmed task, persist a fresh key for a later explicit
+same-scope gap recheck and require the user to acknowledge again. This lets
+new requests revisit still-missing dates without turning response loss into
+duplicate jobs. The response handler checks for an already-changed draft from
+another tab before writing; browser storage has no atomic compare-and-swap.
+Raw market updates remain candidate-only and do not authorize forward execution.
+
+## v1.2 malformed browser drafts preserve both raw text and prior page recovery — 2026-10-01
+
+Fail closed on an unreadable shared experiment draft: show its original text,
+then require an explicit new-start action that persists a separate read-only
+raw copy before replacing the shared pointer. If the backup cannot be stored,
+retain the original and do not open the new draft. Rotate the existing
+per-page recovery key when the request identity changes; otherwise a second
+wizard visit can overwrite the only valid page recovery while backing up only
+the malformed shared value. List raw copies for manual copying, not automatic
+parsing, restoration or execution. A final shared-value recheck narrows
+cross-tab races but `localStorage` provides no atomic compare-and-swap; do not
+claim strict multi-tab serialization. Component tests prove the bounded paths,
+not native browser corruption injection or permanent backup.
+
+## v1.2 installed Chrome CSV fallback is still not file-landing evidence — 2026-10-01
+
+An installed-Chrome read-only attempt on the existing synthetic result showed
+the named prepared `blob:` fallback, but neither automatic nor explicit click
+yielded a download event or an exact file in ordinary Windows Downloads.
+Browser policy blocked Chrome's internal downloads page; do not work around
+that boundary. Keep M5 CSV landing unverified until an observable authorized
+destination and exact file contents can be inspected. This does not prove an
+application export defect or substitute for hosted CI.
+
+## v1.2 task center pagers reuse existing section names — 2026-10-01
+
+Two distinct task streams must not expose identically named pagination groups
+to assistive technology. Pass the existing bilingual section labels to the
+shared pager; do not add another component or translation key. A scoped EN/ZH
+regression and actual in-app accessibility tree verify the names. The
+read-only Docker login-exit follow-up found a possible duplicate startup
+entry but no proven Quit initiator, so no startup setting is changed before
+user context and a genuine-login trace.
+
+## v1.2 CSV landing needs an observable file, not a prepared link — 2026-10-01
+
+An in-app browser export of an existing synthetic report produced the visible
+prepared CSV fallback, but neither the automatic click nor one direct fallback
+click yielded a download event or a file at the exact expected ordinary Windows
+Downloads path. A distinct locator `downloadMedia()` attempt also timed out on
+the `blob:` fallback, and this session exposed no Chrome browser provider. Do
+not infer file landing or diagnose an app bug from that surface alone. Stop
+in-app capture retries; use a supported browser/download manager or known
+destination before closing this M5 gate. The original study, account,
+provider and formal research paths were not mutated.
+
+## v1.2 historical risk wording and inherited-key safety — 2026-10-01
+
+Explain accepted historical ST, *ST and delisting-period codes in the existing
+bilingual market readout, without deriving trading permission from the label.
+Use period-neutral wording for ST across the 2010–2025 archive; the separate
+opening-execution flag remains authoritative for that displayed fact. Unknown
+non-null risk codes stay visible as unrecognized, never Normal. An initial
+plain-object lookup was rejected after read-only review and red tests showed
+`__proto__` could reach React as an object. Explicit risk branches and own-key
+guards in the sibling board/observation label paths close that class of crash
+without a new dependency or financial-data change. Bounded browser and local
+test evidence is recorded in `docs/product/ACCEPTANCE.md`; full U8/M4/M5 and
+hosted CI remain open.
+
+## v1.2 local release smoke and synthetic warmup boundary — 2026-09-28
+
+During the user-reported GitHub Actions hold, test the current release images in
+uniquely named, isolated scratch containers with tmpfs PostgreSQL/Redis. The
+default release frontend API URL points at the live 8000 service, so static
+Nginx HTTP checks are not called an integrated scratch-browser test. Do not
+reuse the older `qtp-release-smoke` local project, its volumes or image names.
+No local result substitutes for exact pushed-head CI or full M5 approval.
+
+An apparent synthetic pre-start trading issue was rejected: the loader includes
+earlier sessions for the declared 253-session feature warmup, but
+`ExploratoryStrategy(active_from=request.start_date)` suppresses targets before
+the chosen start. Existing result tests assert initial cash and fill dates.
+Loaded-session count alone is not evidence of an earlier trade; no financial
+path or historical research was changed.
+
+## v1.2 recovery manual must separate request and attempt identities — 2026-09-28
+
+Update existing EN/ZH guides, no additional recovery abstraction. Unconfirmed
+create: lookup original task, restore unchanged draft/key, acknowledge and retry
+explicitly. Known terminal failure: linked retry is a new attempt retaining the
+original. Paused account can explicitly Resume replay/继续回放, interrupted account
+remains read-only; never infer current balance/fills from lost connection. Correct
+stale startup never-tested claim using actual09-27 task/menuQuit evidence, without
+promoting full login recovery. Current browser CORS address is localhost5173,
+not a reason to weaken security. Actual readonly bilingual old task/source review
+and guide link checks recorded outsideGit; genuine novice question asked once,
+not replaced by agent walk-through. All full product/human/release gates preserved.
+
+## v1.2 uncertain creation response means check/reopen, not assumed failure — 2026-09-28
+
+Actual isolated synthetic task completed after backend202 while browser saw503.
+Use existing shared bilingual error resources for neutral response uncertainty;
+existing wizard alert supplies native task-center link and explains unchanged
+request-ID recovery versus edited new request. Cover408/5xx/nonApiError only,
+retain validation/permission/other4xx handling. No auto-resubmission or new wrapper.
+Existing draft/idempotency mechanism already recovers original job after reload;
+do not replace it. Exact configuration/cash/key/SHA/job/completion time/one SQL
+row preserved in actual UI; component tests additionally cover timeout/network
+errors, not native browser disconnect proof. Full325 frontend/static/build PASS,
+readonly review no blocker. Production backend and financial semantics unchanged.
+Evidence outsideGit: product-evidence/v1.2/m4/20260928-create-response-recovery.json.
+GitHub user hold and all remaining full product/human gates unchanged.
+
+## v1.2 actionable command failures, not presumed non-execution — 2026-09-28
+
+Actual isolated synthetic UI503 exposed no-next-step copy for all three shared
+paper command failures. Add bilingual status/connection-before-retry guidance in
+existing locale resources; preserve explicit user action, command API/runtime and
+financial authority. Failure does not prove an ambiguous network request never
+committed; do not promise zero execution or automatically resubmit. Existing three
+regressions fail before fix and full323 frontend/static/build pass afterward.
+
+Outside-Git guarded local ASGI middleware rejects only armed synthetic account
+POST before domain dispatch; actual SQL/lifespan/socket/runtime remains. Existing
+30s pacing is QA-only, never production performance or new-market evidence.
+UI CREATED/start, RUNNING/pause, PAUSED/stop EN/ZH/context/no-extra-request and
+explicit retry transitions verified with real screenshots. Empty first-day ledger
+does not prove nonempty-fill recovery; prior independently recorded ledger cases
+remain separate. Readonly review no release-critical finding, narrowly scoped.
+Fresh ownership cleanup preserves main eight fingerprints/all services/research;
+GitHub hold/no release. Full mandatory product/human gates unchanged.
+
+## v1.2 measure responsive controls and actual media, not assumptions — 2026-09-28
+
+Use current available in-app browser for read-only saved historical ledger16-case
+matrix; Chrome unavailable, never promote this to native200zoom/speech/fullAA.
+Phone header intentionally hides Theme: select through visible desktop control,
+then measure phone rather than force hidden control or patch working layout.
+ZH no-plan matcher must use observed copy; older account absence cannot be filled
+by frontend reconstruction. Keyboard scrolling needs native settled readback,
+not an immediate0 interpreted as failure. Independent review of three actual
+images found no visible blocker with narrowly stated evidence limits.
+
+Screenshot return bytes decoded as JPEG despite initial .png names. Rename only
+own new current artifacts to jpg, preserve bytes/hash; older links retained with
+MIME correction note. Report actual image pixels separately from DOM viewport,
+no invented exact-size/paint proof. No product code or financial state change,
+no redundant full suite; main eight fingerprints equal, preferences restored.
+
+## v1.2 provider identity controls empty-state copy — 2026-09-28 local
+
+New historical-account UI walkthrough found Bar labels before first A-share
+session arrives. Select headings/empty-state instructions by accepted provider
+type, not existence of latest_session. Reuse shared detail page and current
+bilingual resources; keep replay copy and financial computation unchanged.
+Regression covers all three providers in both locales, fails before/pass after.
+No new helper/dependency/configuration framework. Bounded isolated UI V3 run
+completed with historical dates and distinct plan-time/latest balances; not
+U7 forward, real novice or native Chrome accessibility acceptance.
+
+User confirms GitHub unavailable for five days. Keep all pushes/remote CI polling,
+merge/tag/release paused until actual recovery. Continue local evidence; elapsed
+time is not recovery confirmation. Preserve original data/frozen/formal/OOS and
+all pending human/external/product gates. Temporary test services stopped only.
+
+## v1.2 reuse and strengthen real-archive recovery proof — 2026-09-28 local
+
+The skipped real-archive integration test was the existing path, not a missing
+framework. Run it with the accepted archive and disposable SQL only. Inspection
+showed it reused the same manager after shutdown: strengthen it with a fresh
+manager/registries via the same HTTP routes, explicit V3/date invariants and
+whole saved-prefix equality, retaining original financial baseline comparison.
+Readonly independent review accepted the bounded change;41 related tests pass.
+
+Then validate an actual separate backend-process shutdown/restart against owned
+tmpfs SQL. Paused97-event prefix survived unchanged, no automatic resume; explicit
+resume added only one remaining historical session and six fills. Duplicate
+start409 appended nothing. No production engine patch was necessary. Preserve
+the distinction from abrupt crash, whole-host restart and lawful after-start
+new-market forward acceptance; none follows from historical process recovery.
+Main data fingerprints/frozen Git state unchanged, owned process/test DB stopped,
+GitHub hold and all missing product/release evidence remain.
+
+## v1.2 normal startup authority correction and recovery — 2026-09-28 local
+
+The original goal authorizes non-destructive Docker recovery. A menu-quit log
+does not itself revoke that authority; the earlier additional approval gate
+was unnecessary. One official normal CLI start succeeded, followed by start
+of existing Compose containers, not recreation. No startup-task/settings change,
+reset/deletion/loop. Original volumes/read-only archive mount/eight main table
+fingerprints retained; all four services healthy/reachable, five sessions stopped.
+Isolated tmpfs backend1012+one optional archive skip/static/migration cycle passed;
+only freshly verified owned test container stopped afterward. Local runtime
+blocker resolved, but terminal-free post-login persistence not thereby accepted.
+Bounded in-app EN/ZH historical-warning check is not actual Chrome/forward proof.
+User five-day GitHub estimate does not authorize remote retries or date-based
+recovery assumptions. Preserve all required product, data and release gates.
+
+## v1.2 login and menu-quit evidence — 2026-09-28 local
+
+New Windows boot and task/log evidence changes the runtime diagnosis. Existing
+AtLogOn task executed12:41:15local/result0, launched backend02:41:16Z; logs show
+actionMenuQuit02:41:50Z. A second launch02:42:15Z ended after another menu-quit
+request12:53:21Z and ExitHealthyState12:53:26Z. Do not infer crash, a failed
+login trigger, or the initiating person's intent from absence/EOF alone.
+Keep previous09-26 unresolved disappearance separate. Current services still
+unavailable; task result0 is not database/data/reboot acceptance. No startup
+mechanism change or repeated launch. Confirm whether Desktop should be restarted
+and kept running before overriding an observed menu exit. Full scope/CI hold intact.
+
+## v1.2 GitHub hold and bounded offline home evidence — 2026-09-26
+
+User confirms GitHub recovery is expected in five days. Keep push, remote CI
+polling/retries, merges and release suspended until actual recovery, not a date
+assumption. Unknown independent backup, genuine lost-ledger backup and lawful
+current feed rights are not approvals. Continue independent local work.
+
+Accepted 16 real Chrome home DOM geometry states and five JPEG screenshots,
+not 16 visual acceptances. Offline status stays truthful; no data or account
+action. Readonly review of JSON and two screenshots found no blocking issue.
+Preserve extension overlays and one1188px screenshot delivery mismatch as
+confounds. Native zoom, speech, novice, performance, SQL/runtime and forward
+acceptance remain open. Only freshly verified own preview/tab cleaned; cache
+retained. Docker absent; existing canceled-stream/EOF log tails do not prove
+the exit cause. No blind launch loop, reset or data deletion.
+
+## v1.2 reject coerced historical paper counts — 2026-09-26
+
+Require real integer types for historical account rebalance/holding counts at the
+existing request boundary, as the experimental boundary already does. Six failing
+tests demonstrated boolean/float/string coercion; change only two Field options,
+retain safe defaults/ranges/exact cash and all stored accounts/financial engine.
+Pure126/backend static passed; no new dependency, schema migration or financial
+implementation. Browser service-error observation is bounded real Chrome DOM,
+not nativezoom/screenshot/runtime/forward acceptance. Obeyed native UI policy stop,
+cleaned only freshly verified own preview. Do not bypass or repeatedly retry.
+
+## v1.2 distinguish unverified saved plans from dated previews — 2026-09-26
+
+Do not infer an old plan's snapshot date from the current account. Reuse the shared
+plan view to warn in both locales when its own date is absent or mismatched, while
+preserving original financial/risk evidence and offering no execution action.
+New guarded projections record their Shanghai snapshot date. Paper V3 adds this
+metadata; saved V1/V2 reconstruct exactly without it, retaining strict comparison
+and golden checks. No migration, dependency, record rewrite or accounting change.
+Offline117 backend/321 frontend/static/build and independent review passed; actual
+SQL/V3 persistence, Chrome and forward acceptance remain pending. GitHub hold
+continues until actual recovery; no push, remote CI polling, merge or release.
+
+## v1.2 plan date safety without rewriting saved replay — 2026-09-26
+
+Reject prior-date portfolio snapshots at the shared plan projection boundary,
+using the exchange timezone, not UTC date. Do not alter accounting/execution.
+An independent review exposed old paused V1 projection compatibility: version
+the projection, rebuild saved V1/V2 only inside the cursor and generate V2 outside
+it. Keep exact financial/event payload comparison and immutable original records;
+never strip plans from comparison or weaken assertions. Pre-plan accounts retain
+their existing no-plan contract. Old projections with missing-day snapshots are
+retained evidence of the known defect, not newly approved advice. Reuse current
+JSON parameters and builder; no migration/dependency. Offline real runtime with
+mocked SQL verifies mixed-version resume, no duplicates, tamper rejection and
+never-started V1 upgrade; golden hash comes from unmodified e2a3aa9. Full runtime,
+browser, CI and U7 lawful after-start new-data gates remain explicitly incomplete.
+
+## v1.2 POST recovery must preserve draft and idempotency — 2026-09-26
+
+Keep local validation keys/typed API errors until render for live locale changes.
+The shared GET ErrorPanel is unsuitable for an in-memory POST form: its reload
+would lose the precise draft and idempotency key when a timeout may already have
+created a run. Independent review found this intermediate regression; two tests
+failed before correction. Reuse the existing form alert/submit boundary instead,
+specific translated POST outcome guidance and closed diagnostics. No new helper,
+dependency, financial calculation or automatic resubmission. Same settings retry
+keeps body/key, edits replace key. Final27 focused/311 full/static/build and readonly
+review passed; in-app keyboard locale proof is explicitly not real Chrome, runtime,
+mouse or forward acceptance. GitHub unavailable for user-reported five days:
+hold all push/CI retries/merge/release until actual recovery, no bypass or date-based
+assumption. Continue safe local required work, never reduce the product goal.
+
+## v1.2 command errors are actions, not load failures — 2026-09-26
+
+Paper start/pause/stop use one existing command boundary. Preserve its pending,
+retry and persisted snapshot behavior, but show the specific translated failure
+visibly and translate keys at render, not invocation. Keep stream errors separate
+so a command failure cannot mask them. Three failing-then-passing regressions and
+offline full frontend305/static/build checks plus readonly review support this
+bounded repair. No real account/API/DB action or claimed Chrome acceptance.
+Use existing Node/dependencies while Docker unavailable; fresh scratch output
+avoids root-owned generated dist without permission changes or data deletion.
+
+## v1.2 validate historical paper before saving; render error locale — 2026-09-26
+
+Reuse the shared historical experiment request at paper create, before any saved
+account/event, to reject configurations the runtime cannot accept. Do not duplicate
+the engine cap or change existing persisted idempotent accounts. Frontend exact
+comparison trims pasted whitespace; errors retain translation keys until render,
+so locale change preserves inputs and updates every local/API create error.
+Focused and full tests plus actual Chrome verified these bounded repairs; no
+account start, acquisition or formal research. No dependency/migration added.
+GitHub five-day hold stays in force. Normal Docker launch briefly restored engine
+and original assets but processes subsequently vanished; EOF is not a proven root
+cause. Do not loop restarts/reset/delete data or mark services/release healthy.
+
+## v1.2 cached index is not independent provenance authority — 2026-09-26
+
+Reading actual U7 composition found only replay/synthetic/historical providers;
+forward remains required and unimplemented/unaccepted, not silently replaced by
+fixtures. Do not invent a provider contract or source permission. Independent
+safe work found U5 verified immutable bundles but returned unchecked DB payloads.
+Append-only triggers do not guarantee a newly inserted row belonged to a receipt.
+Reuse verified normalized rows and existing canonical SHA256, checking source
+membership, exact payload and receipt metadata at the shared read boundary so
+both API and missing-date scheduling fail closed. No extra dependency/migration.
+Independent review caught False==0; canonical JSON keeps types distinct. Five
+negative API/acquisition variants, full backend994+1 optional skip, focused56,
+Ruff/format/mypy and actual ZH/EN cached Chrome reads passed. No acquisition or
+paper activity; all retained fingerprints unchanged after normal backend restart.
+Hold GitHub until actual recovery; no merge/release or full forward promotion.
+
+## v1.2 missing native events are pending, not automatically fast — 2026-09-26
+
+Removing click-time DOM publication did not eliminate missing native records.
+The same AX interaction was absent after DOM result readiness but later delivered
+13312ms/13304ms entries after screenshot. Reject interpreting empty records as
+under16 or zero; preserve earlier3040ms too. DOM readiness/fast handlers cannot
+substitute presentation, and this one sequential control does not prove an
+occlusion/screenshot/app cause. Stop larger sampling until rendering/foreground
+conditions are verified; ask human to put Chrome unoccluded in front, no native
+control/security bypass. Reuse existing readonly harness/same-origin isolated
+build; no main CORS weakening. No speculative app fix. While this confirmation
+is pending, inspect independent required U7 implementation gaps without source
+acquisition or paper activity; offline tests never satisfy forward acceptance.
+
+## v1.2 reprioritize after two proof-only units — 2026-09-26
+
+Task Center and strategy matrices add bounded evidence, not new full user flows
+or code-defect reduction. Honor the original two-iteration rule: stop accumulating
+generic geometry matrices and prioritize the observed first strategy activation
+anomaly and unresolved cold native interaction measurement. Stable mouse/Enter
+success does not explain the initial no-drawer observation; no speculative fix.
+Native3040ms cold sample remains; missing native click entries cannot become zero,
+DOM/rAF timing cannot become paint evidence, and p95 remains unknown until a valid
+complete protocol. Do not shrink required quality or forward/source/release scope.
+GitHub remains user-reported hold estimated2026-10-01, no push/CI polling.
+
+## v1.2 shared mode guide must state current availability — 2026-09-26
+
+Help and home onboarding shared a description of forward processing but omitted
+the current “not available” boundary present on Paper/manuals. Reuse their shared
+copy, adding explicit bilingual unavailability plus lawful verified source and
+after-user-start new-session requirements. Do not duplicate conditional badges,
+add dependencies, hide required forward scope or imply a license was obtained.
+Two failing language regressions became passing; actual Help and home dialog
+checked, including mobile motion-off/keyboard. A32-case Help/Settings geometry
+matrix and representative full-page native images reduce bounded quality gaps,
+not the full AA/zoom/speech/novice/performance/media/forward/release gates.
+
+## v1.2 separate existing media from usable delivery — 2026-09-26
+
+All 73 ledger media targets exist natively, but Windows reads through WSL's
+`/mnt/c` UNC alias failed; sampled WSL read succeeded. Reuse the existing images
+and checksum-matching videos through an outside-Git local DELIVERY_INDEX with
+native links, rather than copy private media into Git or add a server/dependency.
+Keep original paths and files for provenance. The M5 home image is still loading/
+fading: label it, do not claim settled current visual proof. Current Browser Use
+policy blocked local video playback; no alternate-browser/hosting/CDP bypass.
+Checksums are byte identity, not playback or full key-interaction coverage.
+
+Reuse both manuals with cache/task-history/candidate restrictions and plain
+result concepts, checking the actual ZH/EN data-center headings and warnings.
+No provider acquisition or financial task. No milestone/release promotion:
+backup/original ledgers/forward rights, genuine login, novice/native zoom/speech/
+performance, complete media and exact-head CI remain. Continue independent quality
+work during the GitHub hold without shrinking the original U1–U8 objective.
+
+## v1.2 reuse native translated market table context — 2026-09-26
+
+Actual browser and failing regressions exposed three unnamed market/data tables
+and two focusable generic containers. Name native tables with existing titles,
+declare existing scroll containers as regions and distinguish the search inner
+region from its already-named outer section using the current scroll hint.
+No dependency, shared abstraction or copy system needed. Preserve raw/adjusted
+and candidate/executable distinctions, Decimal strings and existing GET-only
+inspection. Full frontend298 and independent review pass bounded, not full AA.
+
+## v1.2 finish three-study comparison with existing native tables — 2026-09-26
+
+No additional component, dependency or code is needed: actual three-study
+geometry/keyboard checks pass16 size/theme/locale combinations using existing
+fixed-layout wrapping and local scroll regions. Preserve long metadata and
+exact financial strings, not truncated values or whole-page horizontal overflow.
+Representative visible screenshots are bounded evidence, not full visual/AA
+acceptance. User-reported GitHub hold remains unchanged: no push or CI retry.
+
+## v1.2 reuse field boundary token in research override — 2026-09-26
+
+The specific research input/select rule beat the already-correct global control
+boundary rule. Fix that grouped rule once with --field-border instead of adding
+page overrides or changing quiet decorative borders. Preserve layout/native
+focus/disabled semantics. Actual field and plan samples plus frontend296 and
+read-only review pass bounded; screenshot stale frames are discarded, not
+accepted as theme/mobile evidence. Draft values remain exact; existing autosave
+timestamps may change. No financial or frozen-research mutation.
+
+## v1.2 native research table names and explicit repeated Show — 2026-09-26
+
+Use existing visible translations on native scroll regions and tables, not a
+new accessibility library or labeling registry. Keep plan inner/outer regions
+distinct. Every explicit Show action reopens the bounded date-linked detail
+collections even when the date is unchanged or the user collapsed them;
+synchronous persistent filter focus and resource identity isolation remain.
+No financial calculations, formal study, frozen data or methodology changed.
+Final frontend296/lint/type/build and existing-data Chrome checks pass bounded;
+not full accessibility/release acceptance. Continue local work during the
+user-reported GitHub hold without push/CI retries or gate bypass.
+
+## v1.2 stable native paging focus without stale data — 2026-09-26
+
+Keep the shared pager mounted during asynchronous loading/error/success and focus
+its named group synchronously before a user-initiated page change. Preserve
+native disabled boundaries and hide unknown ranges. Never restore focus in a
+later effect or retain outdated financial rows to hold the DOM. Date links and
+clear use the persistent filter section before keyed collection reset. All21
+callers reviewed independently; obsolete job response and stateful client
+boundaries added as requested regressions. Full frontend294/lint/type/build and
+actual Chrome ZHdark/ENlight plus market-search recheck passed, bounded only.
+No dependency, backend/resource-hook, financial or security change. Continue
+safe local work through the user's five-day GitHub hold; recovery must be verified
+before exact-head remote CI and release gates. No gate bypass or completion claim.
+
+## v1.2 distinguish chart checks from async focus acceptance — 2026-09-26
+
+Keep measured essential-plot contrast and basic native keys as bounded evidence;
+do not inflate them into complete AA. Actual Next and inspect-date loading remove
+focused controls. Preserve useApiResource's identity/stale-data isolation and
+date-key reset semantics; do not restore stale financial data to hold DOM focus.
+Next implement a stable pager/user-action focus target across async loading and
+separate persistent parent focus for date-link, reusing native controls. No global
+focus registry, automatic mount autofocus, new library or security/financial
+change. Independent readonly review examines all callers before a shared repair.
+Checkpoint defect honestly, with async/moved-focus/last-page regressions and
+browser recheck still required. No GitHub retry during reported hold.
+
+## v1.2 name shared paper ledger regions without changing runtime — 2026-09-26
+
+Reuse existing translated section titles and scroll hint in shared PaperTable;
+name the semantic table too. No new component/library or financial calculation.
+Test all five populated types in ZH/EN and keyboard focus; empty states unchanged.
+Do not fix production WebSocket logic merely because a HTTP-only QA helper fails.
+After a temporary-origin403, stop that route without rewriting Origin/security.
+Inspect Compose source mounts first: approved original5173 already serves source
+changes, so no image build or restart required for real-browser verification.
+
+## v1.2 distinguish cold DOM timing from visible response — 2026-09-26
+
+Retain the native3040ms interaction anomaly and incomplete native click samples.
+DOM availability/rAF opportunity and pointerdown-only0 do not prove visible
+response or INP. Stop this incomplete seven-sample series before scaling it to30;
+the two QA-only publication controls do not establish a cause. No product-code
+repair or acceptance promotion from this evidence alone. Reuse native observers
+and the existing GET-only harness, no performance dependency or browser bypass.
+Keep GitHub hold unchanged and continue independent local quality gates.
+
+## v1.2 one field-aware wizard validation path — 2026-09-26
+
+Keep the existing exact-string monetary validation, return first invalid field
+instead of a boolean, and attach translated guidance to that control. Route an
+invalid restored review to its field's step and open native details before focus.
+Use noValidate only with replacement required/date/name/integer bounds, avoiding
+the browser's unfocusable hidden-field failure. Server remains final authority;
+do not use floating-point conversion for money or derive field errors from an
+unknown API response. Focus generic API errors as a summary. Preserve draft
+identity and duplicate-request locking; test and browser-check separately.
+Reuse existing readonly QA harness/isolated origin, no financial POST or runtime
+restart. No new validation/UI framework, GitHub retry or acceptance promotion.
+
+## v1.2 user-estimated five-day GitHub hold — 2026-09-26
+
+User says GitHub needs five days to recover (estimated2026-10-01). Record as
+user estimate, not confirmed resolution. Do not repeatedly rerun Actions or
+push checkpoint-only changes during the unchanged account gate. Continue safe
+local checks/coherent commits; after actual owner-confirmed recovery validate
+the exact release candidate in CI. Do not pay, change limits or bypass checks.
+No scheduled recovery promise; no merge/release or other gate promotion.
+
+## v1.2 stop CI retries at account-billing gate — 2026-09-26
+
+GitHub run36217962698 for pushed f91e1e5 returned all3 jobs failed with zero
+steps and official billing/spending-limit annotations. Distinguish local passing
+tests from CI not started. Do not pay, increase budget, change account, add a
+self-hosted workaround or bypass protected checks. Save this new gate locally
+without a second CI-triggering push; continue independent safe quality work.
+Account owner must resolve the billing/limit state before one deliberate exact
+head rerun. Existing missing-ledger/independent-backup/lawful-forward and full
+product gates remain intact. No merge or release.
+
+## v1.2 retain verified comparison identity and transport fallback — 2026-09-26
+
+One failed result GET must not discard the same request's already parsed job
+name or render a partial metric table. Keep that metadata in the comparison's
+existing catch. Unknown transport codes must use applicable HTTP guidance, not
+promise absent technical-detail controls; registered domain explanations remain
+unchanged via optional fallback in the existing shared explanation helper.
+Preserve permission/timeout priority and no stale data on retry/query changes.
+Failing regression, actual production-build Chrome fault/retry and independent
+read-only review establish the bounded repair. The localhost QA forwarder sends
+only GET to the main API; no financial writes or service restarts, no fake outage
+or forward-data claim. Full product/recovery/release gates remain unchanged.
+
+## v1.2 canonicalize accepted list alias and deploy only while idle — 2026-09-26
+
+Use the existing pathname reader to normalize only `/experiments/`, retaining
+query/hash/native history state and correcting only a matching managed URL
+marker. Root Chrome and failing regressions confirmed the read-only review's
+finding; repaired tests/browser and independent follow-up review passed. No new
+router/cache/dependency. Preserve dirty-navigation guards. Text-contrast checks
+are bounded rendered-result evidence, not full accessibility acceptance.
+
+The main backend was still running before the prior checkpoint guard existed.
+After verifying no active paper/research/update work or competing writer, restart
+only that existing backend. Host/container guard checksum and eight critical
+table fingerprints matched, API healthy and saved studies reloaded. Do not
+infer full crash recovery, missing-ledger restoration or backup safety from an
+idle restart. No research/methodology or data-authority decision changed. Three
+unknown human replies remain unknown and release gates remain closed.
+
+## v1.2 restore asynchronous list scroll after actual rows — 2026-09-26
+
+Native history preserves the right entry but can restore before async rows
+make the document tall enough. Keep a validated vertical position in that
+existing study-list entry, restore once when data arrive, and register only a
+passive loaded-list scroll listener. Ignore other routes/loading clamps and
+discard pending position when the query changes. Do not cache study responses,
+add a router/observer/retry loop, or change financial data. Failing regression
+and actual Chrome 693->55 before / 693->693 after establish this root cause.
+Missing-study bilingual guidance and internal return were separately verified.
+Unknown human answers do not grant backup/data-use authority; release and
+genuine recovery/forward gates remain unchanged.
+
+## v1.2 extend managed history returns rather than copy study state — 2026-09-26
+
+The one-hop Back helper passed direct routes but still reset list context after
+comparison -> detail. Reuse native history and existing navigation indices,
+recording bounded URL/index ancestors instead of copying domain selections into
+each page or adding a router/cache. Select the nearest exact matching ancestor.
+Reject malformed/nonconsecutive/unknown-URL history and use internal navigation;
+retain at most 32 entries as a deliberate bounded-context ceiling. Traversal
+still passes the existing unsaved-draft guard and preserves native Forward.
+A failing regression, full frontend checks and real bilingual nested-return QA
+verify the repair; incomplete comparison was separately tested with actual
+completed/INTERRUPTED saved jobs. No data/source/research/release gate promoted.
+
+## v1.2 preserve the existing study-list history entry — 2026-09-26
+
+Two actual Chrome defects reset comparison selection after a detail/browser
+return or the visible comparison Back link. Extend existing list history state
+with validated, capped selection and the existing Link/navigation helper with
+an explicit back intent. Traverse only to a recorded matching immediate list
+origin; otherwise navigate internally. Do not add router/cache dependencies,
+persist selection in the saved view, override modified anchor clicks or bypass
+the draft guard. Regression and bounded direct-return Chrome evidence pass;
+nested/error/novice/full visual gates remain separate. Research/data/source
+acceptance and release permissions are unchanged.
+
+## v1.2 fail closed before writing an unmatched replay — 2026-09-26
+
+Resume already reconstructs runtime state and compares the exact persisted
+non-status journal at the checkpoint. Reuse that match flag in the existing
+shared persistence callback: no later session/bar may be published before the
+checkpoint matches. Failure/shutdown/concurrent-stop cleanup before matching
+uses only known persisted pending orders. Do not introduce a new checkpoint
+store/queue or permit INTERRUPTED accounts to start automatically. Two failing
+regressions establish the former write-before-failure defect; isolated full
+checks and a real owned synthetic API SIGKILL establish bounded safety evidence.
+This does not repair missing genuine ledgers, promote forward data rights or
+pass full U7/M4/M5. Main backend was not restarted to deploy the patch.
+
+## v1.2 put command focus on search without changing other dialogs — 2026-09-26
+
+The shared native Dialog correctly captures/restores the outside trigger, but
+its default first focusable control is Close. Command search needs immediate
+typing after Ctrl+K or its visible button. Focus the existing input from the
+command component's mount effect after Dialog opens, using one ref; do not add
+a focus manager/library or change confirmation/drawer defaults. A failing
+regression plus StrictMode/trigger-restoration test and actual bilingual Chrome
+keyboard typing/close/navigation verify the change. Explicit motion-off route
+and mobile-navigation evidence is bounded; the actual OS reduced-motion branch
+and full accessibility acceptance remain unproven.
+
+## v1.2 measure native events, restore only the stopped frontend — 2026-09-26
+
+Replace rejected tool-roundtrip chart timing with the browser's native Event
+Timing on a temporary local production build. Use installed platform APIs,
+nonzero interaction grouping and explicit threshold/quantization; remove all
+measurement code afterward instead of adding a permanent telemetry module.
+Thirty real Chrome benchmark toggles matched thirty native interactions and
+met the bounded warm-case target, not the complete performance gate. Evidence,
+hash, counts and cleanup are in the acceptance ledger.
+
+Restoration with `docker compose up -d frontend` unexpectedly recreated the
+three dependencies, although no volume was deleted. Services, named volumes,
+migration head and saved row counts survived, but continuity cannot be claimed.
+For an existing stopped frontend, use `docker compose start frontend`;
+if replacement is necessary, explicitly use `up --no-deps -d frontend`.
+Never rely on an unqualified Compose `up` to leave dependencies unchanged.
+No financial/provider/research operation was requested. The user's answers
+remain unknown for backup destination, pre-loss evidence and forward-use rights;
+none grants authorization or changes those acceptance gates.
+
+## v1.2 protect test-mode entry points at shared configuration — 2026-09-26
+
+The existing pytest-session guard alone left independent scripts and Alembic
+unprotected when `APP_ENV=test` was paired with application history. Reuse the
+existing disposable database namespace check in Settings, before any engine
+construction; pytest imports that one check instead of maintaining another
+regex. Hide configuration inputs in printed validation errors so rejecting a
+database URL does not disclose its credentials. No driver, new dependency,
+schema, finance or development/production behavior changes. Unit/full isolated
+checks and a standalone rejected Alembic probe are in the acceptance ledger.
+This is prevention, not reconstruction or recovery of missing paper accounts.
+
+## v1.2 replace ineffective Docker login Run entry with one user task — 2026-09-25
+
+The next actual Windows boot/login occurred at 2026-09-25 12:04/12:05 AEST,
+after Docker Desktop's Run path was quoted. `AutoStart=true`, the enabled
+StartupApproved value and the quoted Run path were still present, but Docker
+had no process or new launch log until a manual start at 2026-09-26 03:24 AEST;
+no bounded Application crash event explained the absence. The existing
+Docker Desktop 4.92.0 executable started cleanly, and the original four
+Compose services, four named volumes and application counts survived.
+
+Replace that one ineffective per-user Run entry with a single current-user
+Task Scheduler `AtLogOn` action named `QuantTrading-DockerDesktop-AtLogon`.
+Its principal resolves to the current user's SID, uses interactive limited
+privilege, starts the same installed executable, has no time limit and ignores
+overlapping task instances. The old Run value was exactly
+`"C:\Program Files\Docker\Docker\Docker Desktop.exe"` and was removed only
+after the task was registered and verified; restoring that value and removing
+the named task reverses the change. No administrator elevation, Docker reset,
+volume, image or project-data operation occurred. This is a new startup
+hypothesis, **not** successful login acceptance until the next real sign-in.
+Docker's [official setting](https://docs.docker.com/desktop/settings-and-maintenance/settings/)
+describes login autostart but does not explain this host-specific failure.
+
+## v1.2 explicit wizard exit uses the existing in-app dialog — 2026-09-25
+
+Three actual-browser attempts to accept the native `window.confirm` for
+**Save & exit** did not yield a verifiable navigation outcome; the browser
+controller timed out while the wizard remained visible. The explicit button
+now saves the same local draft and opens the product's existing accessible
+`Dialog`, with cancel/Escape or confirm. This preserves exit confirmation and
+the existing dirty-route/Back guard without adding a component or dependency.
+Actual Chrome verified EN/ZH dialog text, cancel/Escape, confirmed navigation
+to the workbench and exact step-2 draft restoration. This is a U3 wizard
+interaction decision, not a change to research execution, finance or data.
+
+## v1.2 raw-data trial never implies forward-use rights — 2026-09-24
+
+The public BaoStock SDK and scoped local source-evaluation trial remain
+candidate evidence only. The [SSE 2026 rule](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/c_20260424_10816482.shtml)
+and [SZSE 2026 rule](https://docs.static.szse.cn/www/lawrules/rule/trade/current/W020260424690713155663.pdf)
+reserve exchange trading-information use to permitted users. User-facing
+EN/ZH terms and request acknowledgment therefore state that this app's data
+rights, including forward simulation, are unverified. Preserve existing
+receipt/provenance fields; do not relabel trial evidence as authorization.
+
+## v1.2 release startup does not migrate application history — 2026-09-24
+
+The development backend still migrates on startup for convenience. The release
+Compose overlay instead resets that inherited command and uses the backend
+image's plain Uvicorn CMD. A release cutover must check schema compatibility
+and apply any needed Alembic migration as a separately controlled action after
+an independently verified backup. CI asserts the merged release command for
+both backend and frontend. This is a deployment safety boundary, not permission
+to rehearse on the current live database while M4 integrity/backup gates fail.
+
+## v1.2 paper handoff eligibility and invalid timing method — 2026-09-24
+
+The saved-result link and destination form now share the same accepted
+historical dataset/strategy predicate, so a successful but incompatible study
+cannot advertise a handoff it cannot complete. This only prepares an
+independent account; it does not make the research preview executable. A
+Chrome control-call round trip is not a valid ≤200 ms interaction measure
+because it includes browser automation transport. Keep QA-PERF open until a
+foreground browser-native timing method is available; the temporary two-frame
+probe showed background-frame/observation delays near two seconds and was
+removed. Do not lower the product target.
+
+## v1.2 paper creation defaults to labeled A-share demo — 2026-09-24
+
+The A-share product shell previously opened `/paper/new` with the legacy AAPL
+fixture selected. A fresh local session now defaults to the existing 2030
+synthetic A-share demo, which works without a private archive and is explicitly
+not research evidence; its large scenario balance is not an account-size
+recommendation. Legacy AAPL replay remains an explicit, labeled non-A-share
+option, and audited historical replay remains available by selection. No
+provider, persisted session, financial engine or forward-source authority was
+changed. This fixes the entry default without presenting synthetic outcomes as
+real A-share history or forward simulation.
+
+## v1.2 historical paper plans are account-native and versioned — 2026-09-24
+
+A saved exploratory result's plan is not an order for a separate paper account.
+New audited historical paper accounts marked `PAPER_ACCOUNT_PLAN_V1` therefore
+save each completed-date plan in the same durable `portfolio.snapshot` event
+batch as their own risk/OMS/portfolio outcome. Existing accounts without that
+marker replay their original event ledger without backfilling a plan. The plan
+reuses the actual engine target and decisions; the latest non-rebalance account
+snapshot and the last genuine rebalance plan remain separately dated. Its
+configuration checksum covers both the strategy request and the **full
+effective account risk** (including limits forced by historical mode), after
+an independent review found the initial request-only hash omitted order and
+exposure limits. The UI distinguishes plan-time balances from latest balances
+and never labels historical output as a current trade recommendation. This
+does not establish a lawful forward feed or repair missing prior paper ledgers.
+
+## v1.2 retries use one database-enforced child per parent — 2026-09-24
+
+The retry UI key and an operator-created child's key need not match. Request-key
+idempotency alone therefore allowed another child for the same failed parent.
+Product research and raw-update job tables now uniquely constrain non-null
+`retry_of`; the managers return the existing child, including when concurrent
+keys race. A conflicting configuration remains a conflict. Migration 0016 is
+reversible and was tested on an isolated database and a restored live-data
+clone before deployment. The old parent reopened its prior successful child
+in real Chrome without increasing the 4 update jobs or 6 receipts. This fixes
+retry identity, not forward-market authorization or the separate missing paper
+ledgers; the pre-migration backup is on the same physical disk.
+
+## v1.2 terminal-free local startup uses native restart policies — 2026-09-23
+
+Docker Desktop 4.92.0's General setting now starts it at Windows sign-in. The
+four project services use Compose `restart: unless-stopped`, also applied to
+their existing running containers without recreation. This avoids a custom
+launcher or background scheduler and respects deliberate manual stops. Base
+and release Compose configuration validated; the backend/API and frontend
+remained available. Full reboot recovery is **not yet accepted**: two separate
+test-database Compose stacks were still running and their owners were not
+verified, so the engine was not restarted merely to exercise this setting.
+No volume, image, application database or research artifact was removed.
+
+At 20:23 UTC a later ownership check found those test stacks had only
+PostgreSQL containers and no active client connections or repository writer.
+A non-destructive `docker desktop restart` then completed. All four project
+containers recovered automatically; API and frontend returned HTTP 200,
+PostgreSQL and backend were healthy, and Redis returned PONG. Named volumes
+and images persisted. Before/after live counts were identical: formal
+datasets/runs/trades 1/3/310, paper sessions/events 5/417, personal jobs 8,
+market-update jobs 4. The two test PostgreSQL containers were restarted to
+their prior healthy state. This proves Docker Desktop engine-restart recovery,
+**not** automatic recovery after a full Windows sign-out/reboot.
+
+## v1.2 application-history loss and test-database isolation — 2026-09-23
+
+At 19:44 UTC the live `quant_platform` database had zero formal research
+datasets/runs/trades, one paper session and one backtest run. Its PostgreSQL
+log at 18:29–18:30 UTC shows multiple backend-test-style constraint failures;
+the surviving AAPL fixture session was created at 18:29 UTC. Test fixtures
+previously truncated research, paper and backtest tables without a suite-wide
+database guard. This is strong evidence of an accidental test run against the
+application database, but the exact invoking command has not been recovered.
+
+The verified pre-0015 logical backup (SHA-256
+`0f751cb54be0d939fdd76d4ed01b5f6c75591fd9f59d634ca10cbcebd3effd57`)
+was restored first into a new inspection database. An additive, single-transaction
+restore of its research, paper and backtest rows passed in a separate trial
+database, then in `quant_platform`. The live database now has the original
+formal 1 dataset / 3 runs / 310 trades, five paper sessions (four restored
+plus one surviving fixture), two backtest runs, eight personal research jobs
+and six market receipts. The current database was backed up before and after
+the repair outside Git; the post-recovery dump SHA-256 is
+`1bb477a8b92fc8d595f09c4622f824d4fe139944b8494ddd8b3d2b145e6e249d`.
+Frozen research files and the OOS lock were not changed.
+The eight product-job rows, 1,110 result rows and one watchlist row have
+identical sorted-row checksums in the pre-0015 backup and current database;
+all four earlier market-receipt IDs remain, plus two later receipts.
+
+The later historical paper accounts `4b64380f-85ff-4696-a710-a8d92725bc0b`
+and `07d72259-4491-4ad6-8ebc-4c8a2a8ae156` were created after the backup
+and remain absent. Other unrecorded post-backup sessions cannot be excluded.
+PostgreSQL WAL archiving is off, there is no replication slot, and no later
+pre-loss logical backup was found under the project backup root. Do not
+fabricate those event ledgers or mark their durability acceptance as current.
+
+The backend pytest suite now rejects any target unless `APP_ENV=test` and the
+database name is `quant_test` or a `quant_test_*` variant, before collection or
+fixture execution. A live-config collect-only invocation was rejected; an
+isolated full suite passed 969 tests with one optional archive skip, and live
+research/paper/product counts remained unchanged. Keep release data-integrity
+acceptance failed until the loss is transparently dispositioned and an
+independent backup destination is established.
+
+At 20:07 UTC the post-recovery full dump was restored with
+`--single-transaction --exit-on-error` into a newly created
+`quant_restore_drill_20260923` database. All 44 public tables matched the live
+database in both row count and MD5 of sorted `to_jsonb` row representations.
+This proves logical restore on the current PostgreSQL 16 instance, not recovery
+from host or disk failure: the only current backups are on the same WSL disk.
+The two post-backup account ledgers remain missing. No live table was changed
+by this drill, and no scratch database was dropped.
+
+At 2026-09-23 21:09 UTC, a read-only inspection of the running PostgreSQL 16
+container found only WAL segments `000000010000000000000012` through `14` in
+`pg_wal`. The earliest transaction commit rendered by `pg_waldump` in segment
+`12` is 2026-09-23 19:48:41 UTC, later than the 18:29–18:30 UTC loss window.
+The retained logical dumps are not physical base backups. These live WAL files
+therefore do not establish a recoverable pre-loss point for the two missing
+accounts. Do not attempt recovery against the live cluster or reconstruct
+financial events from WAL guesses. PostgreSQL's [PITR documentation](https://www.postgresql.org/docs/16/continuous-archiving.html)
+requires an appropriate physical base backup and the required WAL sequence.
+
+## v1.2 executable forward feed needs explicit rights evidence — 2026-09-23
+
+Current SSE and SZSE Trading Rules §5.1.3 reserve exchange trading-information
+use to permitted users. The SZSE website's noncommercial browse/download notice
+and BaoStock's public SDK do not prove permission for this product's executable
+forward feed. Keep bounded private source trials and raw candidate receipts
+separate from forward execution authority; seek provider/exchange rights evidence
+before promotion. This is not a finding that the prior private trial was unlawful.
+
+## v1.2 current-master sample is not a point-in-time execution ledger — 2026-09-23
+
+Targeted SSE exact-code responses and the official SZSE current-list XLSX
+confirm the four-board sample and two SSE ST/suspension controls as listed at
+retrieval. The official SSE notice dates the 688622 delisting-risk-warning
+entry to 2026-04-30. Source snapshots, UTC save times and hashes are in
+`docs/product/SOURCE_READINESS.md`. Do not infer complete 2026 membership,
+2026-09-22 status, or tradability from a current-list row. In particular,
+603400 remains listed while a separate notice reports its suspension. Keep
+all six candidate bars non-executable until dated master/status/action/rule
+and completed-session gates are reconciled. No old research master changed.
+
+## v1.2 current cost provenance is distinct from broker commission — 2026-09-23
+
+The official 2026-01 ChinaClear Shanghai and Shenzhen fee schedules are archived
+and checksummed outside Git; links and hashes are in
+`docs/product/SOURCE_READINESS.md`. For ordinary A-share auctions both show
+0.01‰ transfer fee on each side, 1‰ seller stamp duty subject to the
+continuing half-rate, 0.0341‰ exchange handling fee and 0.02‰ regulatory fee
+on each side. The latter two are included in broker commission according to
+the SSE investor guide, so do not add them again to the existing commission
+model. The 0.0003 rate and CNY 5 minimum remain explicit simulation/brokerage
+assumptions, not a statutory tariff. This current-source finding does not
+retroactively change the frozen v1.1 model-assumption record. Do not promote
+2026 candidate bars or rules to executable status until remaining source and
+runtime gates pass.
+
+The product-only `candidate_2026_cn_a_costs` accepts commission and its minimum
+as caller-supplied assumptions, while fixing the separately sourced 2026
+ordinary A-share transfer and seller-stamp components. It does not double
+charge handling/regulatory fees already included in the assumed commission.
+All resulting candidate rules remain `conservative_no_fill`; source-backed
+components alone do not settle current master, status, calendar or action gates.
+
+## v1.2 forward-market rule authority remains separate — 2026-09-23
+
+Official SSE/SZSE 2026 Trading Rules were saved and checksummed outside Git.
+Both supersede the 2023 revisions on 2026-07-06, and Main Board risk-warning
+price limits changed from 5% to 10%. The historical `cn-a-2010-2025.6`
+version has open-ended 2023 periods and still resolves Main Board ST at 5%.
+Do not mutate that frozen historical version, reuse it for 2026 product
+execution, or promote BaoStock candidate receipts. Record the primary sources
+and hashes in `docs/product/SOURCE_READINESS.md`; build a distinct executable
+effective-dated product version only after mapping the full current rule set and its
+interaction with current master/calendar/ST/suspension/actions/cost evidence.
+The SSE deferred attachment affects specified block-trade provisions, not the
+ordinary 10% Main Board risk-warning limit. This is a partial authority gain,
+not U7 forward acceptance or permission to run a strategy.
+
+The separate `candidate_2026_cn_a_rules` maps the four board terms with an
+explicit cost input, 2026-07-06 start, and `conservative_no_fill=true` on
+every rule. It is not wired to execution. A new focused test exposed that
+serializing the shared `frozenset` of permitted order types gave two different
+historical rule hashes across processes. Sort that field in JSON at the shared
+model boundary; preserve the underlying historical rule values and frozen
+files. Cross-process checks now agree. Promotion still needs audited current
+master/calendar/ST/suspension/actions/cost and order constraints.
+
 ## v1.2 guided-draft navigation listener — 2026-09-23
 
 Editing the guided form recreated its leave callback and re-registered the

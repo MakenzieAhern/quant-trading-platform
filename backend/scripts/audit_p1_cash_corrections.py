@@ -4,7 +4,7 @@ import argparse
 import json
 import re
 import unicodedata
-from decimal import Decimal
+from decimal import Decimal, localcontext
 from pathlib import Path
 
 from app.data.catalog.checksums import canonical_json_bytes, canonical_sha256, sha256_file
@@ -23,6 +23,62 @@ PAGE_GUARANTEE = (
 
 def normalized(text):
     return re.sub(r"\s+", "", unicodedata.normalize("NFKC", text))
+
+
+def unchanged_except_cash_aggregate(pages: list[str]) -> dict[str, str | int] | None:
+    text = normalized("\n".join(pages))
+    markers = ("原文:", "现更正为:", "本公司对上述更正")
+    if any(text.count(marker) != 1 for marker in markers):
+        return None
+    if not text.index(markers[0]) < text.index(markers[1]) < text.index(markers[2]):
+        return None
+    before = text.split(markers[0])[1].split(markers[1])[0]
+    after = text.split(markers[1])[1].split(markers[2])[0]
+    integer = r"(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)"
+    amount = integer + r"(?:\.[0-9]+)?"
+    aggregate = re.compile(r"共计派发股利(" + amount + r")元")
+    old, new = aggregate.search(before), aggregate.search(after)
+    if (
+        before.count("共计派发股利") != 1
+        or after.count("共计派发股利") != 1
+        or old is None
+        or new is None
+        or before[: old.start(1)] + before[old.end(1) :]
+        != after[: new.start(1)] + after[new.end(1) :]
+    ):
+        return None
+    bases = re.findall(r"总股本(" + integer + r")股为基数", before)
+    gross_amounts = re.findall(r"每10股派发现金红利(" + amount + r")元\(含税(?=[,)])", before)
+    if (
+        before.count("总股本") != 1
+        or before.count("每10股派发现金红利") != 1
+        or len(bases) != 1
+        or len(gross_amounts) != 1
+    ):
+        return None
+    shares = int(bases[0].replace(",", ""))
+    gross = Decimal(gross_amounts[0].replace(",", ""))
+    old_total, new_total = (Decimal(match.group(1).replace(",", "")) for match in (old, new))
+    # Keep monetary checks exact even when the caller has reduced Decimal precision.
+    with localcontext() as context:
+        context.prec = len(bases[0]) + len(gross_amounts[0]) + 2
+        cash_per_share = gross / 10
+        if (
+            shares <= 0
+            or gross <= 0
+            or old_total <= 0
+            or old_total == new_total
+            or new_total != shares * cash_per_share
+        ):
+            return None
+    return {
+        "original_aggregate": str(old_total),
+        "corrected_aggregate": str(new_total),
+        "base_shares": shares,
+        "cash_per_share": str(cash_per_share),
+        "original_paragraph": before,
+        "corrected_paragraph": after,
+    }
 
 
 def unchanged_except_share_count(pages):

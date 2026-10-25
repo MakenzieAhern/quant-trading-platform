@@ -5,7 +5,9 @@ import { Dialog } from "../Dialog";
 import { useExperimentCopy } from "../experiments/copy";
 import {
   DRAFT_RECOVERY_PREFIX,
+  UNREADABLE_DRAFT_PREFIX,
   readBrowserDraftRecoveries,
+  readUnreadableDraftCopies,
   type ExperimentDraft,
 } from "../experiments/draft";
 import { useConfigurationCopy } from "./copy";
@@ -22,19 +24,24 @@ import "./configs.css";
 export function ConfigurationVersionsPanel({
   current,
   disabled = false,
+  restoreBlocked = false,
   onRestore,
 }: {
   current: Pick<ExperimentDraft, "form" | "step" | "idempotencyKey">;
   disabled?: boolean;
+  restoreBlocked?: boolean;
   onRestore: (draft: ExperimentDraft) => void;
 }) {
   const c = useConfigurationCopy();
   const fields = useExperimentCopy();
   const [library, setLibrary] = useState(readConfigurationVersions);
   const [name, setName] = useState("");
-  const [offset, setOffset] = useState(0);
+  const [pageOffset, setOffset] = useState(0);
   const [recoveries, setRecoveries] = useState(readBrowserDraftRecoveries);
-  const [recoveryOffset, setRecoveryOffset] = useState(0);
+  const [recoveryPageOffset, setRecoveryOffset] = useState(0);
+  const [unreadableCopies, setUnreadableCopies] = useState(
+    readUnreadableDraftCopies,
+  );
   const [selected, setSelected] = useState<
     | ConfigurationVersion
     | (Omit<ConfigurationVersion, "kind"> & { kind: "browser_recovery" })
@@ -44,25 +51,39 @@ export function ConfigurationVersionsPanel({
   const [error, setError] = useState<"failed" | "conflict" | "changed" | null>(
     null,
   );
-  const pageOffset = Math.min(
-    offset,
-    Math.max(0, Math.ceil(library.items.length / 20) - 1) * 20,
-  );
   const draft = (): ExperimentDraft => ({
     ...current,
     version: 1,
     savedAt: new Date().toISOString(),
   });
   function refresh() {
-    setLibrary(readConfigurationVersions());
-    setRecoveries(readBrowserDraftRecoveries());
+    const versions = readConfigurationVersions();
+    const drafts = readBrowserDraftRecoveries();
+    setLibrary(versions);
+    setRecoveries(drafts);
+    if (!versions.storageFailed)
+      setOffset((value) =>
+        Math.min(
+          value,
+          Math.max(0, Math.ceil(versions.items.length / 20) - 1) * 20,
+        ),
+      );
+    if (!drafts.storageFailed)
+      setRecoveryOffset((value) =>
+        Math.min(
+          value,
+          Math.max(0, Math.ceil(drafts.items.length / 20) - 1) * 20,
+        ),
+      );
+    setUnreadableCopies(readUnreadableDraftCopies());
   }
   useEffect(() => {
     const changed = (event: StorageEvent) => {
       if (
         event.key === null ||
         event.key.startsWith(CONFIG_VERSION_PREFIX) ||
-        event.key.startsWith(DRAFT_RECOVERY_PREFIX)
+        event.key.startsWith(DRAFT_RECOVERY_PREFIX) ||
+        event.key.startsWith(UNREADABLE_DRAFT_PREFIX)
       )
         refresh();
     };
@@ -85,7 +106,7 @@ export function ConfigurationVersionsPanel({
     }
   }
   function restore() {
-    if (disabled || !selected) return;
+    if (disabled || restoreBlocked || !selected) return;
     setNotice(null);
     setError(null);
     try {
@@ -191,6 +212,7 @@ export function ConfigurationVersionsPanel({
                   ))}
               </ul>
               <Pagination
+                label={c.title}
                 offset={pageOffset}
                 limit={20}
                 total={library.items.length}
@@ -206,8 +228,7 @@ export function ConfigurationVersionsPanel({
       <details
         className="configurationRecovery"
         onToggle={(event) => {
-          if (event.currentTarget.open)
-            setRecoveries(readBrowserDraftRecoveries());
+          if (event.currentTarget.open) refresh();
         }}
       >
         <summary>{c.recoveries}</summary>
@@ -226,7 +247,7 @@ export function ConfigurationVersionsPanel({
             )}
             <ul className="configurationVersionList">
               {recoveries.items
-                .slice(recoveryOffset, recoveryOffset + 20)
+                .slice(recoveryPageOffset, recoveryPageOffset + 20)
                 .map((entry) => (
                   <li key={entry.id}>
                     <div>
@@ -264,12 +285,43 @@ export function ConfigurationVersionsPanel({
                 ))}
             </ul>
             <Pagination
-              offset={recoveryOffset}
+              label={c.recoveries}
+              offset={recoveryPageOffset}
               limit={20}
               total={recoveries.items.length}
               onChange={setRecoveryOffset}
             />
           </>
+        )}
+      </details>
+      <details
+        className="configurationRecovery"
+        onToggle={(event) => {
+          if (event.currentTarget.open)
+            setUnreadableCopies(readUnreadableDraftCopies());
+        }}
+      >
+        <summary>{c.unreadableCopies}</summary>
+        <p>{c.unreadableCopyHelp}</p>
+        {unreadableCopies.storageFailed ? (
+          <p role="alert">{c.readFailed}</p>
+        ) : unreadableCopies.items.length === 0 ? (
+          <p>{c.unreadableCopyEmpty}</p>
+        ) : (
+          unreadableCopies.items.map((entry) => (
+            <details key={entry.id}>
+              <summary>{`${c.unreadableCopy}: ${entry.id}`}</summary>
+              <label>
+                {c.unreadableRaw}
+                <textarea
+                  readOnly
+                  rows={6}
+                  value={entry.raw}
+                  style={{ width: "100%" }}
+                />
+              </label>
+            </details>
+          ))
         )}
       </details>
       {selected && (
@@ -295,7 +347,15 @@ export function ConfigurationVersionsPanel({
               <dt>{fields.cash}</dt>
               <dd>{formatDecimal(selected.draft.form.initial_cash)} CNY</dd>
               <dt>{fields.universe}</dt>
-              <dd>{selected.draft.form.universe}</dd>
+              <dd>
+                {selected.draft.form.universe === "ALL"
+                  ? fields.all
+                  : selected.draft.form.universe === "SSE"
+                    ? fields.sse
+                    : selected.draft.form.universe === "SZSE"
+                      ? fields.szse
+                      : selected.draft.form.universe}
+              </dd>
               <dt>{fields.rebalance}</dt>
               <dd>{selected.draft.form.strategy.rebalance_sessions}</dd>
               <dt>{fields.holdings}</dt>
@@ -332,7 +392,7 @@ export function ConfigurationVersionsPanel({
               <button
                 type="button"
                 className="button"
-                disabled={disabled || library.storageFailed}
+                disabled={disabled || restoreBlocked || library.storageFailed}
                 onClick={restore}
               >
                 {c.confirm}
